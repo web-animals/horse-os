@@ -982,6 +982,14 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             <button onclick="dismissLeavePopup()">I was just stretching...</button>
         </div>
 
+        <!-- First Time Welcome Popup -->
+        <div class="horse-leave-popup" id="firstTimePopup" style="z-index:10001">
+            <div class="leave-emoji">🐎</div>
+            <div class="leave-text">Welcome to HorseOS!</div>
+            <p style="margin:10px 0;font-size:12px">Click 📖 README.txt for more information...</p>
+            <p style="margin:10px 0;font-size:11px;color:#666">(Just kidding, you can't)</p>
+        </div>
+
         <!-- Taskbar -->
         <div class="taskbar">
             <button class="start-btn" id="startBtn" onclick="toggleStart()">
@@ -1278,11 +1286,29 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             setTimeout(() => n.classList.remove('show'), 3000);
         }
 
-        // Auto-open horse moment on load
-        setTimeout(() => {
-            openHorse();
-            showNotification('🐴 Welcome to HorseOS! A Horse Moment has been scheduled.');
-        }, 1500);
+        // First time visitor check
+        const hasVisited = localStorage.getItem('horseos_visited');
+        
+        if (!hasVisited) {
+            // First time - show welcome then immediately trap them
+            setTimeout(() => {
+                document.getElementById('firstTimePopup').classList.add('show');
+                showNotification('🐴 Welcome to HorseOS! A Horse Moment has been scheduled.');
+                
+                // HAHA you can't even read the readme first!
+                setTimeout(() => {
+                    document.getElementById('firstTimePopup').classList.remove('show');
+                    openHorse();
+                    localStorage.setItem('horseos_visited', 'true');
+                }, 2500);
+            }, 1000);
+        } else {
+            // Returning visitor - normal flow
+            setTimeout(() => {
+                openHorse();
+                showNotification('🐴 Welcome back! Time to contemplate.');
+            }, 1500);
+        }
 
         // Horse Blocker - prevent clicking other things
         function enableHorseBlocker() {
@@ -1293,7 +1319,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             document.getElementById('horseBlocker').classList.remove('active');
         }
         
-        // Mouse leave detection
+        // Mouse leave detection - more reliable
         const leaveMessages = [
             "Where do you think you're going?",
             "The horse sees you trying to leave.",
@@ -1306,18 +1332,43 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         ];
         
         let leavePopupShown = false;
+        let horseTimerPaused = false;
+        let pausedTimeRemaining = 0;
         
-        document.addEventListener('mouseleave', (e) => {
+        // Use mouseout on documentElement for better detection
+        document.documentElement.addEventListener('mouseleave', (e) => {
+            console.log('Mouse leave detected', e.clientY, e.clientX);
             if (leavePopupShown) return;
-            if (e.clientY < 0 || e.clientX < 0 || e.clientX > window.innerWidth || e.clientY > window.innerHeight) {
+            // Check if mouse left the viewport
+            if (e.relatedTarget === null || e.clientY <= 0 || e.clientY >= window.innerHeight) {
                 leavePopupShown = true;
                 const randomMsg = leaveMessages[Math.floor(Math.random() * leaveMessages.length)];
                 document.getElementById('leaveText').textContent = randomMsg;
                 document.getElementById('horseLeavePopup').classList.add('show');
                 
-                // Also pause the timer if running
+                // Pause the timer if running
                 if (horseRunning && horseInterval) {
                     clearInterval(horseInterval);
+                    horseTimerPaused = true;
+                    pausedTimeRemaining = horseTime;
+                    console.log('Timer paused at:', horseTime);
+                }
+            }
+        });
+        
+        // Also detect when window loses focus
+        window.addEventListener('blur', () => {
+            console.log('Window lost focus');
+            if (horseRunning && !leavePopupShown) {
+                leavePopupShown = true;
+                const randomMsg = leaveMessages[Math.floor(Math.random() * leaveMessages.length)];
+                document.getElementById('leaveText').textContent = randomMsg;
+                document.getElementById('horseLeavePopup').classList.add('show');
+                
+                if (horseInterval) {
+                    clearInterval(horseInterval);
+                    horseTimerPaused = true;
+                    pausedTimeRemaining = horseTime;
                 }
             }
         });
@@ -1327,7 +1378,11 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             leavePopupShown = false;
             
             // Resume timer if it was running
-            if (horseRunning && horseTime > 0) {
+            if (horseRunning && horseTimerPaused && pausedTimeRemaining > 0) {
+                horseTimerPaused = false;
+                horseTime = pausedTimeRemaining;
+                console.log('Timer resuming at:', horseTime);
+                
                 horseInterval = setInterval(() => {
                     horseTime--;
                     document.getElementById('horseTimer').textContent = horseTime;
