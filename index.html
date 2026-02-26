@@ -559,14 +559,6 @@
         
         .notification.show { display: block; }
         
-        @keyframes gallop {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px) rotate(-5deg); }
-            75% { transform: translateX(5px) rotate(5deg); }
-        }
-        
-        .galloping { animation: gallop 0.5s infinite; }
-        
         @media (max-width: 600px) {
             .horse-modal { width: 95vw; }
             .desktop-icons { top: 5px; left: 5px; }
@@ -588,7 +580,7 @@
                 <div class="icon-label">Scheduler</div>
             </div>
             <div class="desktop-icon" onclick="openHorse()">
-                <div class="icon-img galloping">🐴</div>
+                <div class="icon-img">🐎</div>
                 <div class="icon-label">Horse Moment</div>
             </div>
             <div class="desktop-icon" onclick="openWindow('explorer')">
@@ -870,11 +862,11 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 <div style="margin-bottom:15px">
                     <label style="display:block;margin-bottom:5px;font-weight:bold">🎭 Contemplation Style:</label>
                     <select id="styleSelect" class="btn-98" style="width:100%;padding:5px">
-                        <option value="standard" selected>Standard (Random prompts)</option>
-                        <option value="existential">Existential Dread Only</option>
-                        <option value="professional">Corporate Horse</option>
-                        <option value="zen">Zen Master Horse</option>
-                        <option value="judgmental">Judgmental Horse</option>
+                        <option value="standard" selected>Standard</option>
+                        <option value="existential">Existential Dread</option>
+                        <option value="professional">Corporate</option>
+                        <option value="zen">Zen Master</option>
+                        <option value="judgmental">Judgmental</option>
                     </select>
                 </div>
                 
