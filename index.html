@@ -741,7 +741,6 @@
             <div class="desktop-icon" onclick="openWindow('recycle')">
                 <div class="icon-img">🗑️</div>
                 <div class="icon-label">Recycle Bin</div>
-            </div>
             <div class="desktop-icon" onclick="openWindow('paint')">
                 <div class="icon-img">🎨</div>
                 <div class="icon-label">Paint</div>
@@ -1714,12 +1713,15 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             setTimeout(() => n.classList.remove('show'), 3000);
         }
 
-        // First time visitor check - NEW FLOW
+        // First time visitor check
         const hasVisited = localStorage.getItem('horseos_visited');
         let tutorialMode = false;
         
         if (!hasVisited) {
-            // FIRST TIME EXPERIENCE
+            // FIRST TIME ONLY: Auto-show Horse Moment after 3 seconds
+            // After this, Horse Moments only occur via:
+            // 1. Manual click on Horse Moment icon
+            // 2. Scheduler (if enabled in settings)
             tutorialMode = true;
             
             setTimeout(() => {
@@ -1851,47 +1853,14 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         let horseTimerPaused = false;
         let pausedTimeRemaining = 0;
         
-        // Use mouseout on documentElement for better detection
-        document.documentElement.addEventListener('mouseleave', (e) => {
-            console.log('Mouse leave detected', e.clientY, e.clientX);
-            if (leavePopupShown) return;
-            // Check if mouse left the viewport
-            if (e.relatedTarget === null || e.clientY <= 0 || e.clientY >= window.innerHeight) {
-                leavePopupShown = true;
-                const randomMsg = leaveMessages[Math.floor(Math.random() * leaveMessages.length)];
-                document.getElementById('leaveText').textContent = randomMsg;
-                document.getElementById('horseLeavePopup').classList.add('show');
-                
-                // Pause the timer if running
-                if (horseRunning && horseInterval) {
-                    clearInterval(horseInterval);
-                    horseTimerPaused = true;
-                    pausedTimeRemaining = horseTime;
-                    console.log('Timer paused at:', horseTime);
-                }
-            }
-        });
+        // Mouse leave detection removed - too annoying!
+        // Users can trigger Horse Moment manually or via scheduler
         
-        // Also detect when window loses focus
-        window.addEventListener('blur', () => {
-            console.log('Window lost focus');
-            if (horseRunning && !leavePopupShown) {
-                leavePopupShown = true;
-                const randomMsg = leaveMessages[Math.floor(Math.random() * leaveMessages.length)];
-                document.getElementById('leaveText').textContent = randomMsg;
-                document.getElementById('horseLeavePopup').classList.add('show');
-                
-                if (horseInterval) {
-                    clearInterval(horseInterval);
-                    horseTimerPaused = true;
-                    pausedTimeRemaining = horseTime;
-                }
-            }
-        });
+        // Window blur detection removed - too annoying!
         
         function dismissLeavePopup() {
             document.getElementById('horseLeavePopup').classList.remove('show');
-            leavePopupShown = false;
+            // leavePopupShown no longer used - popups now controlled by scheduler only
             
             // Resume timer if it was running
             if (horseRunning && horseTimerPaused && pausedTimeRemaining > 0) {
