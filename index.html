@@ -5,119 +5,782 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HorseOS</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:monospace;background:#008080;overflow:hidden;height:100vh}
-        .desktop{width:100%;height:100%;position:relative}
-        .icon{position:absolute;width:80px;text-align:center;color:#fff;cursor:pointer}
-        .icon:hover{background:rgba(0,0,128,.3)}
-        .icon-horse{top:20px;left:20px}
-        .icon-calc{top:20px;left:120px}
-        .icon-mine{top:120px;left:20px}
-        .window{position:absolute;background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;display:none}
-        .title{background:linear-gradient(90deg,#000080,#1084d0);color:#fff;padding:4px;display:flex;justify-content:space-between}
-        .content{padding:10px}
-        .horse-win{width:400px;top:50%;left:50%;transform:translate(-50%,-50%)}
-        .horse-text{text-align:center;font-size:20px;margin:20px}
-        .timer{font-size:30px;color:#000080;margin:20px}
-        button{padding:10px 20px;margin:5px;cursor:pointer}
-        .calc-win{width:220px;top:100px;left:100px}
-        .calc-display{background:#fff;border:2px inset #808080;padding:10px;font-size:24px;text-align:right;margin-bottom:10px}
-        .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
-        .calc-grid button{padding:15px;font-size:18px}
-        .mine-win{width:250px;top:150px;left:150px}
-        .mine-grid{display:grid;grid-template-columns:repeat(8,25px);gap:1px;background:#808080;padding:2px}
-        .mine-cell{width:25px;height:25px;background:#c0c0c0;border:2px solid;border-color:#fff #000 #000 #fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold}
-        .mine-cell.revealed{border:1px solid #808080;background:#c0c0c0;cursor:default}
-        .taskbar{position:fixed;bottom:0;left:0;right:0;height:30px;background:#c0c0c0;border-top:2px solid #fff;display:flex;align-items:center;padding:2px}
-        .start-btn{padding:4px 10px;font-weight:bold;cursor:pointer}
-        .clock{margin-left:auto;padding:4px 10px;border:2px inset #c0c0c0}
+        @font-face {
+            font-family: 'MS Sans Serif';
+            src: local('MS Sans Serif'), local('Tahoma'), local('Arial');
+        }
+        
+        :root {
+            --win-teal: #008080;
+            --win-gray: #c0c0c0;
+            --win-dark: #808080;
+            --win-light: #ffffff;
+            --win-black: #000000;
+            --win-blue: #000080;
+            --win-navy: #0a246a;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: "MS Sans Serif", Tahoma, sans-serif;
+            font-size: 11px;
+            background: var(--win-teal);
+            overflow: hidden;
+            height: 100vh;
+            cursor: default;
+        }
+        
+        /* Desktop with pattern */
+        .desktop {
+            width: 100vw;
+            height: 100vh;
+            background: var(--win-teal);
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0,0,0,0.1) 0%, transparent 50%);
+        }
+        
+        /* Desktop Icons - Authentic Windows 98 */
+        .desktop-icons {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            z-index: 1;
+        }
+        
+        .desktop-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 75px;
+            cursor: pointer;
+            padding: 4px;
+            border: 1px solid transparent;
+        }
+        
+        .desktop-icon:hover {
+            border: 1px dotted white;
+        }
+        
+        .desktop-icon.selected,
+        .desktop-icon:active {
+            border: 1px dotted white;
+            background: rgba(0,0,128,0.3);
+        }
+        
+        .desktop-icon.selected .icon-label,
+        .desktop-icon:active .icon-label {
+            background: var(--win-blue);
+            color: white;
+        }
+        
+        .icon-img {
+            font-size: 32px;
+            margin-bottom: 4px;
+            filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.3));
+        }
+        
+        .icon-label {
+            text-align: center;
+            color: white;
+            font-size: 11px;
+            text-shadow: 1px 1px 2px #000;
+            padding: 1px 4px;
+            background: transparent;
+        }
+        
+        /* Windows 98 Window */
+        .window {
+            position: absolute;
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+            min-width: 200px;
+            display: none;
+        }
+        
+        .window.active {
+            display: block;
+        }
+        
+        .window-title {
+            background: linear-gradient(90deg, var(--win-navy), #a6caf0);
+            color: white;
+            padding: 2px 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        
+        .window-title.inactive {
+            background: linear-gradient(90deg, #808080, #c0c0c0);
+        }
+        
+        .window-buttons {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .win-btn {
+            width: 16px;
+            height: 14px;
+            background: var(--win-gray);
+            border: 1px solid;
+            border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+            font-size: 9px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Marlett", sans-serif;
+        }
+        
+        .win-btn:active {
+            border-color: var(--win-black) var(--win-light) var(--win-light) var(--win-black);
+        }
+        
+        .win-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .window-content {
+            padding: 8px;
+            background: var(--win-gray);
+        }
+        
+        .window-menu {
+            display: flex;
+            gap: 15px;
+            padding: 2px 8px;
+            border-bottom: 1px solid var(--win-dark);
+            margin-bottom: 4px;
+        }
+        
+        .window-menu span {
+            cursor: pointer;
+            padding: 2px 4px;
+        }
+        
+        .window-menu span:hover {
+            background: var(--win-blue);
+            color: white;
+        }
+        
+        .window-status {
+            border-top: 1px solid var(--win-dark);
+            border-bottom: 1px solid var(--win-light);
+            padding: 2px 4px;
+            margin-top: 4px;
+            font-size: 11px;
+        }
+        
+        /* Horse Moment - MODAL */
+        .horse-modal {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%);
+            width: 450px;
+            z-index: 9999;
+            display: none;
+        }
+        
+        .horse-modal .window-title {
+            background: linear-gradient(90deg, #800000, #ff4444);
+        }
+        
+        .horse-content {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .horse-ascii {
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.2;
+            color: #8B4513;
+            margin: 15px 0;
+            white-space: pre;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+        }
+        
+        .horse-message {
+            font-size: 13px;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        
+        .horse-message .warning {
+            color: #cc0000;
+            font-weight: bold;
+            background: #ffffcc;
+            padding: 4px 8px;
+            display: inline-block;
+            margin-top: 10px;
+            border: 1px solid #cc0000;
+        }
+        
+        .horse-timer {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--win-blue);
+            margin: 20px 0;
+            font-family: "Courier New", monospace;
+            background: #000;
+            color: #0f0;
+            padding: 10px 20px;
+            display: inline-block;
+            border: 2px inset var(--win-gray);
+        }
+        
+        .horse-timer.complete {
+            color: #0f0;
+            background: #004400;
+        }
+        
+        .progress-bar {
+            width: 80%;
+            height: 20px;
+            background: var(--win-dark);
+            border: 2px inset var(--win-gray);
+            margin: 15px auto;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #000080, #1084d0, #00ff00);
+            width: 100%;
+            transition: width 1s linear;
+        }
+        
+        .btn-98 {
+            padding: 6px 20px;
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+            font-size: 11px;
+            cursor: pointer;
+            margin: 5px;
+            font-family: "MS Sans Serif", sans-serif;
+        }
+        
+        .btn-98:active {
+            border-color: var(--win-black) var(--win-light) var(--win-light) var(--win-black);
+        }
+        
+        .btn-98:disabled {
+            color: var(--win-dark);
+            cursor: not-allowed;
+        }
+        
+        .btn-98.primary {
+            background: #000080;
+            color: white;
+            border-color: #4444ff #000044 #000044 #4444ff;
+        }
+        
+        /* Calculator */
+        .calc-window { width: 220px; top: 100px; left: 150px; }
+        .calc-display {
+            background: white;
+            border: 2px inset var(--win-gray);
+            padding: 8px;
+            font-size: 20px;
+            text-align: right;
+            margin-bottom: 8px;
+            font-family: "Courier New", monospace;
+            min-height: 36px;
+            overflow: hidden;
+        }
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3px;
+        }
+        .calc-buttons button {
+            padding: 8px;
+            font-size: 14px;
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+            cursor: pointer;
+            font-family: "MS Sans Serif", sans-serif;
+        }
+        .calc-buttons button:active {
+            border-color: var(--win-black) var(--win-light) var(--win-light) var(--win-black);
+        }
+        .calc-buttons .equals {
+            grid-row: span 2;
+            background: #ff6b6b;
+        }
+        .calc-buttons .zero { grid-column: span 2; }
+        
+        /* Minesweeper */
+        .mine-window { width: 220px; top: 150px; left: 200px; }
+        .mine-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px;
+            border: 2px inset var(--win-gray);
+            margin-bottom: 8px;
+            background: var(--win-gray);
+        }
+        .mine-counter {
+            background: black;
+            color: red;
+            font-family: "Courier New", monospace;
+            font-size: 18px;
+            padding: 2px 6px;
+            border: 1px inset var(--win-gray);
+        }
+        .mine-btn {
+            font-size: 16px;
+            padding: 2px 8px;
+        }
+        .mine-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 20px);
+            gap: 1px;
+            background: var(--win-dark);
+            border: 3px inset var(--win-gray);
+            padding: 3px;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        .mine-cell {
+            width: 20px;
+            height: 20px;
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .mine-cell:active, .mine-cell.revealed {
+            border: 1px solid var(--win-dark);
+            background: #c0c0c0;
+        }
+        .mine-cell.mine { background: red; }
+        .mine-cell.flagged::after { content: "🚩"; font-size: 10px; }
+        .mine-cell.num-1 { color: blue; }
+        .mine-cell.num-2 { color: green; }
+        .mine-cell.num-3 { color: red; }
+        
+        /* Explorer Window */
+        .explorer-window { width: 350px; top: 80px; left: 100px; }
+        .explorer-content {
+            background: white;
+            border: 2px inset var(--win-gray);
+            min-height: 200px;
+            padding: 4px;
+        }
+        .folder-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px;
+            cursor: pointer;
+        }
+        .folder-item:hover {
+            background: #000080;
+            color: white;
+        }
+        .folder-icon { font-size: 20px; }
+        
+        /* Taskbar */
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 28px;
+            background: var(--win-gray);
+            border-top: 2px solid var(--win-light);
+            display: flex;
+            align-items: center;
+            padding: 2px;
+            z-index: 1000;
+        }
+        
+        .start-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+            font-family: "MS Sans Serif", sans-serif;
+        }
+        
+        .start-btn:active, .start-btn.active {
+            border-color: var(--win-black) var(--win-light) var(--win-light) var(--win-black);
+        }
+        
+        .start-btn img, .start-btn span { font-size: 16px; }
+        
+        .taskbar-divider {
+            width: 2px;
+            height: 22px;
+            border-left: 1px solid var(--win-dark);
+            border-right: 1px solid var(--win-light);
+            margin: 0 4px;
+        }
+        
+        .taskbar-items {
+            flex: 1;
+            display: flex;
+            gap: 2px;
+            padding: 0 4px;
+        }
+        
+        .taskbar-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: var(--win-light) var(--win-dark) var(--win-dark) var(--win-light);
+            font-size: 11px;
+            cursor: pointer;
+            max-width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .taskbar-item.active {
+            border-color: var(--win-dark) var(--win-light) var(--win-light) var(--win-dark);
+            background: #d4d0c8;
+        }
+        
+        .clock {
+            margin-left: auto;
+            padding: 2px 8px;
+            border: 2px inset var(--win-gray);
+            font-size: 11px;
+            min-width: 60px;
+            text-align: center;
+            font-family: "Courier New", monospace;
+            background: #c0c0c0;
+        }
+        
+        /* Start Menu */
+        .start-menu {
+            position: fixed;
+            bottom: 28px;
+            left: 0;
+            width: 200px;
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+            z-index: 1001;
+            display: none;
+        }
+        
+        .start-header {
+            background: linear-gradient(90deg, var(--win-navy), #a6caf0);
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .start-user-icon {
+            font-size: 32px;
+            border: 2px solid var(--win-light);
+            border-radius: 4px;
+            padding: 2px;
+            background: var(--win-gray);
+        }
+        
+        .start-username {
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .start-items { padding: 4px; }
+        
+        .start-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            cursor: pointer;
+        }
+        
+        .start-item:hover {
+            background: var(--win-blue);
+            color: white;
+        }
+        
+        .start-item span { font-size: 16px; }
+        
+        .start-separator {
+            height: 2px;
+            border-top: 1px solid var(--win-dark);
+            border-bottom: 1px solid var(--win-light);
+            margin: 4px 0;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #ffffcc;
+            border: 2px solid #cc0000;
+            padding: 10px;
+            z-index: 9999;
+            display: none;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+        }
+        
+        .notification.show { display: block; }
+        
+        @keyframes gallop {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px) rotate(-5deg); }
+            75% { transform: translateX(5px) rotate(5deg); }
+        }
+        
+        .galloping { animation: gallop 0.5s infinite; }
+        
+        @media (max-width: 600px) {
+            .horse-modal { width: 95vw; }
+            .desktop-icons { top: 5px; left: 5px; }
+            .desktop-icon { width: 60px; }
+            .icon-img { font-size: 24px; }
+        }
     </style>
 </head>
 <body>
-    <div class="desktop">
-        <!-- Icons -->
-        <div class="icon icon-horse" onclick="showWindow('horseWindow')">
-            <div style="font-size:40px">🐴</div>
-            <div>Horse Moment</div>
-        </div>
-        <div class="icon icon-calc" onclick="showWindow('calcWindow')">
-            <div style="font-size:40px">🧮</div>
-            <div>Calculator</div>
-        </div>
-        <div class="icon icon-mine" onclick="showWindow('mineWindow');initMine()">
-            <div style="font-size:40px">💣</div>
-            <div>Minesweeper</div>
+    <div class="desktop" id="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" onclick="openWindow('explorer')">
+                <div class="icon-img">💻</div>
+                <div class="icon-label">My Computer</div>
+            </div>
+            <div class="desktop-icon" onclick="openHorse()">
+                <div class="icon-img galloping">🐴</div>
+                <div class="icon-label">Horse Moment</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('calc')">
+                <div class="icon-img">🧮</div>
+                <div class="icon-label">Calculator</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('minesweeper'); initMine()">
+                <div class="icon-img">💣</div>
+                <div class="icon-label">Minesweeper</div>
+            </div>
+            <div class="desktop-icon" onclick="showNotification('🐴 Horse Fact: Horses can sleep standing up!')">
+                <div class="icon-img">📝</div>
+                <div class="icon-label">Horse Facts</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('recycle')">
+                <div class="icon-img">🗑️</div>
+                <div class="icon-label">Recycle Bin</div>
+            </div>
         </div>
 
-        <!-- Horse Window -->
-        <div class="window horse-win" id="horseWindow" style="display:block">
-            <div class="title">
-                <span>🐴 Scheduled_Horse_Moment.exe</span>
-                <button id="horseCloseBtn" onclick="alert('⚠️ You cannot close this. Contemplation is mandatory.')" style="cursor:not-allowed;opacity:0.5">×</button>
+        <!-- Horse Moment Modal -->
+        <div class="window horse-modal" id="horseModal">
+            <div class="window-title">
+                <span>⚠️ Scheduled_Horse_Moment.exe</span>
+                <div class="window-buttons">
+                    <button class="win-btn" disabled>×</button>
+                </div>
             </div>
-            <div class="content">
-                <div class="horse-text">
-                    <p>Please stand by for a scheduled Horse Moment.</p>
+            <div class="window-content horse-content">
+                <div class="horse-ascii">
+    ,--,
+ _.-'    -._
+(   _.--._  )
+ =.'      '._
+    '-.    .-'
+       '--'
+     🐴 HORSE
+                </div>
+                <div class="horse-message">
+                    <p><strong>Please stand by for a scheduled Horse Moment.</strong></p>
                     <p>You will now contemplate and reflect.</p>
                     <p style="color:#800000;font-weight:bold">This is a time of seriousness.</p>
-                    <p style="font-size:12px">You cannot change this in settings.</p>
+                    <p class="warning">⚠️ You cannot change this in settings.</p>
                 </div>
-                <div class="timer" id="horseTimer">60</div>
-                <div style="text-align:center">
-                    <button onclick="startHorse()" id="horseBtn">I am Contemplating</button>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="horseProgress"></div>
+                </div>
+                <div class="horse-timer" id="horseTimer">60</div>
+                <div>
+                    <button class="btn-98 primary" id="horseBtn" onclick="startHorse()">I am Contemplating</button>
                 </div>
             </div>
+        </div>
+
+        <!-- My Computer Window -->
+        <div class="window explorer-window" id="explorer">
+            <div class="window-title">
+                <span>💻 My Computer</span>
+                <div class="window-buttons">
+                    <button class="win-btn">_</button>
+                    <button class="win-btn">□</button>
+                    <button class="win-btn" onclick="closeWindow('explorer')">×</button>
+                </div>
+            </div>
+            <div class="window-menu">
+                <span>File</span><span>Edit</span><span>View</span><span>Help</span>
+            </div>
+            <div class="window-content explorer-content">
+                <div class="folder-item"><span class="folder-icon">💾</span><span>3½ Floppy (A:)</span></div>
+                <div class="folder-item"><span class="folder-icon">💿</span><span>Local Disk (C:)</span></div>
+                <div class="folder-item"><span class="folder-icon">🌐</span><span>Control Panel</span></div>
+                <div class="folder-item" onclick="openHorse()" style="cursor:pointer"><span class="folder-icon">🐴</span><span>HorseOS System</span></div>
+            </div>
+            <div class="window-status">4 object(s)</div>
         </div>
 
         <!-- Calculator Window -->
-        <div class="window calc-win" id="calcWindow">
-            <div class="title">
+        <div class="window calc-window" id="calc">
+            <div class="window-title">
                 <span>🧮 Calculator</span>
-                <button onclick="hideWindow('calcWindow')">×</button>
+                <div class="window-buttons">
+                    <button class="win-btn">_</button>
+                    <button class="win-btn">□</button>
+                    <button class="win-btn" onclick="closeWindow('calc')">×</button>
+                </div>
             </div>
-            <div class="content">
-                <div class="calc-display" id="calcDisp">0</div>
-                <div class="calc-grid">
+            <div class="window-content">
+                <div class="calc-display" id="calcDisplay">0</div>
+                <div class="calc-buttons">
                     <button onclick="calc('C')">C</button>
-                    <button onclick="calc('/')">/</button>
-                    <button onclick="calc('*')">×</button>
+                    <button onclick="calc('CE')">CE</button>
                     <button onclick="calc('⌫')">⌫</button>
+                    <button onclick="calc('/')">/</button>
                     <button onclick="calc('7')">7</button>
                     <button onclick="calc('8')">8</button>
                     <button onclick="calc('9')">9</button>
-                    <button onclick="calc('-')">-</button>
+                    <button onclick="calc('*')">×</button>
                     <button onclick="calc('4')">4</button>
                     <button onclick="calc('5')">5</button>
                     <button onclick="calc('6')">6</button>
-                    <button onclick="calc('+')">+</button>
+                    <button onclick="calc('-')">-</button>
                     <button onclick="calc('1')">1</button>
                     <button onclick="calc('2')">2</button>
                     <button onclick="calc('3')">3</button>
-                    <button onclick="calc('=')" style="grid-row:span 2">=</button>
-                    <button onclick="calc('0')" style="grid-column:span 2">0</button>
+                    <button onclick="calc('+')">+</button>
+                    <button onclick="calc('0')" class="zero">0</button>
                     <button onclick="calc('.')">.</button>
+                    <button onclick="calc('=')" class="equals">=</button>
                 </div>
             </div>
         </div>
 
         <!-- Minesweeper Window -->
-        <div class="window mine-win" id="mineWindow">
-            <div class="title">
+        <div class="window mine-window" id="minesweeper">
+            <div class="window-title">
                 <span>💣 Minesweeper</span>
-                <button onclick="hideWindow('mineWindow')">×</button>
+                <div class="window-buttons">
+                    <button class="win-btn">_</button>
+                    <button class="win-btn">□</button>
+                    <button class="win-btn" onclick="closeWindow('minesweeper')">×</button>
+                </div>
             </div>
-            <div class="content">
-                <div style="text-align:center;margin-bottom:10px">
-                    <button onclick="initMine()">😊 New Game</button>
+            <div class="window-content">
+                <div class="mine-header">
+                    <div class="mine-counter" id="mineCount">010</div>
+                    <button class="btn-98 mine-btn" onclick="initMine()">😊</button>
+                    <div class="mine-counter" id="mineTime">000</div>
                 </div>
                 <div class="mine-grid" id="mineGrid"></div>
             </div>
         </div>
 
+        <!-- Recycle Bin -->
+        <div class="window" id="recycle" style="width:300px;top:200px;left:250px">
+            <div class="window-title">
+                <span>🗑️ Recycle Bin</span>
+                <div class="window-buttons">
+                    <button class="win-btn">_</button>
+                    <button class="win-btn">□</button>
+                    <button class="win-btn" onclick="closeWindow('recycle')">×</button>
+                </div>
+            </div>
+            <div class="window-content explorer-content" style="min-height:150px">
+                <div class="folder-item"><span>🗑️</span><span>Your Screen Time Guilt</span></div>
+                <div class="folder-item"><span>🗑️</span><span>Doomscrolling Addiction</span></div>
+                <div class="folder-item"><span>🗑️</span><span>Productivity Anxiety</span></div>
+                <div style="text-align:center;margin-top:20px">
+                    <button class="btn-98" onclick="emptyRecycle()">Empty Recycle Bin</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification -->
+        <div class="notification" id="notification">
+            <span id="notifText"></span>
+        </div>
+
         <!-- Taskbar -->
         <div class="taskbar">
-            <button class="start-btn" onclick="alert('🐴 HorseOS v1.0\n\nScheduled Horse Moments for Digital Wellness')">🐴 Start</button>
+            <button class="start-btn" id="startBtn" onclick="toggleStart()">
+                <span>🐴</span> Start
+            </button>
+            <div class="taskbar-divider"></div>
+            <div class="taskbar-items">
+                <div class="taskbar-item active" onclick="openHorse()">
+                    <span>🐴</span> Horse Moment
+                </div>
+            </div>
             <div class="clock" id="clock">--:--</div>
+        </div>
+
+        <!-- Start Menu -->
+        <div class="start-menu" id="startMenu">
+            <div class="start-header">
+                <div class="start-user-icon">🐴</div>
+                <div class="start-username">Horse User</div>
+            </div>
+            <div class="start-items">
+                <div class="start-item" onclick="openWindow('explorer');toggleStart()">
+                    <span>💻</span> My Computer
+                </div>
+                <div class="start-item" onclick="openWindow('calc');toggleStart()">
+                    <span>🧮</span> Calculator
+                </div>
+                <div class="start-item" onclick="openWindow('minesweeper');initMine();toggleStart()">
+                    <span>💣</span> Minesweeper
+                </div>
+                <div class="start-separator"></div>
+                <div class="start-item" onclick="openHorse();toggleStart()">
+                    <span>🐴</span> Horse Moment
+                </div>
+                <div class="start-separator"></div>
+                <div class="start-item" onclick="alert('🐴 It is now safe to contemplate.')">
+                    <span>⏻</span> Shut Down...
+                </div>
+            </div>
         </div>
     </div>
 
@@ -127,67 +790,103 @@
             const now = new Date();
             const h = now.getHours() % 12 || 12;
             const m = now.getMinutes().toString().padStart(2, '0');
-            document.getElementById('clock').textContent = h + ':' + m;
+            const s = now.getSeconds().toString().padStart(2, '0');
+            const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+            document.getElementById('clock').textContent = h + ':' + m + ' ' + ampm;
         }
         setInterval(updateClock, 1000);
         updateClock();
 
         // Window management
-        function showWindow(id) {
-            document.getElementById(id).style.display = 'block';
+        function openWindow(id) {
+            const win = document.getElementById(id);
+            win.style.display = 'block';
+            win.style.zIndex = getMaxZ() + 1;
         }
-        function hideWindow(id) {
+        
+        function closeWindow(id) {
             document.getElementById(id).style.display = 'none';
         }
+        
+        function getMaxZ() {
+            const windows = document.querySelectorAll('.window');
+            let max = 10;
+            windows.forEach(w => {
+                const z = parseInt(w.style.zIndex) || 10;
+                if (z > max) max = z;
+            });
+            return max;
+        }
 
-        // Horse Moment - AUTO START
-        let horseInterval;
+        // Start Menu
+        function toggleStart() {
+            const menu = document.getElementById('startMenu');
+            const btn = document.getElementById('startBtn');
+            const isOpen = menu.style.display === 'block';
+            menu.style.display = isOpen ? 'none' : 'block';
+            btn.classList.toggle('active', !isOpen);
+        }
+        
+        document.addEventListener('click', e => {
+            const menu = document.getElementById('startMenu');
+            const btn = document.getElementById('startBtn');
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.style.display = 'none';
+                btn.classList.remove('active');
+            }
+        });
+
+        // Horse Moment
         let horseTime = 60;
-        let horseStarted = false;
+        let horseInterval;
+        let horseRunning = false;
+        
+        function openHorse() {
+            document.getElementById('horseModal').style.display = 'block';
+            document.getElementById('horseModal').style.zIndex = 9999;
+        }
         
         function startHorse() {
-            if (horseStarted) return;
-            horseStarted = true;
+            if (horseRunning) return;
+            horseRunning = true;
             
-            document.getElementById('horseBtn').disabled = true;
-            document.getElementById('horseBtn').textContent = 'Contemplating...';
-            document.getElementById('horseCloseBtn').style.opacity = '0.3';
+            const btn = document.getElementById('horseBtn');
+            btn.disabled = true;
+            btn.textContent = 'Contemplating...';
+            
+            document.getElementById('horseProgress').style.width = '100%';
+            document.getElementById('horseProgress').style.transition = 'width 60s linear';
             
             horseInterval = setInterval(() => {
                 horseTime--;
                 document.getElementById('horseTimer').textContent = horseTime;
+                
                 if (horseTime <= 0) {
                     clearInterval(horseInterval);
-                    document.getElementById('horseTimer').innerHTML = '<span style="color:green">✓ Complete!</span>';
-                    document.getElementById('horseBtn').textContent = 'Contemplation Complete';
-                    document.getElementById('horseBtn').disabled = false;
-                    document.getElementById('horseBtn').onclick = closeAndResetHorse;
-                    document.getElementById('horseBtn').textContent = 'Click to Return to Desktop';
-                    document.getElementById('horseCloseBtn').style.opacity = '1';
-                    document.getElementById('horseCloseBtn').onclick = closeAndResetHorse;
+                    document.getElementById('horseTimer').innerHTML = '✓ DONE';
+                    document.getElementById('horseTimer').classList.add('complete');
+                    btn.disabled = false;
+                    btn.textContent = 'Return to Desktop';
+                    btn.onclick = finishHorse;
+                    showNotification('🎉 Contemplation complete! You are now more horse.');
                 }
             }, 1000);
         }
         
-        function closeAndResetHorse() {
-            hideWindow('horseWindow');
-            // Reset for next time
+        function finishHorse() {
+            document.getElementById('horseModal').style.display = 'none';
+            // Reset
             horseTime = 60;
-            horseStarted = false;
+            horseRunning = false;
             document.getElementById('horseTimer').textContent = '60';
-            document.getElementById('horseBtn').textContent = 'I am Contemplating';
-            document.getElementById('horseBtn').disabled = false;
-            document.getElementById('horseBtn').onclick = startHorse;
-            document.getElementById('horseCloseBtn').style.opacity = '0.5';
-            document.getElementById('horseCloseBtn').onclick = function() {
-                alert('⚠️ You cannot close this. Contemplation is mandatory.');
-            };
+            document.getElementById('horseTimer').classList.remove('complete');
+            document.getElementById('horseProgress').style.width = '100%';
+            document.getElementById('horseProgress').style.transition = 'none';
+            
+            const btn = document.getElementById('horseBtn');
+            btn.textContent = 'I am Contemplating';
+            btn.onclick = startHorse;
         }
-        
-        // Auto-open horse moment on load (after 1 second)
-        setTimeout(() => {
-            document.getElementById('horseWindow').style.display = 'block';
-        }, 1000);
 
         // Calculator
         let calcVal = '0', calcPrev = null, calcOp = null, calcNew = true;
@@ -197,6 +896,8 @@
                 else calcVal = calcVal === '0' ? btn : calcVal + btn;
             } else if (btn === 'C') {
                 calcVal = '0'; calcPrev = null; calcOp = null; calcNew = true;
+            } else if (btn === 'CE') {
+                calcVal = '0'; calcNew = true;
             } else if (btn === '⌫') {
                 calcVal = calcVal.length > 1 ? calcVal.slice(0, -1) : '0';
             } else if (btn === '.') {
@@ -205,10 +906,10 @@
                 if (calcOp && calcPrev !== null) {
                     const cur = parseFloat(calcVal);
                     switch(calcOp) {
-                        case '+': calcVal = (calcPrev + cur).toString(); break;
-                        case '-': calcVal = (calcPrev - cur).toString(); break;
-                        case '*': calcVal = (calcPrev * cur).toString(); break;
-                        case '/': calcVal = cur !== 0 ? (calcPrev / cur).toString() : 'Error'; break;
+                        case '+': calcVal = String(calcPrev + cur); break;
+                        case '-': calcVal = String(calcPrev - cur); break;
+                        case '*': calcVal = String(calcPrev * cur); break;
+                        case '/': calcVal = cur !== 0 ? String(calcPrev / cur) : 'Error'; break;
                     }
                     calcOp = null; calcPrev = null; calcNew = true;
                 }
@@ -217,25 +918,128 @@
                 calcOp = btn;
                 calcNew = true;
             }
-            document.getElementById('calcDisp').textContent = calcVal;
+            document.getElementById('calcDisplay').textContent = calcVal.substring(0, 12);
         }
 
         // Minesweeper
+        let mineGrid = [], mineRevealed = [], mineFlags = [], mineGameOver = false;
+        const MINE_ROWS = 8, MINE_COLS = 8, MINE_TOTAL = 10;
+        
         function initMine() {
             const grid = document.getElementById('mineGrid');
             grid.innerHTML = '';
-            for (let i = 0; i < 64; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'mine-cell';
-                cell.onclick = function() {
-                    this.classList.add('revealed');
-                    this.textContent = Math.random() > 0.85 ? '💣' : '';
-                };
-                grid.appendChild(cell);
+            mineGrid = []; mineRevealed = []; mineFlags = []; mineGameOver = false;
+            
+            for (let r = 0; r < MINE_ROWS; r++) {
+                mineGrid[r] = []; mineRevealed[r] = []; mineFlags[r] = [];
+                for (let c = 0; c < MINE_COLS; c++) {
+                    mineGrid[r][c] = 0; mineRevealed[r][c] = false; mineFlags[r][c] = false;
+                    const cell = document.createElement('div');
+                    cell.className = 'mine-cell';
+                    cell.onclick = () => clickMine(r, c);
+                    cell.oncontextmenu = e => { e.preventDefault(); flagMine(r, c); };
+                    grid.appendChild(cell);
+                }
+            }
+            
+            let placed = 0;
+            while (placed < MINE_TOTAL) {
+                const r = Math.floor(Math.random() * MINE_ROWS);
+                const c = Math.floor(Math.random() * MINE_COLS);
+                if (mineGrid[r][c] !== -1) { mineGrid[r][c] = -1; placed++; }
+            }
+            
+            for (let r = 0; r < MINE_ROWS; r++)
+                for (let c = 0; c < MINE_COLS; c++)
+                    if (mineGrid[r][c] !== -1)
+                        mineGrid[r][c] = countMines(r, c);
+            
+            updateMineCount();
+        }
+        
+        function countMines(r, c) {
+            let count = 0;
+            for (let dr = -1; dr <= 1; dr++)
+                for (let dc = -1; dc <= 1; dc++)
+                    if (r+dr >= 0 && r+dr < MINE_ROWS && c+dc >= 0 && c+dc < MINE_COLS)
+                        if (mineGrid[r+dr][c+dc] === -1) count++;
+            return count;
+        }
+        
+        function clickMine(r, c) {
+            if (mineGameOver || mineRevealed[r][c] || mineFlags[r][c]) return;
+            revealMine(r, c);
+            if (mineGrid[r][c] === -1) { mineGameOver = true; showNotification('💥 BOOM! Game Over!'); }
+            else if (checkWin()) showNotification('🎉 You Win! Horse-level concentration achieved!');
+        }
+        
+        function revealMine(r, c) {
+            if (r < 0 || r >= MINE_ROWS || c < 0 || c >= MINE_COLS) return;
+            if (mineRevealed[r][c] || mineFlags[r][c]) return;
+            mineRevealed[r][c] = true;
+            
+            const cells = document.querySelectorAll('.mine-cell');
+            const cell = cells[r * MINE_COLS + c];
+            cell.classList.add('revealed');
+            
+            if (mineGrid[r][c] === -1) {
+                cell.classList.add('mine'); cell.textContent = '💣';
+            } else if (mineGrid[r][c] > 0) {
+                cell.textContent = mineGrid[r][c];
+                cell.classList.add('num-' + mineGrid[r][c]);
+            } else {
+                for (let dr = -1; dr <= 1; dr++)
+                    for (let dc = -1; dc <= 1; dc++)
+                        revealMine(r + dr, c + dc);
             }
         }
+        
+        function flagMine(r, c) {
+            if (mineGameOver || mineRevealed[r][c]) return;
+            mineFlags[r][c] = !mineFlags[r][c];
+            const cells = document.querySelectorAll('.mine-cell');
+            cells[r * MINE_COLS + c].classList.toggle('flagged');
+            updateMineCount();
+        }
+        
+        function updateMineCount() {
+            let flags = 0;
+            for (let r = 0; r < MINE_ROWS; r++)
+                for (let c = 0; c < MINE_COLS; c++)
+                    if (mineFlags[r][c]) flags++;
+            document.getElementById('mineCount').textContent = String(MINE_TOTAL - flags).padStart(3, '0');
+        }
+        
+        function checkWin() {
+            for (let r = 0; r < MINE_ROWS; r++)
+                for (let c = 0; c < MINE_COLS; c++)
+                    if (mineGrid[r][c] !== -1 && !mineRevealed[r][c]) return false;
+            return true;
+        }
 
-        console.log('🐴 HorseOS loaded successfully!');
+        // Recycle Bin
+        function emptyRecycle() {
+            document.querySelector('#recycle .explorer-content').innerHTML = 
+                '<div style="text-align:center;padding:40px"><div style="font-size:48px">🗑️</div><p>Recycle Bin is empty.</p><p style="font-size:11px;color:gray">Your guilt has been deleted.</p></div>';
+            showNotification('🗑️ Recycle Bin emptied successfully!');
+        }
+
+        // Notification
+        function showNotification(text) {
+            const n = document.getElementById('notification');
+            document.getElementById('notifText').textContent = text;
+            n.classList.add('show');
+            setTimeout(() => n.classList.remove('show'), 3000);
+        }
+
+        // Auto-open horse moment on load
+        setTimeout(() => {
+            openHorse();
+            showNotification('🐴 Welcome to HorseOS! A Horse Moment has been scheduled.');
+        }, 1500);
+
+        console.log('🐴 HorseOS v2.0 - Super Retro Edition loaded!');
+        console.log('Contemplation is mandatory.');
     </script>
 </body>
 </html>
