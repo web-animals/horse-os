@@ -199,6 +199,70 @@
             background: linear-gradient(90deg, #800000, #ff4444);
         }
         
+        /* Blocker overlay - prevents clicking anything else */
+        .horse-blocker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 9998;
+            display: none;
+        }
+        
+        .horse-blocker.active {
+            display: block;
+        }
+        
+        /* Mouse leave popup */
+        .horse-leave-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffcc;
+            border: 3px solid #cc0000;
+            padding: 20px;
+            z-index: 10000;
+            display: none;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            max-width: 300px;
+        }
+        
+        .horse-leave-popup.show {
+            display: block;
+            animation: horseShake 0.5s ease-in-out;
+        }
+        
+        @keyframes horseShake {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            25% { transform: translate(-50%, -50%) rotate(-5deg); }
+            75% { transform: translate(-50%, -50%) rotate(5deg); }
+        }
+        
+        .horse-leave-popup .leave-emoji {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .horse-leave-popup .leave-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #cc0000;
+            margin-bottom: 15px;
+        }
+        
+        .horse-leave-popup button {
+            padding: 8px 20px;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #fff #000 #000 #fff;
+            cursor: pointer;
+            font-family: "MS Sans Serif", sans-serif;
+        }
+        
         .horse-content {
             text-align: center;
             padding: 20px;
@@ -621,7 +685,7 @@
  =.'      '._
     '-.    .-'
        '--'
-     🐴 HORSE
+     🐎 HORSE
                 </div>
                 <div class="horse-message">
                     <p><strong>Please stand by for a scheduled Horse Moment.</strong></p>
@@ -906,6 +970,16 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         <!-- Notification -->
         <div class="notification" id="notification">
             <span id="notifText"></span>
+        </div>
+
+        <!-- Horse Blocker Overlay -->
+        <div class="horse-blocker" id="horseBlocker"></div>
+
+        <!-- Mouse Leave Popup -->
+        <div class="horse-leave-popup" id="horseLeavePopup">
+            <div class="leave-emoji">🐎</div>
+            <div class="leave-text" id="leaveText">Where do you think you're going?</div>
+            <button onclick="dismissLeavePopup()">I was just stretching...</button>
         </div>
 
         <!-- Taskbar -->
@@ -1209,6 +1283,81 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             openHorse();
             showNotification('🐴 Welcome to HorseOS! A Horse Moment has been scheduled.');
         }, 1500);
+
+        // Horse Blocker - prevent clicking other things
+        function enableHorseBlocker() {
+            document.getElementById('horseBlocker').classList.add('active');
+        }
+        
+        function disableHorseBlocker() {
+            document.getElementById('horseBlocker').classList.remove('active');
+        }
+        
+        // Mouse leave detection
+        const leaveMessages = [
+            "Where do you think you're going?",
+            "The horse sees you trying to leave.",
+            "Contemplation is not optional.",
+            "Running away from your problems?",
+            "The horse is disappointed in you.",
+            "Get back here and contemplate!",
+            "You cannot escape the horse.",
+            "The horse knows you're avoiding this."
+        ];
+        
+        let leavePopupShown = false;
+        
+        document.addEventListener('mouseleave', (e) => {
+            if (leavePopupShown) return;
+            if (e.clientY < 0 || e.clientX < 0 || e.clientX > window.innerWidth || e.clientY > window.innerHeight) {
+                leavePopupShown = true;
+                const randomMsg = leaveMessages[Math.floor(Math.random() * leaveMessages.length)];
+                document.getElementById('leaveText').textContent = randomMsg;
+                document.getElementById('horseLeavePopup').classList.add('show');
+                
+                // Also pause the timer if running
+                if (horseRunning && horseInterval) {
+                    clearInterval(horseInterval);
+                }
+            }
+        });
+        
+        function dismissLeavePopup() {
+            document.getElementById('horseLeavePopup').classList.remove('show');
+            leavePopupShown = false;
+            
+            // Resume timer if it was running
+            if (horseRunning && horseTime > 0) {
+                horseInterval = setInterval(() => {
+                    horseTime--;
+                    document.getElementById('horseTimer').textContent = horseTime;
+                    
+                    if (horseTime <= 0) {
+                        clearInterval(horseInterval);
+                        document.getElementById('horseTimer').innerHTML = '✓ DONE';
+                        document.getElementById('horseTimer').classList.add('complete');
+                        document.getElementById('horseBtn').disabled = false;
+                        document.getElementById('horseBtn').textContent = 'Return to Desktop';
+                        document.getElementById('horseBtn').onclick = finishHorse;
+                        showNotification('🎉 Contemplation complete! You are now more horse.');
+                    }
+                }, 1000);
+            }
+        }
+        
+        // Override openHorse to enable blocker
+        const originalOpenHorse = openHorse;
+        openHorse = function() {
+            originalOpenHorse();
+            enableHorseBlocker();
+        };
+        
+        // Override finishHorse to disable blocker
+        const originalFinishHorse = finishHorse;
+        finishHorse = function() {
+            originalFinishHorse();
+            disableHorseBlocker();
+        };
 
         // Scheduler Functions
         let horseDuration = 60;
