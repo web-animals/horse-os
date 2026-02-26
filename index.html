@@ -579,13 +579,21 @@
     <div class="desktop" id="desktop">
         <!-- Desktop Icons -->
         <div class="desktop-icons">
-            <div class="desktop-icon" onclick="openWindow('explorer')">
-                <div class="icon-img">💻</div>
-                <div class="icon-label">My Computer</div>
+            <div class="desktop-icon" onclick="openWindow('welcome')">
+                <div class="icon-img">📖</div>
+                <div class="icon-label">README.txt</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('scheduler')">
+                <div class="icon-img">⏰</div>
+                <div class="icon-label">Scheduler</div>
             </div>
             <div class="desktop-icon" onclick="openHorse()">
                 <div class="icon-img galloping">🐴</div>
                 <div class="icon-label">Horse Moment</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('explorer')">
+                <div class="icon-img">💻</div>
+                <div class="icon-label">My Computer</div>
             </div>
             <div class="desktop-icon" onclick="openWindow('calc')">
                 <div class="icon-img">🧮</div>
@@ -717,6 +725,172 @@
             </div>
         </div>
 
+        <!-- Welcome/ReadMe Window -->
+        <div class="window" id="welcome" style="width:450px;top:50px;left:50px;z-index:10000">
+            <div class="window-title">
+                <span>📖 README.txt - HorseOS</span>
+                <div class="window-buttons">
+                    <button class="win-btn">_</button>
+                    <button class="win-btn">□</button>
+                    <button class="win-btn" onclick="closeWindow('welcome')">×</button>
+                </div>
+            </div>
+            <div class="window-menu">
+                <span>File</span><span>Edit</span><span>Search</span><span>Help</span>
+            </div>
+            <div class="window-content" style="background:#fff;padding:15px;font-family:'Courier New',monospace;font-size:12px;line-height:1.6;max-height:400px;overflow-y:auto">
+                <pre style="white-space:pre-wrap;font-family:inherit">
+╔══════════════════════════════════════════════════════════════╗
+║                    🐴 WELCOME TO HORSEOS 🐴                  ║
+║              "The Operating System You Can't Ignore"          ║
+╚══════════════════════════════════════════════════════════════╝
+
+WHAT IS THIS?
+-------------
+HorseOS is a digital wellness platform designed to force you to take 
+breaks using the power of ABSURDITY and HORSES.
+
+THE SCIENCE (we made it up):
+---------------------------
+Studies show* that humans need mandatory contemplation breaks every 
+20 minutes. But regular wellness apps are BORING and you ignore them.
+
+*Studies conducted by horses
+
+HOW IT WORKS:
+-------------
+1. HorseOS INTERRUPTS your doomscrolling
+2. You CANNOT close the window (seriously, we disabled it)
+3. You MUST contemplate for 60 seconds
+4. The horse judges you silently
+5. You return to your life, slightly more equine
+
+FEATURES:
+---------
+🐴 SCHEDULED HORSE MOMENTS
+   - Uncloseable 60-second contemplation sessions
+   - Random existential prompts
+   - Progress bar for your suffering
+   
+💣 MINESWEEPER
+   - Because you need something to do while avoiding work
+   - 10 mines, infinite regrets
+   
+🧮 CALCULATOR
+   - For calculating how much time you've wasted
+   
+🗑️ RECYCLE BIN
+   - Delete your screen time guilt
+   - (It comes back, guilt always does)
+
+FAQ:
+----
+Q: Can I turn off Horse Moments?
+A: No. The settings button is decorative.
+
+Q: Why a horse?
+A: Horses are nature's most contemplative creatures. 
+   Also, we had the domain name.
+
+Q: Is this malware?
+A: Only if you consider self-care malicious.
+
+Q: My boss caught me doing a Horse Moment at work.
+A: Tell them you're "optimizing cognitive performance through 
+   structured contemplation intervals." They'll be impressed.
+
+CONTROLS:
+---------
+• Click icons to open apps
+• Drag windows by title bar
+• Right-click Minesweeper cells to flag
+• Press any key during startup to skip (but why would you?)
+
+REMEMBER:
+---------
+"The horse is always watching."
+"Contemplation is mandatory."
+"This is not a suggestion."
+
+- HorseOS Development Team (just a horse with a keyboard)
+
+P.S. - If you read this far, you definitely need a Horse Moment.
+                </pre>
+            </div>
+            <div class="window-status">Readme.txt - 4,847 bytes</div>
+        </div>
+
+        <!-- Horse Scheduler Window -->
+        <div class="window" id="scheduler" style="width:350px;top:100px;left:400px">
+            <div class="window-title">
+                <span>⏰ Horse Moment Scheduler</span>
+                <div class="window-buttons">
+                    <button class="win-btn">_</button>
+                    <button class="win-btn">□</button>
+                    <button class="win-btn" onclick="closeWindow('scheduler')">×</button>
+                </div>
+            </div>
+            <div class="window-content" style="padding:15px">
+                <div style="text-align:center;margin-bottom:15px">
+                    <div style="font-size:40px;margin-bottom:10px">🐴 ⏰</div>
+                    <h3 style="margin-bottom:5px">Schedule Your Destiny</h3>
+                    <p style="color:#666;font-size:10px">(The horse appreciates planning)</p>
+                </div>
+                
+                <div style="background:#ffffcc;border:1px solid #cc0;padding:10px;margin-bottom:15px">
+                    <strong>Current Settings:</strong><br>
+                    Auto-Horse: <span id="autoStatus" style="color:red">OFF</span><br>
+                    Interval: <span id="intervalDisplay">Manual</span><br>
+                    Duration: <span id="durationDisplay">60 seconds</span>
+                </div>
+                
+                <div style="margin-bottom:15px">
+                    <label style="display:block;margin-bottom:5px;font-weight:bold">⏱️ Horse Moment Duration:</label>
+                    <select id="durationSelect" class="btn-98" style="width:100%;padding:5px" onchange="updateDuration()">
+                        <option value="30">30 seconds (Casual)</option>
+                        <option value="60" selected>60 seconds (Standard)</option>
+                        <option value="120">2 minutes (Serious)</option>
+                        <option value="300">5 minutes (Existential Crisis)</option>
+                        <option value="600">10 minutes (Horse Master)</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom:15px">
+                    <label style="display:block;margin-bottom:5px;font-weight:bold">🔄 Auto-Horse Interval:</label>
+                    <select id="intervalSelect" class="btn-98" style="width:100%;padding:5px" onchange="updateInterval()">
+                        <option value="0" selected>Manual Only (When you click)</option>
+                        <option value="5">Every 5 minutes</option>
+                        <option value="15">Every 15 minutes</option>
+                        <option value="20">Every 20 minutes (Recommended)</option>
+                        <option value="30">Every 30 minutes</option>
+                        <option value="60">Every hour</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom:15px">
+                    <label style="display:block;margin-bottom:5px;font-weight:bold">🎭 Contemplation Style:</label>
+                    <select id="styleSelect" class="btn-98" style="width:100%;padding:5px">
+                        <option value="standard" selected>Standard (Random prompts)</option>
+                        <option value="existential">Existential Dread Only</option>
+                        <option value="professional">Corporate Horse</option>
+                        <option value="zen">Zen Master Horse</option>
+                        <option value="judgmental">Judgmental Horse</option>
+                    </select>
+                </div>
+                
+                <div style="text-align:center;margin-top:20px">
+                    <button class="btn-98 primary" onclick="saveSchedule()" style="padding:8px 20px">
+                        💾 Save Settings
+                    </button>
+                    <button class="btn-98" onclick="testHorseNow()" style="margin-left:10px">
+                        🐴 Test Horse Moment
+                    </button>
+                </div>
+                
+                <div id="scheduleMsg" style="text-align:center;margin-top:10px;font-size:10px;color:green;min-height:15px"></div>
+            </div>
+        </div>
+
         <!-- Recycle Bin -->
         <div class="window" id="recycle" style="width:300px;top:200px;left:250px">
             <div class="window-title">
@@ -763,6 +937,12 @@
                 <div class="start-username">Horse User</div>
             </div>
             <div class="start-items">
+                <div class="start-item" onclick="openWindow('welcome');toggleStart()">
+                    <span>📖</span> README.txt
+                </div>
+                <div class="start-item" onclick="openWindow('scheduler');toggleStart()">
+                    <span>⏰</span> Scheduler
+                </div>
                 <div class="start-item" onclick="openWindow('explorer');toggleStart()">
                     <span>💻</span> My Computer
                 </div>
@@ -1038,8 +1218,144 @@
             showNotification('🐴 Welcome to HorseOS! A Horse Moment has been scheduled.');
         }, 1500);
 
+        // Scheduler Functions
+        let horseDuration = 60;
+        let autoInterval = 0;
+        let autoHorseTimer = null;
+        
+        const horsePrompts = {
+            standard: [
+                "What would you do if you were a horse with WiFi?",
+                "Reflect on your last email. Was it necessary?",
+                "The horse judges your browser tabs. Explain yourself.",
+                "If horses could code, what would they build?",
+                "Contemplate the last time you touched grass."
+            ],
+            existential: [
+                "Why do horses exist? Why do YOU exist?",
+                "Contemplate the void. The horse contemplates with you.",
+                "In 100 years, will anyone remember your Slack messages?",
+                "The horse knows all your passwords. Reflect.",
+                "What is the meaning of neigh?"
+            ],
+            corporate: [
+                "Please contemplate your Q3 performance goals.",
+                "The horse requests a TPS report on your thoughts.",
+                "Let's circle back to your existential dread.",
+                "Synergize your mindfulness with horse energy.",
+                "Schedule a 1:1 with yourself. The horse will attend."
+            ],
+            zen: [
+                "Be the grass the horse grazes upon.",
+                "The neigh that can be spoken is not the eternal neigh.",
+                "You are the horse. The horse is you. Neigh.",
+                "Empty your mind like an empty stable.",
+                "The journey of a thousand miles begins with one hoof."
+            ],
+            judgmental: [
+                "The horse saw what you just did. Explain.",
+                "Your posture is disappointing to the horse.",
+                "That email you drafted but didn't send? The horse knows.",
+                "The horse expected better from you.",
+                "Your screen time embarrasses the entire equine community."
+            ]
+        };
+        
+        function updateDuration() {
+            horseDuration = parseInt(document.getElementById('durationSelect').value);
+            document.getElementById('durationDisplay').textContent = horseDuration + ' seconds';
+        }
+        
+        function updateInterval() {
+            autoInterval = parseInt(document.getElementById('intervalSelect').value);
+            const display = autoInterval === 0 ? 'Manual' : 'Every ' + autoInterval + ' minutes';
+            document.getElementById('intervalDisplay').textContent = display;
+        }
+        
+        function saveSchedule() {
+            const style = document.getElementById('styleSelect').value;
+            
+            // Clear existing auto timer
+            if (autoHorseTimer) {
+                clearInterval(autoHorseTimer);
+                autoHorseTimer = null;
+            }
+            
+            // Set up auto-horse if enabled
+            if (autoInterval > 0) {
+                autoHorseTimer = setInterval(() => {
+                    if (!horseRunning) {
+                        openHorse();
+                        showNotification('🐴 Scheduled Horse Moment! Time to contemplate.');
+                    }
+                }, autoInterval * 60 * 1000);
+                document.getElementById('autoStatus').textContent = 'ON';
+                document.getElementById('autoStatus').style.color = 'green';
+            } else {
+                document.getElementById('autoStatus').textContent = 'OFF';
+                document.getElementById('autoStatus').style.color = 'red';
+            }
+            
+            // Show confirmation
+            const msg = document.getElementById('scheduleMsg');
+            msg.textContent = '✅ Settings saved! The horse is pleased.';
+            setTimeout(() => msg.textContent = '', 3000);
+            
+            showNotification('🐴 Schedule updated! Duration: ' + horseDuration + 's');
+        }
+        
+        function testHorseNow() {
+            closeWindow('scheduler');
+            setTimeout(() => {
+                openHorse();
+                showNotification('🐴 Test Horse Moment activated!');
+            }, 300);
+        }
+        
+        // Override startHorse to use custom duration
+        const originalStartHorse = startHorse;
+        startHorse = function() {
+            if (horseRunning) return;
+            horseRunning = true;
+            horseTime = horseDuration;
+            
+            const btn = document.getElementById('horseBtn');
+            btn.disabled = true;
+            btn.textContent = 'Contemplating...';
+            
+            // Get random prompt based on style
+            const style = document.getElementById('styleSelect')?.value || 'standard';
+            const prompts = horsePrompts[style] || horsePrompts.standard;
+            const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+            
+            // Update prompt display if it exists
+            const promptEl = document.querySelector('.horse-message p:first-child');
+            if (promptEl) {
+                promptEl.innerHTML = '<strong>' + randomPrompt + '</strong>';
+            }
+            
+            document.getElementById('horseProgress').style.width = '100%';
+            document.getElementById('horseProgress').style.transition = 'width ' + horseDuration + 's linear';
+            
+            horseInterval = setInterval(() => {
+                horseTime--;
+                document.getElementById('horseTimer').textContent = horseTime;
+                
+                if (horseTime <= 0) {
+                    clearInterval(horseInterval);
+                    document.getElementById('horseTimer').innerHTML = '✓ DONE';
+                    document.getElementById('horseTimer').classList.add('complete');
+                    btn.disabled = false;
+                    btn.textContent = 'Return to Desktop';
+                    btn.onclick = finishHorse;
+                    showNotification('🎉 Contemplation complete! You are now more horse.');
+                }
+            }, 1000);
+        };
+
         console.log('🐴 HorseOS v2.0 - Super Retro Edition loaded!');
         console.log('Contemplation is mandatory.');
+        console.log('Type openWindow("welcome") to read the manual.');
     </script>
 </body>
 </html>
