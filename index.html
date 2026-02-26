@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HorseOS</title>
     <style>
         @font-face {
@@ -704,7 +704,109 @@
             .desktop-icon { width: 60px; }
             .icon-img { font-size: 24px; }
         }
-    </style>
+    
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            .desktop-icons {
+                top: 5px;
+                left: 5px;
+                gap: 15px;
+            }
+            
+            .desktop-icon {
+                width: 70px;
+                padding: 8px;
+            }
+            
+            .icon-img {
+                font-size: 28px;
+            }
+            
+            .icon-label {
+                font-size: 10px;
+            }
+            
+            .window {
+                max-width: 95vw !important;
+                max-height: 85vh !important;
+            }
+            
+            .horse-modal {
+                width: 95vw !important;
+                left: 2.5vw !important;
+                top: 10vh !important;
+            }
+            
+            .horse-ascii {
+                font-size: 8px;
+            }
+            
+            .window-content {
+                padding: 10px;
+            }
+            
+            .btn-98 {
+                padding: 10px 15px;
+                font-size: 14px;
+                min-height: 44px;
+            }
+            
+            .taskbar {
+                height: 44px;
+            }
+            
+            .start-btn {
+                padding: 0 15px;
+                font-size: 12px;
+            }
+            
+            .calc-window, .explorer-window {
+                width: 95vw !important;
+                left: 2.5vw !important;
+            }
+            
+            #paint {
+                width: 95vw !important;
+                height: 60vh !important;
+            }
+            
+            #paintCanvas {
+                width: 90vw !important;
+                height: 40vh !important;
+            }
+            
+            .horse-message {
+                font-size: 14px;
+            }
+            
+            .horse-message h2 {
+                font-size: 18px;
+            }
+        }
+        
+        /* Touch-friendly improvements */
+        @media (pointer: coarse) {
+            .desktop-icon {
+                min-height: 70px;
+            }
+            
+            .win-btn, .btn-98 {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            .window-title {
+                padding: 8px;
+            }
+        }
+        
+        /* Prevent text selection on touch */
+        .desktop-icon, .win-btn, .btn-98, .window-title {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+</style>
 </head>
 <body>
     <div class="desktop" id="desktop">
@@ -719,7 +821,7 @@
                 <div class="icon-label">Scheduler</div>
             </div>
             <div class="desktop-icon" onclick="openHorse()">
-                <div class="icon-img"><b>H</b></div>
+                <div class="icon-img">🐴</div>
                 <div class="icon-label">Horse Moment</div>
             </div>
             <div class="desktop-icon" onclick="openWindow('explorer')">
@@ -734,7 +836,7 @@
                 <div class="icon-img">[MINE]</div>
                 <div class="icon-label">Minesweeper</div>
             </div>
-            <div class="desktop-icon" onclick="showNotification('<b>H</b> Horse Fact: Horses can sleep standing up!')">
+            <div class="desktop-icon" onclick="showNotification('🐴 Horse Fact: Horses can sleep standing up!')">
                 <div class="icon-img">[NOTE]</div>
                 <div class="icon-label">Horse Facts</div>
             </div>
@@ -820,7 +922,7 @@
                 <div class="folder-item" onclick="openWindow('floppyMystery')" style="cursor:pointer"><span class="folder-icon">[FLOP]</span><span>3½ Floppy (A:)</span></div>
                 <div class="folder-item" onclick="openWindow('driveMystery')" style="cursor:pointer"><span class="folder-icon">[DISK]</span><span>Local Disk (C:)</span></div>
                 <div class="folder-item" onclick="openWindow('controlMystery')" style="cursor:pointer"><span class="folder-icon">[NET]</span><span>Control Panel</span></div>
-                <div class="folder-item" onclick="openHorse()" style="cursor:pointer"><span class="folder-icon"><b>H</b></span><span>HorseOS System</span></div>
+                <div class="folder-item" onclick="openHorse()" style="cursor:pointer"><span class="folder-icon">🐴</span><span>HorseOS System</span></div>
             </div>
             <div class="window-status">4 object(s)</div>
         </div>
@@ -897,7 +999,7 @@
             <div class="window-content" style="background:#fff;padding:15px;font-family:'Courier New',monospace;font-size:12px;line-height:1.6;max-height:400px;overflow-y:auto">
                 <pre style="white-space:pre-wrap;font-family:inherit">
 ╔══════════════════════════════════════════════════════════════╗
-║                    <b>H</b> WELCOME TO HORSEOS <b>H</b>                  ║
+║                    🐴 WELCOME TO HORSEOS 🐴                  ║
 ║              "The Operating System You Can't Ignore"          ║
 ╚══════════════════════════════════════════════════════════════╝
 
@@ -923,7 +1025,7 @@ HOW IT WORKS:
 
 FEATURES:
 ---------
-<b>H</b> SCHEDULED HORSE MOMENTS
+🐴 SCHEDULED HORSE MOMENTS
    - Uncloseable 60-second contemplation sessions
    - Random existential prompts
    - Progress bar for your suffering
@@ -988,7 +1090,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             </div>
             <div class="window-content" style="padding:15px">
                 <div style="text-align:center;margin-bottom:15px">
-                    <div style="font-size:40px;margin-bottom:10px"><b>H</b> [CLK]</div>
+                    <div style="font-size:40px;margin-bottom:10px">🐴 [CLK]</div>
                     <h3 style="margin-bottom:5px">Schedule Your Destiny</h3>
                     <p style="color:#666;font-size:10px">(The horse appreciates planning)</p>
                 </div>
@@ -1039,7 +1141,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                         [FLOP] Save Settings
                     </button>
                     <button class="btn-98" onclick="testHorseNow()" style="margin-left:10px">
-                        <b>H</b> Test Horse Moment
+                        🐴 Test Horse Moment
                     </button>
                 </div>
                 
@@ -1088,11 +1190,11 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                     <button class="btn-98" style="font-size:16px" onclick="setPaintTool('eraser')" title="Eraser">🧼</button>
                     <button class="btn-98" style="font-size:16px" onclick="clearCanvas()" title="Clear">[BIN]</button>
                     <span style="margin-left:10px">|</span>
-                    <button class="btn-98" style="font-size:16px" onclick="showNotification('<b>H</b> The horse decides what color you use.')" title="Color">[ART]</button>
+                    <button class="btn-98" style="font-size:16px" onclick="showNotification('🐴 The horse decides what color you use.')" title="Color">[ART]</button>
                 </div>
                 <canvas id="paintCanvas" width="480" height="300" style="background:white;cursor:crosshair;display:block;margin:10px auto;border:1px solid #808080"></canvas>
                 <div style="text-align:center;padding:5px;font-size:11px;color:#666">
-                    <b>H</b> <em>The horse guides your brush. You cannot draw anything else.</em>
+                    🐴 <em>The horse guides your brush. You cannot draw anything else.</em>
                 </div>
             </div>
         </div>
@@ -1112,12 +1214,12 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             </div>
             <div class="window-content" style="background:#fff;padding:0">
                 <div style="background:#c0c0c0;padding:5px;border-bottom:1px solid #808080">
-                    <button class="btn-98" onclick="showNotification('<b>H</b> You cannot send mail. Only receive judgment.')">📤 Send</button>
-                    <button class="btn-98" onclick="showNotification('<b>H</b> Refreshing... 0 new messages.')">R Check</button>
+                    <button class="btn-98" onclick="showNotification('🐴 You cannot send mail. Only receive judgment.')">📤 Send</button>
+                    <button class="btn-98" onclick="showNotification('🐴 Refreshing... 0 new messages.')">R Check</button>
                 </div>
                 <div style="border-bottom:1px solid #c0c0c0;padding:10px;background:#f0f0f0;cursor:pointer" onclick="openEmail('judgment')">
                     <div style="display:flex;align-items:center;gap:10px">
-                        <span style="font-size:20px"><b>H</b></span>
+                        <span style="font-size:20px">🐴</span>
                         <div style="flex:1">
                             <div style="font-weight:bold;color:#000080">The Horse</div>
                             <div style="color:#333">RE: Your Life Choices</div>
@@ -1128,7 +1230,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 </div>
                 <div style="border-bottom:1px solid #c0c0c0;padding:10px;background:#fff;cursor:pointer" onclick="openEmail('performance')">
                     <div style="display:flex;align-items:center;gap:10px">
-                        <span style="font-size:20px"><b>H</b></span>
+                        <span style="font-size:20px">🐴</span>
                         <div style="flex:1">
                             <div style="font-weight:bold;color:#000080">HR Department</div>
                             <div style="color:#333">Performance Review</div>
@@ -1156,7 +1258,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                     <div id="emailBody" style="font-family:'Courier New',monospace;font-size:12px;line-height:1.6;white-space:pre-wrap"></div>
                     <div style="margin-top:15px;text-align:center">
                         <button class="btn-98" onclick="document.getElementById('emailContent').style.display='none'">Close</button>
-                        <button class="btn-98 primary" onclick="showNotification('<b>H</b> Reply blocked. The horse does not negotiate.')">Reply</button>
+                        <button class="btn-98 primary" onclick="showNotification('🐴 Reply blocked. The horse does not negotiate.')">Reply</button>
                     </div>
                 </div>
             </div>
@@ -1194,10 +1296,10 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 <div style="background:#c0c0c0;padding:10px">
                     <div style="font-size:11px;margin-bottom:5px"><strong>📋 Live Chat:</strong></div>
                     <div id="horseChat" style="background:#000;color:#0f0;padding:8px;font-family:monospace;font-size:10px;height:60px;overflow-y:auto">
-                        > [H]: *chewing sounds*<br>
-                        > [H]: *tail swish*<br>
+                        > 🐴: *chewing sounds*<br>
+                        > 🐴: *tail swish*<br>
                         > [U]: beautiful creature<br>
-                        > [H]: *stares into camera*<br>
+                        > 🐴: *stares into camera*<br>
                     </div>
                     <div style="margin-top:5px;display:flex;gap:5px">
                         <input type="text" placeholder="Say something nice to the horse..." style="flex:1;padding:3px;font-size:11px" onkeypress="if(event.key==='Enter')sendHorseChat(this.value);this.value=''">
@@ -1239,7 +1341,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                         <th style="padding:3px;text-align:right">Memory</th>
                     </tr>
                     <tr style="background:#f0f0f0">
-                        <td style="padding:3px"><b>H</b> Contemplating.exe</td>
+                        <td style="padding:3px">🐴 Contemplating.exe</td>
                         <td style="padding:3px;text-align:right">99%</td>
                         <td style="padding:3px;text-align:right">4,096 MB</td>
                     </tr>
@@ -1260,8 +1362,8 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                     </tr>
                 </table>
                 <div style="text-align:center;margin-top:10px">
-                    <button class="btn-98" onclick="showNotification('<b>H</b> You cannot end this process. It is you.')">End Process</button>
-                    <button class="btn-98" onclick="showNotification('<b>H</b> All processes serve the horse.')">New Task...</button>
+                    <button class="btn-98" onclick="showNotification('🐴 You cannot end this process. It is you.')">End Process</button>
+                    <button class="btn-98" onclick="showNotification('🐴 All processes serve the horse.')">New Task...</button>
                 </div>
             </div>
         </div>
@@ -1283,7 +1385,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
 
         <!-- Mouse Leave Popup -->
         <div class="horse-leave-popup" id="horseLeavePopup">
-            <div class="leave-emoji"><b>H</b></div>
+            <div class="leave-emoji">🐴</div>
             <div class="leave-text" id="leaveText">Where do you think you're going?</div>
             <button onclick="dismissLeavePopup()">I was just stretching...</button>
         </div>
@@ -1318,8 +1420,8 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 <p style="font-size:10px;color:#415a77">General Failure reading drive A:<br>Abort, Retry, Fail?</p>
                 <div style="margin-top:15px">
                     <button class="btn-98" onclick="closeWindow('floppyMystery')" style="background:#3949ab;color:#fff">Abort</button>
-                    <button class="btn-98" onclick="showNotification('<b>H</b> The horse rejects your retry.')" style="margin:0 5px">Retry</button>
-                    <button class="btn-98" onclick="showNotification('<b>H</b> You cannot fail the horse.')">Fail</button>
+                    <button class="btn-98" onclick="showNotification('🐴 The horse rejects your retry.')" style="margin:0 5px">Retry</button>
+                    <button class="btn-98" onclick="showNotification('🐴 You cannot fail the horse.')">Fail</button>
                 </div>
             </div>
         </div>
@@ -1405,13 +1507,13 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                     </p>
                 </div>
                 <p style="font-size:9px;color:#9c27b0">Attempting to change settings will alert the horse.</p>
-                <button class="btn-98" onclick="showNotification('<b>H</b> The horse has denied your request.');closeWindow('controlMystery')" style="margin-top:10px;background:#7b1fa2;color:#fff">Apply Changes</button>
+                <button class="btn-98" onclick="showNotification('🐴 The horse has denied your request.');closeWindow('controlMystery')" style="margin-top:10px;background:#7b1fa2;color:#fff">Apply Changes</button>
             </div>
         </div>
 
         <!-- First Time Welcome Popup -->
         <div class="horse-leave-popup" id="firstTimePopup" style="z-index:10001">
-            <div class="leave-emoji"><b>H</b></div>
+            <div class="leave-emoji">🐴</div>
             <div class="leave-text">Welcome to HorseOS!</div>
             <p style="margin:10px 0;font-size:12px">Click [TXT] README.txt for more information...</p>
             <p style="margin:10px 0;font-size:11px;color:#666">(Just kidding, you can't)</p>
@@ -1420,12 +1522,12 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         <!-- Taskbar -->
         <div class="taskbar">
             <button class="start-btn" id="startBtn" onclick="toggleStart()">
-                <span><b>H</b></span> Start
+                <span>🐴</span> Start
             </button>
             <div class="taskbar-divider"></div>
             <div class="taskbar-items">
                 <div class="taskbar-item active" onclick="openHorse()">
-                    <span><b>H</b></span> Horse Moment
+                    <span>🐴</span> Horse Moment
                 </div>
             </div>
             <div class="clock" id="clock">--:--</div>
@@ -1434,7 +1536,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         <!-- Start Menu -->
         <div class="start-menu" id="startMenu">
             <div class="start-header">
-                <div class="start-user-icon"><b>H</b></div>
+                <div class="start-user-icon">🐴</div>
                 <div class="start-username">Horse User</div>
             </div>
             <div class="start-items">
@@ -1455,10 +1557,10 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 </div>
                 <div class="start-separator"></div>
                 <div class="start-item" onclick="openHorse();toggleStart()">
-                    <span><b>H</b></span> Horse Moment
+                    <span>🐴</span> Horse Moment
                 </div>
                 <div class="start-separator"></div>
-                <div class="start-item" onclick="alert('<b>H</b> It is now safe to contemplate.')">
+                <div class="start-item" onclick="alert('🐴 It is now safe to contemplate.')">
                     <span>⏻</span> Shut Down...
                 </div>
             </div>
@@ -1724,7 +1826,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             setTimeout(() => {
                 // Show welcome popup with longer duration
                 document.getElementById('firstTimePopup').innerHTML = `
-                    <div class="leave-emoji"><b>H</b></div>
+                    <div class="leave-emoji">🐴</div>
                     <div class="leave-text">Welcome to HorseOS!</div>
                     <p style="margin:10px 0;font-size:12px">Your journey to digital wellness begins...</p>
                     <button onclick="startTutorial()" style="margin-top:10px">Click to Continue 👉</button>
@@ -1754,7 +1856,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             // Returning visitor - normal flow
             setTimeout(() => {
                 openHorse();
-                showNotification('<b>H</b> Welcome back! Time to contemplate.');
+                showNotification('🐴 Welcome back! Time to contemplate.');
             }, 1500);
         }
         
@@ -1997,7 +2099,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 autoHorseTimer = setInterval(() => {
                     if (!horseRunning) {
                         openHorse();
-                        showNotification('<b>H</b> Scheduled Horse Moment! Time to contemplate.');
+                        showNotification('🐴 Scheduled Horse Moment! Time to contemplate.');
                     }
                 }, autoInterval * 60 * 1000);
                 document.getElementById('autoStatus').textContent = 'ON';
@@ -2012,14 +2114,14 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             msg.textContent = 'OK Settings saved! The horse is pleased.';
             setTimeout(() => msg.textContent = '', 3000);
             
-            showNotification('<b>H</b> Schedule updated! Duration: ' + horseDuration + 's');
+            showNotification('🐴 Schedule updated! Duration: ' + horseDuration + 's');
         }
         
         function testHorseNow() {
             closeWindow('scheduler');
             setTimeout(() => {
                 openHorse();
-                showNotification('<b>H</b> Test Horse Moment activated!');
+                showNotification('🐴 Test Horse Moment activated!');
             }, 300);
         }
         
@@ -2072,7 +2174,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         
         function setPaintTool(tool) {
             paintTool = tool;
-            showNotification(tool === 'brush' ? '<b>H</b> Brush selected. You will draw horses.' : '🧼 Eraser selected... but the horse remembers.');
+            showNotification(tool === 'brush' ? '🐴 Brush selected. You will draw horses.' : '🧼 Eraser selected... but the horse remembers.');
         }
         
         function initPaint() {
@@ -2124,7 +2226,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 const ctx = canvas.getContext('2d');
                 ctx.fillStyle = '#fff';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                showNotification('<b>H</b> Canvas cleared. The horse provides a fresh pasture.');
+                showNotification('🐴 Canvas cleared. The horse provides a fresh pasture.');
             }
         }
         
@@ -2150,7 +2252,7 @@ This is not contemplation.
 The next Horse Moment will be... extended.
 
 Judging you silently,
-<b>H</b> The Horse
+🐴 The Horse
 
 P.S. - That sourdough recipe won't fix what's broken.`
             },
@@ -2159,7 +2261,7 @@ P.S. - That sourdough recipe won't fix what's broken.`
                 subject: 'Performance Review - ACTION REQUIRED',
                 body: `EMPLOYEE: You
 REVIEW PERIOD: All of it
-RATING: <b>H</b> (Horse)
+RATING: 🐴 (Horse)
 
 STRENGTHS:
 - Consistent screen time
@@ -2232,14 +2334,117 @@ P.S. - Your horse knows you read this far. They're watching.`
             
             const chat = document.getElementById('horseChat');
             const viewerMsg = `> [U]: ${msg}`;
-            const horseMsg = `> [H]: ${horseResponses[Math.floor(Math.random() * horseResponses.length)]}`;
+            const horseMsg = `> 🐴: ${horseResponses[Math.floor(Math.random() * horseResponses.length)]}`;
             
             chat.innerHTML += viewerMsg + '<br>' + horseMsg + '<br>';
             chat.scrollTop = chat.scrollHeight;
         }
         
 
-console.log('<b>H</b> HorseOS v2.0 - Super Retro Edition loaded!');
+
+        // MOBILE TOUCH SUPPORT
+        // Make windows draggable on touch devices
+        document.querySelectorAll('.window').forEach(win => {
+            let touchStartX, touchStartY, startLeft, startTop;
+            const titleBar = win.querySelector('.window-title');
+            
+            if (titleBar) {
+                titleBar.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 1) {
+                        const touch = e.touches[0];
+                        touchStartX = touch.clientX;
+                        touchStartY = touch.clientY;
+                        startLeft = parseInt(win.style.left) || 0;
+                        startTop = parseInt(win.style.top) || 0;
+                        e.preventDefault();
+                    }
+                }, {passive: false});
+                
+                titleBar.addEventListener('touchmove', (e) => {
+                    if (e.touches.length === 1) {
+                        const touch = e.touches[0];
+                        const dx = touch.clientX - touchStartX;
+                        const dy = touch.clientY - touchStartY;
+                        win.style.left = Math.max(0, startLeft + dx) + 'px';
+                        win.style.top = Math.max(0, startTop + dy) + 'px';
+                        e.preventDefault();
+                    }
+                }, {passive: false});
+            }
+        });
+        
+        // Touch support for Paint canvas
+        function initPaintTouch() {
+            const canvas = document.getElementById('paintCanvas');
+            if (!canvas) return;
+            
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                isPainting = true;
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                lastX = touch.clientX - rect.left;
+                lastY = touch.clientY - rect.top;
+            }, {passive: false});
+            
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (!isPainting) return;
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                
+                if (paintTool === 'eraser') {
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 20;
+                } else {
+                    const browns = ['#8B4513', '#A0522D', '#CD853F', '#D2691E', '#8B4513'];
+                    ctx.strokeStyle = browns[Math.floor(Math.random() * browns.length)];
+                    ctx.lineWidth = 3;
+                }
+                
+                ctx.lineCap = 'round';
+                ctx.stroke();
+                
+                lastX = x;
+                lastY = y;
+            }, {passive: false});
+            
+            canvas.addEventListener('touchend', () => isPainting = false);
+        }
+        
+        // Add touch init to Paint
+        const originalInitPaint = initPaint;
+        initPaint = function() {
+            originalInitPaint();
+            initPaintTouch();
+        };
+        
+        // Mobile window positioning - center on small screens
+        function centerWindowOnMobile(id) {
+            if (window.innerWidth <= 768) {
+                const win = document.getElementById(id);
+                if (win) {
+                    win.style.left = '2.5vw';
+                    win.style.top = '10vh';
+                }
+            }
+        }
+        
+        // Override openWindow to center on mobile
+        const _origOpenWindow = openWindow;
+        openWindow = function(id) {
+            _origOpenWindow(id);
+            centerWindowOnMobile(id);
+        };
+
+        console.log('🐴 HorseOS v2.0 - Super Retro Edition loaded!');
         console.log('Contemplation is mandatory.');
         console.log('Type openWindow("welcome") to read the manual.');
     </script>
