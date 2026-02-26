@@ -263,6 +263,76 @@
             font-family: "MS Sans Serif", sans-serif;
         }
         
+        /* README wiggle animation for first-time tutorial */
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+        
+        .readme-wiggle {
+            animation: wiggle 0.5s ease-in-out infinite;
+            border: 2px dotted yellow !important;
+            background: rgba(255,255,0,0.3) !important;
+        }
+        
+        .readme-wiggle .icon-img {
+            animation: wiggle 0.5s ease-in-out infinite;
+            font-size: 40px !important;
+        }
+        
+        /* First-time overlay blocker */
+        .tutorial-blocker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            z-index: 9990;
+            display: none;
+        }
+        
+        .tutorial-blocker.active {
+            display: block;
+        }
+        
+        /* Notification pointing to README */
+        .readme-notification {
+            position: absolute;
+            top: 40px;
+            left: 85px;
+            background: #ffffcc;
+            border: 2px solid #cc0000;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            z-index: 9995;
+            display: none;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+        
+        .readme-notification::before {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 5px solid transparent;
+            border-right-color: #cc0000;
+        }
+        
+        .readme-notification.show {
+            display: block;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
         .horse-content {
             text-align: center;
             padding: 20px;
@@ -974,6 +1044,14 @@ P.S. - If you read this far, you definitely need a Horse Moment.
 
         <!-- Horse Blocker Overlay -->
         <div class="horse-blocker" id="horseBlocker"></div>
+        
+        <!-- Tutorial Blocker (for first-time experience) -->
+        <div class="tutorial-blocker" id="tutorialBlocker"></div>
+        
+        <!-- README Notification Arrow -->
+        <div class="readme-notification" id="readmeNotification">
+            👆 Click here!
+        </div>
 
         <!-- Mouse Leave Popup -->
         <div class="horse-leave-popup" id="horseLeavePopup">
@@ -1286,22 +1364,43 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             setTimeout(() => n.classList.remove('show'), 3000);
         }
 
-        // First time visitor check
+        // First time visitor check - NEW FLOW
         const hasVisited = localStorage.getItem('horseos_visited');
+        let tutorialMode = false;
         
         if (!hasVisited) {
-            // First time - show welcome then immediately trap them
+            // FIRST TIME EXPERIENCE
+            tutorialMode = true;
+            
             setTimeout(() => {
+                // Show welcome popup with longer duration
+                document.getElementById('firstTimePopup').innerHTML = `
+                    <div class="leave-emoji">🐎</div>
+                    <div class="leave-text">Welcome to HorseOS!</div>
+                    <p style="margin:10px 0;font-size:12px">Your journey to digital wellness begins...</p>
+                    <button onclick="startTutorial()" style="margin-top:10px">Click to Continue 👉</button>
+                `;
                 document.getElementById('firstTimePopup').classList.add('show');
-                showNotification('🐴 Welcome to HorseOS! A Horse Moment has been scheduled.');
                 
-                // HAHA you can't even read the readme first!
-                setTimeout(() => {
-                    document.getElementById('firstTimePopup').classList.remove('show');
-                    openHorse();
-                    localStorage.setItem('horseos_visited', 'true');
-                }, 2500);
+                // Enable tutorial blocker (prevents clicking desktop)
+                document.getElementById('tutorialBlocker').classList.add('active');
+                
+                // Block all desktop icon clicks during tutorial
+                document.querySelectorAll('.desktop-icon').forEach(icon => {
+                    icon.dataset.originalOnclick = icon.onclick;
+                    icon.onclick = function(e) {
+                        if (tutorialMode) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            // Wiggle the README icon
+                            wiggleReadme();
+                            return false;
+                        }
+                    };
+                });
+                
             }, 1000);
+            
         } else {
             // Returning visitor - normal flow
             setTimeout(() => {
@@ -1309,6 +1408,73 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 showNotification('🐴 Welcome back! Time to contemplate.');
             }, 1500);
         }
+        
+        function startTutorial() {
+            // Close welcome popup
+            document.getElementById('firstTimePopup').classList.remove('show');
+            
+            // Show README notification pointing to it
+            const readmeIcon = document.querySelector('.desktop-icon[onclick*="welcome"]');
+            if (readmeIcon) {
+                readmeIcon.classList.add('readme-wiggle');
+                document.getElementById('readmeNotification').classList.add('show');
+                
+                // Position notification near README
+                const rect = readmeIcon.getBoundingClientRect();
+                document.getElementById('readmeNotification').style.top = (rect.top + 20) + 'px';
+                document.getElementById('readmeNotification').style.left = (rect.right + 10) + 'px';
+            }
+            
+            // After 8 seconds, auto-open Horse Moment (even if they didn't click README)
+            setTimeout(() => {
+                endTutorial();
+                openHorse();
+                localStorage.setItem('horseos_visited', 'true');
+            }, 8000);
+        }
+        
+        function wiggleReadme() {
+            const readmeIcon = document.querySelector('.desktop-icon[onclick*="welcome"]');
+            if (readmeIcon) {
+                readmeIcon.classList.remove('readme-wiggle');
+                void readmeIcon.offsetWidth; // Force reflow
+                readmeIcon.classList.add('readme-wiggle');
+            }
+        }
+        
+        function endTutorial() {
+            tutorialMode = false;
+            document.getElementById('tutorialBlocker').classList.remove('active');
+            document.getElementById('readmeNotification').classList.remove('show');
+            
+            // Remove wiggle from README
+            const readmeIcon = document.querySelector('.desktop-icon[onclick*="welcome"]');
+            if (readmeIcon) {
+                readmeIcon.classList.remove('readme-wiggle');
+            }
+            
+            // Restore original onclick handlers
+            document.querySelectorAll('.desktop-icon').forEach(icon => {
+                if (icon.dataset.originalOnclick) {
+                    // Restore by re-setting the onclick from the HTML attribute
+                    const onclickStr = icon.getAttribute('onclick');
+                    if (onclickStr) {
+                        icon.onclick = new Function('event', onclickStr);
+                    }
+                }
+            });
+        }
+        
+        // Override welcome window open to end tutorial
+        const originalOpenWindow = openWindow;
+        openWindow = function(id) {
+            if (id === 'welcome' && tutorialMode) {
+                endTutorial();
+                // Clear the 8-second timeout since they clicked README
+                // (We can't actually clear it, but tutorialMode prevents it from doing harm)
+            }
+            originalOpenWindow(id);
+        };
 
         // Horse Blocker - prevent clicking other things
         function enableHorseBlocker() {
