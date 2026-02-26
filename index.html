@@ -340,12 +340,17 @@
         
         .horse-ascii {
             font-family: "Courier New", monospace;
-            font-size: 14px;
-            line-height: 1.2;
-            color: #8B4513;
+            font-size: 10px;
+            line-height: 1.1;
+            color: #5D4037;
             margin: 15px 0;
             white-space: pre;
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+            background: #f5f5f5;
+            padding: 10px;
+            border: 1px inset #c0c0c0;
+            display: inline-block;
+            text-align: left;
         }
         
         .horse-message {
@@ -796,10 +801,10 @@
                 <span>File</span><span>Edit</span><span>View</span><span>Help</span>
             </div>
             <div class="window-content explorer-content">
-                <div class="folder-item"><span class="folder-icon">💾</span><span>3½ Floppy (A:)</span></div>
-                <div class="folder-item"><span class="folder-icon">💿</span><span>Local Disk (C:)</span></div>
-                <div class="folder-item"><span class="folder-icon">🌐</span><span>Control Panel</span></div>
-                <div class="folder-item" onclick="openHorse()" style="cursor:pointer"><span class="folder-icon">🐴</span><span>HorseOS System</span></div>
+                <div class="folder-item" onclick="openWindow('mysteriousHorse')" style="cursor:pointer"><span class="folder-icon">💾</span><span>3½ Floppy (A:)</span></div>
+                <div class="folder-item" onclick="openWindow('mysteriousHorse')" style="cursor:pointer"><span class="folder-icon">💿</span><span>Local Disk (C:)</span></div>
+                <div class="folder-item" onclick="openWindow('mysteriousHorse')" style="cursor:pointer"><span class="folder-icon">🌐</span><span>Control Panel</span></div>
+                <div class="folder-item" onclick="openHorse()" style="cursor:pointer"><span class="folder-icon">🐎</span><span>HorseOS System</span></div>
             </div>
             <div class="window-status">4 object(s)</div>
         </div>
@@ -1067,6 +1072,37 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             <div class="leave-emoji">🐎</div>
             <div class="leave-text" id="leaveText">Where do you think you're going?</div>
             <button onclick="dismissLeavePopup()">I was just stretching...</button>
+        </div>
+
+        <!-- Mysterious Horse Popup -->
+        <div class="window" id="mysteriousHorse" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;z-index:9999">
+            <div class="window-title" style="background:linear-gradient(90deg,#2d1b4e,#4a148c)">
+                <span>❓ ???</span>
+                <div class="window-buttons">
+                    <button class="win-btn" onclick="closeWindow('mysteriousHorse')">×</button>
+                </div>
+            </div>
+            <div class="window-content" style="text-align:center;padding:20px;background:#1a1a2e;color:#fff">
+                <div style="font-size:12px;line-height:1.2;margin:10px 0;white-space:pre;font-family:monospace;color:#888">
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣶⣶⣶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⣀⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣤⡀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⣀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣀⠀⠀⠀
+    ⠀⠀⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡀⠀
+    ⠀⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡀
+    ⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷
+    ⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+    ⢾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟
+    ⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀
+    ⠀⠙⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀
+    ⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀
+    ⠀⠀⠀⠀⠙⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠋⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠉⠛⠻⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠟⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀
+                </div>
+                <p style="font-style:italic;color:#888;margin:15px 0">"The horse sees all. The horse knows all."</p>
+                <p style="font-size:10px;color:#666">You weren't supposed to find this.</p>
+                <button class="btn-98" onclick="closeWindow('mysteriousHorse')" style="margin-top:15px">Forget what you saw</button>
+            </div>
         </div>
 
         <!-- First Time Welcome Popup -->
