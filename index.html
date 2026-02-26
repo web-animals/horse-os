@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HorseOS - Scheduled Horse Moments</title>
+    <style>
+        :root{--win-gray:#c0c0c0;--win-dark:#808080;--win-light:#fff;--win-black:#000;--win-blue:#000080;--win-teal:#008080}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:"MS Sans Serif",Tahoma,sans-serif;font-size:11px;background:var(--win-teal);overflow:hidden;user-select:none}
+        .desktop{width:100vw;height:100vh;background:var(--win-teal);position:relative}
+        .desktop-icons{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:20px;z-index:1}
+        .desktop-icon{display:flex;flex-direction:column;align-items:center;width:75px;cursor:pointer;padding:4px}
+        .desktop-icon:hover{background:rgba(0,0,128,.3)}.desktop-icon:hover .icon-label{background:var(--win-blue);color:#fff}
+        .icon-img{font-size:32px;margin-bottom:4px}.icon-label{text-align:center;color:#fff;font-size:11px;text-shadow:1px 1px 0 #000;padding:1px 4px}
+        .window{position:absolute;background:var(--win-gray);border:2px solid;border-color:var(--win-light) var(--win-dark) var(--win-dark) var(--win-light);box-shadow:2px 2px 0 rgba(0,0,0,.3);min-width:300px;z-index:10}
+        .window-title{background:linear-gradient(90deg,#0a246a,#a6caf0);color:#fff;padding:2px 4px;display:flex;justify-content:space-between;align-items:center;font-weight:bold;font-size:11px}
+        .window-title.critical{background:linear-gradient(90deg,#800000,red)}
+        .window-buttons{display:flex;gap:2px}.win-btn{width:16px;height:14px;background:var(--win-gray);border:1px solid;border-color:var(--win-light) #000 #000 var(--win-light);font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .win-btn.disabled{color:var(--win-dark);cursor:not-allowed}.window-content{padding:8px;background:var(--win-gray)}
+        .modal-window{position:fixed!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%);width:90vw;max-width:500px;z-index:1000}
+        .horse-moment{text-align:center;padding:20px}.horse-container{margin:20px 0;position:relative}
+        .horse-3d{font-size:100px;animation:horseFloat 3s ease-in-out infinite;display:inline-block}
+        @keyframes horseFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-20px) rotate(5deg)}}
+        .horse-shadow{width:80px;height:15px;background:rgba(0,0,0,.2);border-radius:50%;margin:10px auto 0;animation:shadowPulse 3s ease-in-out infinite}
+        @keyframes shadowPulse{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(.8);opacity:.1}}
+        .horse-text h2{font-size:14px;font-weight:bold;margin-bottom:12px;color:var(--win-black)}
+        .horse-text p{font-size:12px;margin-bottom:8px;line-height:1.4}.horse-text .serious{font-weight:bold;color:#800000;font-size:13px}
+        .horse-text .warning{color:red;font-weight:bold;background:#ffc;padding:4px 8px;display:inline-block;margin-top:8px}
+        .contemplation-timer{font-size:18px;font-weight:bold;margin:16px 0;color:var(--win-blue)}
+        .progress-bar{width:100%;height:20px;background:var(--win-dark);border:2px inset var(--win-gray);margin:12px 0}
+        .progress-fill{height:100%;background:linear-gradient(90deg,#000080,#1084d0);width:0%;transition:width 1s linear}
+        .reflection-prompt{font-style:italic;font-size:14px;color:#000080;background:#f0f0f0;padding:12px;margin:16px 0;border:1px dashed var(--win-dark)}
+        .horse-buttons{margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+        .horse-btn{padding:6px 20px;background:var(--win-gray);border:2px solid;border-color:var(--win-light) #000 #000 var(--win-light);font-size:11px;cursor:pointer}
+        .horse-btn.disabled{color:var(--win-dark);cursor:not-allowed}.toolbar{display:flex;gap:4px;margin-bottom:8px;border-bottom:1px solid var(--win-dark);padding-bottom:4px}
+        .toolbar button{background:var(--win-gray);border:1px solid;border-color:var(--win-light) var(--win-dark) var(--win-dark) var(--win-light);padding:2px 8px;font-size:11px;cursor:pointer}
+        .explorer{background:#fff;border:2px inset var(--win-gray);padding:4px;min-height:150px}
+        .folder-item{display:flex;align-items:center;gap:8px;padding:4px;cursor:pointer}
+        .folder-item:hover{background:#000080;color:#fff}.folder-icon{font-size:20px}
+        .recycle-content{background:#fff;border:2px inset var(--win-gray);padding:8px;min-height:150px}
+        .trash-item{display:flex;align-items:center;gap:8px;padding:4px;border-bottom:1px dotted var(--win-dark)}
+        .trash-size{margin-left:auto;color:var(--win-dark);font-size:10px}.empty-trash{margin-top:16px;text-align:center}
+        .ie-toolbar{display:flex;gap:4px;margin-bottom:8px;padding:4px;background:var(--win-gray);border-bottom:1px solid var(--win-dark)}
+        .ie-toolbar button{width:24px;height:22px;background:var(--win-gray);border:1px solid;border-color:var(--win-light) var(--win-dark) var(--win-dark) var(--win-light);cursor:pointer}
+        .ie-toolbar input{flex:1;border:2px inset var(--win-gray);padding:2px 4px;font-size:11px}
+        .ie-content{background:#fff;border:2px inset var(--win-gray);padding:16px;min-height:300px}
+        .ie-content h1{font-size:18px;margin-bottom:16px;color:var(--win-blue)}
+        .fact-box{background:#f0f0f0;border:1px solid var(--win-dark);padding:16px;margin:16px 0;font-size:14px}
+        .horse-stats{margin-top:24px;border-top:2px solid var(--win-dark);padding-top:16px}
+        .stat-item{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dotted var(--win-dark)}
+        .notepad-content{background:#fff}.notepad-content textarea{width:100%;height:300px;border:none;font-family:"Courier New",monospace;font-size:12px;resize:none;outline:none;padding:4px}
+        .minesweeper-content{background:var(--win-gray);padding:8px}.minesweeper-header{display:flex;justify-content:space-between;align-items:center;padding:4px 8px;border:2px inset var(--win-gray);margin-bottom:8px;background:var(--win-gray)}
+        .mine-counter,.timer{background:#000;color:red;font-family:"Courier New",monospace;font-size:20px;padding:2px 8px;min-width:50px;text-align:center}
+        .reset-btn{font-size:20px;padding:2px 8px;background:var(--win-gray);border:2px solid;border-color:var(--win-light) #000 #000 var(--win-light);cursor:pointer}
+        .reset-btn:active{border-color:#000 var(--win-light) var(--win-light) #000}
+        .minesweeper-grid{display:grid;grid-template-columns:repeat(8,25px);grid-template-rows:repeat(8,25px);gap:1px;background:var(--win-dark);border:3px inset var(--win-gray);padding:2px;width:fit-content;margin:0 auto}
+        .mine-cell{width:25px;height:25px;background:var(--win-gray);border:2px solid;border-color:var(--win-light) #000 #000 var(--win-light);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;user-select:none}
+        .mine-cell.revealed{border:1px solid var(--win-dark);background:#c0c0c0;cursor:default}.mine-cell.mine{background:red}
+        .mine-cell.flagged::after{content:"🚩"}.mine-cell.number-1{color:blue}.mine-cell.number-2{color:green}.mine-cell.number-3{color:red}.mine-cell.number-4{color:#00008b}.mine-cell.number-5{color:maroon}.mine-cell.number-6{color:cyan}.mine-cell.number-7{color:#000}.mine-cell.number-8{color:gray}
+        .calculator-content{background:var(--win-gray);padding:8px;width:200px}.calc-display{background:#fff;border:2px inset var(--win-gray);padding:8px;font-size:20px;text-align:right;margin-bottom:8px;font-family:"Courier New",monospace;overflow:hidden}
+        .calc-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.calc-buttons button{padding:8px;font-size:14px;background:var(--win-gray);border:2px solid;border-color:var(--win-light) #000 #000 var(--win-light);cursor:pointer}
+        .calc-buttons button:active{border-color:#000 var(--win-light) var(--win-light) #000}.calc-buttons .calc-equals{grid-row:span 2;background:#008080;color:#fff}.calc-buttons .calc-zero{grid-column:span 2}
+        .taskbar{position:fixed;bottom:0;left:0;right:0;height:28px;background:var(--win-gray);border-top:2px solid var(--win-light);display:flex;align-items:center;padding:2px;z-index:1000}
+        .start-btn{display:flex;align-items:center;gap:4px;padding:2px 6px;background:var(--win-gray);border:2px solid;border-color:var(--win-light) #000 #000 var(--win-light);font-weight:bold;font-size:11px;cursor:pointer}
+        .start-btn:active{border-color:#000 var(--win-light) var(--win-light) #000}.start-btn span{font-size:14px}
+        .taskbar-divider{width:2px;height:22px;border-left:1px solid var(--win-dark);border-right:1px solid var(--win-light);margin:0 4px}
+        .taskbar-items{flex:1;display:flex;gap:2px}.taskbar-item{display:flex;align-items:center;gap:4px;padding:2px 8px;background:var(--win-gray);border:2px solid;border-color:var(--win-light) var(--win-dark) var(--win-dark) var(--win-light);font-size:11px;cursor:pointer;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .taskbar-item.active{border-color:var(--win-dark) var(--win-light) var(--win-light) var(--win-dark);background:#d4d0c8}
+        .clock{margin-left:auto;padding:2px 8px;border:2px inset var(--win-gray);font-size:11px;min-width:60px;text-align:center}
+        .start-menu{position:fixed;bottom:28px;left:0;width:200px;background:var(--win-gray);border:2px solid;border-color:var(--win-light) #000 #000 var(--win-light);z-index:1001}
+        .start-header{background:linear-gradient(90deg,#0a246a,#a6caf0);padding:8px;display:flex;align-items:center;gap:8px}.start-user{font-size:32px;border:2px solid var(--win-light);border-radius:4px;padding:2px}
+        .start-username{color:#fff;font-weight:bold;font-size:14px}.start-items{padding:4px}.start-item{display:flex;align-items:center;gap:8px;padding:6px 8px;cursor:pointer}
+        .start-item:hover{background:var(--win-blue);color:#fff}.start-item span{font-size:16px}.start-separator{height:2px;border-top:1px solid var(--win-dark);border-bottom:1px solid var(--win-light);margin:4px 0}
+        .start-item.shutdown:hover{background:#800000}.shutdown-screen{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--win-teal);display:none;align-items:center;justify-content:center;z-index:9999}
+        .shutdown-content{text-align:center;color:#fff}.shutdown-horse{font-size:100px;margin-bottom:20px;animation:bounce 2s infinite}
+        @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+        .shutdown-content p{font-size:24px;margin-bottom:10px}.shutdown-content .small{font-size:14px;opacity:.8}
+        .startup-screen{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9999}
+        .startup-content{text-align:center;color:#c0c0c0}.startup-logo{font-size:80px;margin-bottom:20px}
+        .startup-text h1{font-size:32px;font-weight:normal;margin-bottom:10px;color:#fff}.startup-text p{font-size:14px;margin-bottom:30px}
+        .startup-bar{width:300px;height:20px;border:2px solid var(--win-gray);margin:0 auto;overflow:hidden}
+        .startup-fill{height:100%;background:linear-gradient(90deg,#000080,#1084d0);width:0%;animation:startupLoad 3s ease-out forwards}
+        @keyframes startupLoad{0%{width:0%}100%{width:100%}}@media(max-width:768px){.desktop-icons{top:5px;left:5px}.desktop-icon{width:60px}.icon-img{font-size:24px}.modal-window{width:95vw;max-width:95vw}.horse-3d{font-size:80px}}
+    </style>
+</head>
+<body>
+    <div class="desktop">
+        <div class="desktop-icons">
+            <div class="desktop-icon" onclick="openWindow('myComputer')"><div class="icon-img">💻</div><div class="icon-label">My Computer</div></div>
+            <div class="desktop-icon" onclick="openWindow('horseMoment')"><div class="icon-img">🐴</div><div class="icon-label">Scheduled Horse<br>Moment.exe</div></div>
+            <div class="desktop-icon" onclick="openWindow('recycleBin')"><div class="icon-img">🗑️</div><div class="icon-label">Recycle Bin</div></div>
+            <div class="desktop-icon" onclick="openWindow('internet')"><div class="icon-img">🌐</div><div class="icon-label">Internet<br>Explorer</div></div>
+            <div class="desktop-icon" onclick="openWindow('notepad')"><div class="icon-img">📝</div><div class="icon-label">Horse Facts.txt</div></div>
+            <div class="desktop-icon" onclick="openWindow('minesweeper')"><div class="icon-img">💣</div><div class="icon-label">Minesweeper</div></div>
+            <div class="desktop-icon" onclick="openWindow('calculator')"><div class="icon-img">🧮</div><div class="icon-label">Calculator</div></div>
+        </div>
+
+        <div class="window modal-window" id="horseMoment" style="display:none">
+            <div class="window-title critical"><span>🐴 Scheduled_Horse_Moment.exe</span><div class="window-buttons"><button class="win-btn close disabled">×</button></div></div>
+            <div class="window-content horse-moment">
+                <div class="horse-container"><div class="horse-3d">🐴</div><div class="horse-shadow"></div></div>
+                <div class="horse-text"><h2>Please stand by for a scheduled Horse Moment.</h2><p>You will now contemplate and reflect.</p><p class="serious">This is a time of seriousness.</p><p class="small">You currently have <strong>Scheduled Horse Moments</strong> turned on.</p><p class="warning">⚠️ You cannot change this in settings.</p></div>
+                <div class="contemplation-timer">Time remaining: <span id="timer">60</span> seconds</div>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <div class="reflection-prompt" id="reflectionPrompt">"What would you do if you were a horse with WiFi?"</div>
+                <div class="horse-buttons"><button class="horse-btn" id="contemplateBtn" onclick="contemplate()">I am Contemplating</button><button class="horse-btn disabled" disabled>Settings...</button></div>
+            </div>
+        </div>
+
+        <div class="window" id="myComputer" style="display:none;top:50px;left:50px"><div class="window-title"><span>My Computer</span><div class="window-buttons"><button class="win-btn minimize">_</button><button class="win-btn maximize">□</button><button class="win-btn close" onclick="closeWindow('myComputer')">×</button></div></div><div class="window-content"><div class="toolbar"><button>File</button><button>Edit</button><button>View</button><button>Help</button></div><div class="explorer"><div class="folder-item"><span class="folder-icon">💾</span><span>3½ Floppy (A:)</span></div><div class="folder-item"><span class="folder-icon">💿</span><span>Local Disk (C:)</span></div><div class="folder-item"><span class="folder-icon">🌐</span><span>Control Panel</span></div><div class="folder-item"><span class="folder-icon">🐴</span><span>HorseOS System</span></div></div><div class="window-status">4 object(s)</div></div></div>
+
+        <div class="window" id="recycleBin" style="display:none;top:100px;left:100px"><div class="window-title"><span>Recycle Bin</span><div class="window-buttons"><button class="win-btn minimize">_</button><button class="win-btn maximize">□</button><button class="win-btn close" onclick="closeWindow('recycleBin')">×</button></div></div><div class="window-content"><div class="recycle-content"><div class="trash-item"><span>🗑️</span><span>Your Screen Time Guilt</span><span class="trash-size">2.4 MB</span></div><div class="trash-item"><span>🗑️</span><span>Doomscrolling Addiction</span><span class="trash-size">847 KB</span></div><div class="trash-item"><span>🗑️</span><span>Productivity Anxiety</span><span class="trash-size">1.1 MB</span></div><div class="empty-trash"><button onclick="emptyTrash()">Empty Recycle Bin</button></div></div></div></div>
+
+        <div class="window" id="internet" style="display:none;top:80px;left:80px;width:600px"><div class="window-title"><span>Internet Explorer - Horse Facts</span><div class="window-buttons"><button class="win-btn minimize">_</button><button class="win-btn maximize">□</button><button class="win-btn close" onclick="closeWindow('internet')">×</button></div></div><div class="window-content"><div class="ie-toolbar"><button>←</button><button>→</button><button>🔄</button><input type="text" value="http://www.horsefacts.com" readonly></div><div class="ie-content"><h1>🐴 Daily Horse Fact</h1><div class="fact-box"><p id="horseFact">Loading horse wisdom...</p></div><button onclick="newFact()">Get New Fact</button><div class="horse-stats"><h3>Global Horse Moments</h3><div class="stat-item"><span>Total Contemplations:</span><span id="totalContemplations">42,847</span></div><div class="stat-item"><span>Horses Online:</span><span>1,337</span></div><div class="stat-item"><span>Seriousness Level:</span><span>Maximum</span></div></div></div></div></div>
+
+        <div class="window" id="notepad" style="display:none;top:120px;left:120px"><div class="window-title"><span>Horse Facts.txt - Notepad</span><div class="window-buttons"><button class="win-btn minimize">_</button><button class="win-btn maximize">□</button><button class="win-btn close" onclick="closeWindow('notepad')">×</button></div></div><div class="window-content notepad-content"><textarea readonly>HORSE FACTS - READ ONLY
+==================
+
+1. Horses can sleep standing up
+2. A horse's heart weighs 9-10 pounds
+3. Horses have 205 bones
+4. The average horse lives 25-30 years
+5. Horses can see nearly 360 degrees
+6. A horse's teeth take up more space
+   than its brain
+7. Horses cannot vomit
+8. The fastest recorded horse speed:
+   55 mph
+9. Horses have excellent hearing
+10. There are over 300 breeds of horses
+
+Remember: Contemplation is mandatory.
+This is not a suggestion.
+
+- HorseOS System</textarea></div></div>
+
+        <div class="window" id="minesweeper" style="display:none;top:150px;left:150px"><div class="window-title"><span>💣 Minesweeper</span><div class="window-buttons"><button class="win-btn minimize">_</button><button class="win-btn maximize">□</button><button class="win-btn close" onclick="closeWindow('minesweeper')">×</button></div></div><div class="window-content minesweeper-content"><div class="minesweeper-header"><div class="mine-counter" id="mineCounter">010</div><button class="reset-btn" id="resetBtn" onclick="resetMinesweeper()">😊</button><div class="timer" id="mineTimer">000</div></div><div class="minesweeper-grid" id="minesweeperGrid"></div></div></div>
+
+        <div class="window" id="calculator" style="display:none;top:180px;left:180px"><div class="window-title"><span>🧮 Calculator</span><div class="window-buttons"><button class="win-btn minimize">_</button><button class="win-btn maximize">□</button><button class="win-btn close" onclick="closeWindow('calculator')">×</button></div></div><div class="window-content calculator-content"><div class="calc-display" id="calcDisplay">0</div><div class="calc-buttons"><button onclick="calcClear()">C</button><button onclick="calcOperator('/')">/</button><button onclick="calcOperator('*')">×</button><button onclick="calcBackspace()">←</button><button onclick="calcNumber('7')">7</button><button onclick="calcNumber('8')">8</button><button onclick="calcNumber('9')">9</button><button onclick="calcOperator('-')">-</button><button onclick="calcNumber('4')">4</button><button onclick="calcNumber('5')">5</button><button onclick="calcNumber('6')">6</button><button onclick="calcOperator('+')">+</button><button onclick="calcNumber('1')">1</button><button onclick="calcNumber('2')">2</button><button onclick="calcNumber('3')">3</button><button onclick="calcEquals()" class="calc-equals">=</button><button onclick="calcNumber('0')" class="calc-zero">0</button><button onclick="calcDecimal()">.</button></div></div></div>
+
+        <div class="taskbar"><button class="start-btn" onclick="toggleStartMenu()"><span>🐴</span> Start</button><div class="taskbar-divider"></div><div class="taskbar-items"><div class="taskbar-item active" onclick="openWindow('horseMoment')"><span>🐴</span> Scheduled Horse Moment</div></div><div class="clock" id="clock">--:--</div></div>
+
+        <div class="start-menu" id="startMenu" style="display:none"><div class="start-header"><div class="start-user">🐴</div><div class="start-username">Horse User</div></div><div class="start-items"><div class="start-item" onclick="openWindow('internet');toggleStartMenu()"><span>🌐</span> Internet Explorer</div><div class="start-item" onclick="openWindow('notepad');toggleStartMenu()"><span>📝</span> Notepad</div><div class="start-item" onclick="openWindow('minesweeper');toggleStartMenu()"><span>💣</span> Minesweeper</div><div class="start-item" onclick="openWindow('calculator');toggleStartMenu()"><span>🧮</span> Calculator</div><div class="start-item" onclick="openWindow('myComputer');toggleStartMenu()"><span>💻</span> My Computer</div><div class="start-separator"></div><div class="start-item" onclick="openWindow('horseMoment');toggleStartMenu()"><span>🐴</span> Scheduled Horse Moment</div><div class="start-separator"></div><div class="start-item shutdown" onclick="shutdown()"><span>⏻</span> Shut Down...</div></div></div>
+
+        <div class="shutdown-screen" id="shutdownScreen"><div class="shutdown-content"><div class="shutdown-horse">🐴</div><p>It is now safe to contemplate.</p><p class="small">Please reflect on your session.</p></div></div>
+
+        <div class="startup-screen" id="startupScreen"><div class="startup-content"><div class="startup-logo">🐴</div><div class="startup-text"><h1>HorseOS</h1><p>Starting Horse Moments...</p></div><div class="startup-bar"><div class="startup-fill"></div></div></div></div>
+    </div>
+
+    <script>
+        const contemplationPrompts=["What would you do if you were a horse with WiFi?","Reflect on your last email. Was it necessary?","The horse judges your browser tabs. Explain yourself.","If horses could code, what would they build?","Contemplate the last time you touched grass.","The horse asks: Have you hydrated today?","What is your favorite ponytail and why?","Reflect on your screen time. The horse is concerned.","If you were a horse, what would your LinkedIn headline be?","The horse wants to know: When did you last stretch?","Contemplate the concept of stable employment.","What would a horse post on Instagram?","The horse asks: Are you doomscrolling again?","Reflect on your password choices. The horse sees all.","If horses had meetings, how long would they be?","The horse judges your chair posture. Sit up straight.","Contemplate why you're reading this instead of working.","What is the horsepower of your thoughts right now?","The horse wants to know your 5-year plan.","Reflect on the last time you said 'neigh' to something."];
+        const horseFacts=["Horses can sleep both lying down and standing up.","A horse's heart weighs approximately 9 to 10 pounds.","Horses have 205 bones in their skeleton.","The average lifespan of a horse is 25-30 years.","Horses can see nearly 360 degrees at once.","A horse's teeth take up more space than its brain.","Horses cannot vomit due to their digestive system anatomy.","The fastest recorded speed of a horse was 55 mph.","Horses have better hearing than dogs.","There are over 300 different breeds of horses.","Horses can run within hours of being born.","A horse's height is measured in 'hands' (4 inches each).","Horses have the largest eyes of any land mammal.","The oldest horse on record lived to be 62 years old.","Horses can recognize themselves in mirrors.","A horse produces approximately 10 gallons of saliva per day.","Horses have a great memory and can remember people.","The Przewalski's horse is the only truly wild horse species.","Horses use their ears, eyes, and nostrils to express mood.","A horse's gallop has a moment where all four feet are off the ground."];
+        let currentTimer=60,timerInterval=null,isContemplating=false;
+        function openWindow(windowId){const window=document.getElementById(windowId);if(window){window.style.display='block';window.style.zIndex=getHighestZIndex()+1;if(windowId==='horseMoment')startHorseMoment();if(windowId==='minesweeper')initMinesweeper()}}
+        function closeWindow(windowId){const window=document.getElementById(windowId);if(window){window.style.display='none';if(windowId==='horseMoment'&&timerInterval){clearInterval(timerInterval);timerInterval=null}}}
+        function getHighestZIndex(){const windows=document.querySelectorAll('.window');let maxZ=10;windows.forEach(w=>{const z=parseInt(w.style.zIndex)||10;if(z>maxZ)maxZ=z});return maxZ}
+        function toggleStartMenu(){const menu=document.getElementById('startMenu');menu.style.display=menu.style.display==='none'?'block':'none'}
+        document.addEventListener('click',e=>{const startMenu=document.getElementById('startMenu'),startBtn=document.querySelector('.start-btn');if(!startMenu.contains(e.target)&&!startBtn.contains(e.target))startMenu.style.display='none'});
+        function startHorseMoment(){currentTimer=60;isContemplating=false;document.getElementById('reflectionPrompt').textContent='"'+contemplationPrompts[Math.floor(Math.random()*contemplationPrompts.length)]+'"';updateTimerDisplay();document.getElementById('progressFill').style.width='0%';const btn=document.getElementById('contemplateBtn');btn.textContent='I am Contemplating';btn.disabled=false;btn.classList.remove('disabled');if(timerInterval)clearInterval(timerInterval);timerInterval=setInterval(()=>{currentTimer--;updateTimerDisplay();document.getElementById('progressFill').style.width=((60-currentTimer)/60*100)+'%';if(currentTimer<=0){clearInterval(timerInterval);timerInterval=null;btn.textContent='✓ Contemplation Complete';incrementContemplationCount();document.querySelector('.horse-3d').textContent='🦄';setTimeout(()=>{document.querySelector('.horse-3d').textContent='🐴'},2000)}},1000)}
+        function updateTimerDisplay(){document.getElementById('timer').textContent=currentTimer}
+        function contemplate(){isContemplating=true;const btn=document.getElementById('contemplateBtn');btn.textContent='Contemplating...';btn.disabled=true;btn.classList.add('disabled');document.querySelector('.horse-3d').style.animation='horseFloat 0.5s ease-in-out infinite'}
+        function newFact(){const factEl=document.getElementById('horseFact'),randomFact=horseFacts[Math.floor(Math.random()*horseFacts.length)];factEl.textContent='';let i=0;const typeInterval=setInterval(()=>{factEl.textContent+=randomFact.charAt(i);i++;if(i>=randomFact.length)clearInterval(typeInterval)},30)}
+        function incrementContemplationCount(){const countEl=document.getElementById('totalContemplations'),current=parseInt(countEl.textContent.replace(',','')),newCount=current+1;countEl.textContent=newCount.toLocaleString()}
+        function emptyTrash(){document.querySelectorAll('.trash-item').forEach(item=>{item.style.opacity='0';item.style.transition='opacity 0.5s'});setTimeout(()=>{document.querySelector('.recycle-content').innerHTML='<div style="text-align:center;padding:40px;color:#808080"><div style="font-size:48px;margin-bottom:16px">🗑️</div><p>The Recycle Bin is empty.</p><p style="font-size:11px;margin-top:8px">Your guilt has been successfully deleted.</p></div>'},500)}
+        function shutdown(){document.getElementById('shutdownScreen').style.display='flex';document.getElementById('startMenu').style.display='none'}
+        function updateClock(){const now=new Date(),hours=now.getHours(),minutes=now.getMinutes().toString().padStart(2,'0'),ampm=hours>=12?'PM':'AM',displayHours=hours%12||12;document.getElementById('clock').textContent=displayHours+':'+minutes+' '+ampm}
+        window.addEventListener('DOMContentLoaded',()=>{updateClock();setInterval(updateClock,1000);setTimeout(()=>{document.getElementById('startupScreen').style.opacity='0';document.getElementById('startupScreen').style.transition='opacity 0.5s';setTimeout(()=>{document.getElementById('startupScreen').style.display='none';openWindow('horseMoment')},500)},3000);setTimeout(newFact,4000)});
+        document.addEventListener('contextmenu',e=>{if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA')e.preventDefault()});
+        let mineGrid=[],mineRevealed=[],mineFlags=[],mineGameOver=false,mineTimer=0,mineTimerInterval=null;const MINE_ROWS=8,MINE_COLS=8,MINE_COUNT=10;
+        function initMinesweeper(){const grid=document.getElementById('minesweeperGrid');grid.innerHTML='';mineGrid=[];mineRevealed=[];mineFlags=[];mineGameOver=false;mineTimer=0;if(mineTimerInterval){clearInterval(mineTimerInterval);mineTimerInterval=null}for(let r=0;r<MINE_ROWS;r++){mineGrid[r]=[];mineRevealed[r]=[];mineFlags[r]=[];for(let c=0;c<MINE_COLS;c++){mineGrid[r][c]=0;mineRevealed[r][c]=false;mineFlags[r][c]=false;const cell=document.createElement('div');cell.className='mine-cell';cell.dataset.row=r;cell.dataset.col=c;cell.addEventListener('click',()=>clickMineCell(r,c));cell.addEventListener('contextmenu',e=>{e.preventDefault();rightClickMineCell(r,c)});grid.appendChild(cell)}}let minesPlaced=0;while(minesPlaced<MINE_COUNT){const r=Math.floor(Math.random()*MINE_ROWS),c=Math.floor(Math.random()*MINE_COLS);if(mineGrid[r][c]!==-1){mineGrid[r][c]=-1;minesPlaced++}}for(let r=0;r<MINE_ROWS;r++)for(let c=0;c<MINE_COLS;c++)if(mineGrid[r][c]!==-1)mineGrid[r][c]=countAdjacentMines(r,c);updateMineCounter();document.getElementById('mineTimer').textContent='000';document.getElementById('resetBtn').textContent='😊'}
+        function countAdjacentMines(row,col){let count=0;for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){const r=row+dr,c=col+dc;if(r>=0&&r<MINE_ROWS&&c>=0&&c<MINE_COLS&&mineGrid[r][c]===-1)count++}return count}
+        function clickMineCell(row,col){if(mineGameOver||mineRevealed[row][col]||mineFlags[row][col])return;if(!mineTimerInterval){mineTimerInterval=setInterval(()=>{mineTimer++;document.getElementById('mineTimer').textContent=mineTimer.toString().padStart(3,'0')},1000)}revealCell(row,col);if(mineGrid[row][col]===-1)gameOver();else if(checkWin())gameWin()}
+        function revealCell(row,col){if(row<0||row>=MINE_ROWS||col<0||col>=MINE_COLS)return;if(mineRevealed[row][col]||mineFlags[row][col])return;mineRevealed[row][col]=true;const cell=document.querySelector(`.mine-cell[data-row="${row}"][data-col="${col}"]`);cell.classList.add('revealed');if(mineGrid[row][col]===-1){cell.classList.add('mine');cell.textContent='💣'}else if(mineGrid[row][col]>0){cell.textContent=mineGrid[row][col];cell.classList.add(`number-${mineGrid[row][col]}`)}else for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++)revealCell(row+dr,col+dc)}
+        function rightClickMineCell(row,col){if(mineGameOver||mineRevealed[row][col])return;mineFlags[row][col]=!mineFlags[row][col];const cell=document.querySelector(`.mine-cell[data-row="${row}"][data-col="${col}"]`);cell.classList.toggle('flagged');updateMineCounter()}
+        function updateMineCounter(){let flags=0;for(let r=0;r<MINE_ROWS;r++)for(let c=0;c<MINE_COLS;c++)if(mineFlags[r][c])flags++;document.getElementById('mineCounter').textContent=(MINE_COUNT-flags).toString().padStart(3,'0')}
+        function gameOver(){mineGameOver=true;clearInterval(mineTimerInterval);document.getElementById('resetBtn').textContent='😵';for(let r=0;r<MINE_ROWS;r++)for(let c=0;c<MINE_COLS;c++)if(mineGrid[r][c]===-1){const cell=document.querySelector(`.mine-cell[data-row="${r}"][data-col="${c}"]`);cell.classList.add('revealed','mine');cell.textContent='💣'}}
+        function gameWin(){mineGameOver=true;clearInterval(mineTimerInterval);document.getElementById('resetBtn').textContent='😎';setTimeout(()=>{alert('🎉 Congratulations! You have achieved horse-level concentration!')},300)}
+        function checkWin(){for(let r=0;r<MINE_ROWS;r++)for(let c=0;c<MINE_COLS;c++)if(mineGrid[r][c]!==-1&&!mineRevealed[r][c])return false;return true}
+        function resetMinesweeper(){if(mineTimerInterval)clearInterval(mineTimerInterval);mineTimerInterval=null;initMinesweeper()}
+        let calcDisplay='0',calcPrevious=null,calcOperator=null,calcNewNumber=true;
+        function updateCalcDisplay(){document.getElementById('calcDisplay').textContent=calcDisplay}
+        function calcNumber(num){if(calcNewNumber){calcDisplay=num;calcNewNumber=false}else calcDisplay=calcDisplay==='0'?num:calcDisplay+num;updateCalcDisplay()}
+        function calcDecimal(){if(calcNewNumber){calcDisplay='0.';calcNewNumber=false}else if(!calcDisplay.includes('.'))calcDisplay+='.';updateCalcDisplay()}
+        function calcOperator(op){calcPrevious=parseFloat(calcDisplay);calcOperator=op;calcNewNumber=true}
+        function calcEquals(){if(calcOperator===null||calcPrevious===null)return;const current=parseFloat(calcDisplay);let result;switch(calcOperator){case'+':result=calcPrevious+current;break;case'-':result=calcPrevious-current;break;case'*':result=calcPrevious*current;break;case'/':result=current!==0?calcPrevious/current:'Error';break;default:return}calcDisplay=result.toString();calcPrevious=null;calcOperator=null;calcNewNumber=true;updateCalcDisplay()}
+        function calcClear(){calcDisplay='0';calcPrevious=null;calcOperator=null;calcNewNumber=true;updateCalcDisplay()}
+        function calcBackspace(){if(calcDisplay.length>1)calcDisplay=calcDisplay.slice(0,-1);else calcDisplay='0';updateCalcDisplay()}
+        console.log('%c🐴 HorseOS Loaded','font-size:24px;font-weight:bold;color:#000080');console.log('%cPlease stand by for scheduled Horse Moments.','font-size:14px;color:#808080');console.log('%cThis is not a suggestion.','font-size:12px;color:#ff0000;font-weight:bold');
+    </script>
+</body>
+</html>
