@@ -2238,15 +2238,7 @@ P.S. - Your horse knows you read this far. They're watching.`
             chat.scrollTop = chat.scrollHeight;
         }
         
-        // Override openWindow to init Paint
-        const originalOpenWindow = openWindow;
-        openWindow = function(id) {
-            originalOpenWindow(id);
-            if (id === 'paint') {
-                setTimeout(initPaint, 100);
-            }
-        };
-        
+
 console.log('🐴 HorseOS v2.0 - Super Retro Edition loaded!');
         console.log('Contemplation is mandatory.');
         console.log('Type openWindow("welcome") to read the manual.');
