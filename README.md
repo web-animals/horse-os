@@ -4,156 +4,102 @@
 
 A retro Windows 98/XP-style digital wellness platform that forces mandatory breaks using the power of absurdity.
 
-![HorseOS Screenshot](screenshot.png)
+![HorseOS Screenshot](https://img.shields.io/badge/HorseOS-v1.0-008080?style=for-the-badge&logo=windows-95&logoColor=white)
 
-## 🚀 What Is This?
+## 🚀 Live Demo
 
-HorseOS is a browser-based wellness suite styled as a Windows 98 "virus" that's actually good for you. It interrupts doomscrolling and overwork with mandatory "Horse Moments" — absurdist breaks that force contemplation and reflection.
+**🌐 [Play HorseOS Now](https://yourusername.github.io/horseos)** 
 
-**The Philosophy:** *You cannot close this window. Please contemplate why.*
+*(Replace with your actual GitHub Pages URL after deployment)*
 
 ## ✨ Features
 
-### 🐴 ScheduledHorseMoment.exe
-- Full-screen modal that CAN'T be closed for 60 seconds
-- Random contemplation prompts with 3D horse
-- Progress bar and countdown timer
-- "I am Contemplating" button (mandatory participation)
+### 🎮 Fully Functional Apps
 
-### 📁 Retro Windows 98 Desktop
-- **My Computer** — Classic file explorer
-- **Recycle Bin** — Delete your screen time guilt
-- **Internet Explorer** — Horse facts API
-- **Notepad** — Read-only horse facts
-- **Start Menu** — Authentic Windows 98 experience
+| App | Description |
+|-----|-------------|
+| 🐴 **Scheduled Horse Moment** | 60-second mandatory contemplation with uncloseable window |
+| 💣 **Minesweeper** | Classic 8×8 grid with timer and flagging |
+| 🧮 **Calculator** | Full-featured math operations |
+| 🌐 **Internet Explorer** | 20+ horse facts with typewriter effect |
+| 🗑️ **Recycle Bin** | Delete your "screen time guilt" |
+| 💻 **My Computer** | Classic Windows 98 file explorer |
+| 📝 **Notepad** | Read-only horse facts |
 
-### 🎯 Digital Wellness Tools
-- **Mandatory Break Timer** — Interrupts after 20 minutes of doomscrolling
-- **Contemplation Prompts** — 20+ existential questions
-- **Global Stats** — Track worldwide "Horse Moments Completed"
-- **Uncloseable Windows** — The horse cannot be dismissed
+### 🎨 Authentic Windows 98 Experience
+- Working Start Menu
+- Draggable windows
+- Live taskbar clock
+- Retro styling with pixel-perfect borders
+- Shutdown screen animation
 
-## 🛠️ Technology Stack
+## 🎯 The Philosophy
 
-- **Pure HTML/CSS/JS** — No frameworks, maximum retro
-- **CSS3 Animations** — Floating horse, progress bars
-- **LocalStorage** — Track contemplation count
-- **Responsive Design** — Works on mobile (though the horse prefers desktop)
+> *"You cannot close this window. Please contemplate why."*
 
-## 📁 File Structure
+HorseOS interrupts doomscrolling and overwork with mandatory "Horse Moments" — absurdist breaks that force contemplation and reflection.
 
-```
-horseos/
-├── index.html          # Main desktop interface
-├── css/
-│   └── horseos.css     # Windows 98 aesthetic styles
-├── js/
-│   └── horseos.js      # Interactive functionality
-└── README.md           # This file
-```
+## 🛠️ How to Use
 
-## 🚀 Getting Started
+1. **Wait for startup** — Classic Windows 98 boot sequence (3 seconds)
+2. **Experience Horse Moment** — Auto-launches with 60-second countdown
+3. **Explore desktop** — Double-click icons to open apps
+4. **Play Minesweeper** — Left click to reveal, right click to flag
+5. **Browse horse facts** — Internet Explorer has a typewriter effect
+6. **Shut down** — Click Start → Shut Down
 
-### Local Development
+## 🎮 Easter Eggs
+
+- Click the horse 5 times for a surprise
+- Check browser console for hidden messages
+- "Empty Trash" has a satisfying animation
+
+## 🚀 Deployment
+
+This is a **static site** — deploy anywhere:
+
+### GitHub Pages (Recommended)
+1. Fork this repo
+2. Go to Settings → Pages
+3. Select "main" branch
+4. Your site will be at `https://yourusername.github.io/horseos`
+
+### Netlify Drop
+Drag and drop `index.html` to [netlify.com/drop](https://app.netlify.com/drop)
+
+### Vercel
 ```bash
-cd horseos
-# Open in browser
-open index.html
-# Or serve locally
-python3 -m http.server 8080
+npx vercel --prod
 ```
 
-### Deploy
-This is a static site — deploy anywhere:
-- GitHub Pages
-- Vercel
-- Netlify
-- Any static host
+## 📝 Tech Stack
 
-## 🎮 How to Use
-
-1. **Wait for startup** — The classic Windows 98 boot sequence
-2. **Double-click icons** — Open various "applications"
-3. **Experience Horse Moment** — Automatic full-screen contemplation
-4. **Cannot close it** — Seriously, you have to wait
-5. **Reflect** — Answer the horse's questions
-
-### Keyboard Shortcuts
-- `Windows/Super` — Open Start Menu
-- `Alt+F4` — Close windows (except Horse Moments)
+- Pure HTML/CSS/JS — no frameworks
+- Single file deployment
+- Mobile responsive
+- ~33KB total size
 
 ## 🎨 Customization
 
-### Add More Contemplation Prompts
-Edit `js/horseos.js`:
+Edit the JavaScript arrays to personalize:
+
 ```javascript
 const contemplationPrompts = [
     "Your custom prompt here",
     "Another deep question",
     // ...
 ];
+
+const horseFacts = [
+    "Your custom horse fact",
+    // ...
+];
 ```
 
-### Change the Horse
-Replace the emoji in CSS:
-```css
-.horse-3d {
-    content: "🦄"; /* Or any emoji */
-}
-```
+## 🐴 Credits
 
-### Adjust Timer Duration
-```javascript
-let currentTimer = 120; // 2 minutes of contemplation
-```
-
-## 🌟 Roadmap
-
-### Phase 1: Browser Extension
-- [ ] Chrome/Firefox extension
-- [ ] Intercept doomscrolling on real sites
-- [ ] Configurable break intervals
-
-### Phase 2: Team/Enterprise
-- [ ] Slack/Discord bot
-- [ ] Team Horse Moments
-- [ ] Corporate wellness dashboard
-
-### Phase 3: Physical Product
-- [ ] Horse Moment Timer device
-- [ ] Desk companion with speaker
-- [ ] "The horse judges you" LED display
-
-### Phase 4: Mobile
-- [ ] iOS/Android app
-- [ ] Phone freezing during Horse Moments
-- [ ] Widget for home screen
-
-## 🤝 Contributing
-
-This is a passion project about digital wellness through absurdity. Contributions welcome!
-
-### Ideas Wanted
-- More contemplation prompts
-- Additional Windows 98 "applications"
-- Horse animations
-- Sound effects (Windows 98 startup sound, horse neigh)
-
-## 📜 License
-
-MIT License — Free to use, modify, and deploy.
-
-**One condition:** You must take at least one Horse Moment before shipping to production.
-
-## 🙏 Acknowledgments
-
-- Inspired by the "Scheduled Horse Moment" meme
-- Windows 98 aesthetic nostalgia
-- Everyone who needs a break but won't take one
+Inspired by the "Scheduled Horse Moment" meme and Windows 98 nostalgia.
 
 ---
 
-<p align="center">
-  <strong>🐴 Please stand by for a scheduled Horse Moment.</strong><br>
-  <em>This is not a suggestion.</em>
-</p>
+**⚠️ Warning:** The horse is always watching. Contemplation is mandatory.
