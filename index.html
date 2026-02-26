@@ -801,9 +801,9 @@
                 <span>File</span><span>Edit</span><span>View</span><span>Help</span>
             </div>
             <div class="window-content explorer-content">
-                <div class="folder-item" onclick="openWindow('mysteriousHorse')" style="cursor:pointer"><span class="folder-icon">💾</span><span>3½ Floppy (A:)</span></div>
-                <div class="folder-item" onclick="openWindow('mysteriousHorse')" style="cursor:pointer"><span class="folder-icon">💿</span><span>Local Disk (C:)</span></div>
-                <div class="folder-item" onclick="openWindow('mysteriousHorse')" style="cursor:pointer"><span class="folder-icon">🌐</span><span>Control Panel</span></div>
+                <div class="folder-item" onclick="openWindow('floppyMystery')" style="cursor:pointer"><span class="folder-icon">💾</span><span>3½ Floppy (A:)</span></div>
+                <div class="folder-item" onclick="openWindow('driveMystery')" style="cursor:pointer"><span class="folder-icon">💿</span><span>Local Disk (C:)</span></div>
+                <div class="folder-item" onclick="openWindow('controlMystery')" style="cursor:pointer"><span class="folder-icon">🌐</span><span>Control Panel</span></div>
                 <div class="folder-item" onclick="openHorse()" style="cursor:pointer"><span class="folder-icon">🐎</span><span>HorseOS System</span></div>
             </div>
             <div class="window-status">4 object(s)</div>
@@ -1074,34 +1074,124 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             <button onclick="dismissLeavePopup()">I was just stretching...</button>
         </div>
 
-        <!-- Mysterious Horse Popup -->
-        <div class="window" id="mysteriousHorse" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;z-index:9999">
-            <div class="window-title" style="background:linear-gradient(90deg,#2d1b4e,#4a148c)">
-                <span>❓ ???</span>
+        <!-- Floppy Disk Mystery -->
+        <div class="window" id="floppyMystery" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;z-index:9999">
+            <div class="window-title" style="background:linear-gradient(90deg,#1a237e,#3949ab)">
+                <span>💾 A:\\ - SECTOR_NOT_FOUND</span>
                 <div class="window-buttons">
-                    <button class="win-btn" onclick="closeWindow('mysteriousHorse')">×</button>
+                    <button class="win-btn" onclick="closeWindow('floppyMystery')">×</button>
                 </div>
             </div>
-            <div class="window-content" style="text-align:center;padding:20px;background:#1a1a2e;color:#fff">
-                <div style="font-size:12px;line-height:1.2;margin:10px 0;white-space:pre;font-family:monospace;color:#888">
-    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣶⣶⣶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-    ⠀⠀⠀⠀⠀⠀⠀⣀⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣤⡀⠀⠀⠀⠀⠀⠀
-    ⠀⠀⠀⠀⠀⣀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣀⠀⠀⠀
-    ⠀⠀⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡀⠀
-    ⠀⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡀
-    ⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷
-    ⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-    ⢾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟
-    ⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀
-    ⠀⠙⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀
-    ⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀
-    ⠀⠀⠀⠀⠙⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠋⠀⠀⠀⠀
-    ⠀⠀⠀⠀⠀⠀⠀⠉⠛⠻⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠟⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀
+            <div class="window-content" style="text-align:center;padding:20px;background:#0d1b2a;color:#a8dadc;font-family:monospace">
+                <div style="font-size:10px;line-height:1.1;margin:10px 0;white-space:pre;color:#778da9">
+    ⠀⠀⠀⠀⢀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⣰⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⣸⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣄⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠙⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠉⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⢿⣿⣿⣿⣿⣿⣿⡿⠃
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠿⠿⠟⠋⠀⠀
                 </div>
-                <p style="font-style:italic;color:#888;margin:15px 0">"The horse sees all. The horse knows all."</p>
-                <p style="font-size:10px;color:#666">You weren't supposed to find this.</p>
-                <button class="btn-98" onclick="closeWindow('mysteriousHorse')" style="margin-top:15px">Forget what you saw</button>
+                <p style="font-style:italic;color:#778da9;margin:15px 0;font-size:12px">"The floppy disk contains the original horse source code... from 1987."</p>
+                <p style="font-size:10px;color:#415a77">General Failure reading drive A:<br>Abort, Retry, Fail?</p>
+                <div style="margin-top:15px">
+                    <button class="btn-98" onclick="closeWindow('floppyMystery')" style="background:#3949ab;color:#fff">Abort</button>
+                    <button class="btn-98" onclick="showNotification('🐴 The horse rejects your retry.')" style="margin:0 5px">Retry</button>
+                    <button class="btn-98" onclick="showNotification('🐴 You cannot fail the horse.')">Fail</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- C: Drive Mystery -->
+        <div class="window" id="driveMystery" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;z-index:9999">
+            <div class="window-title" style="background:linear-gradient(90deg,#00695c,#00897b)">
+                <span>💿 C:\\ - ACCESS_DENIED</span>
+                <div class="window-buttons">
+                    <button class="win-btn" onclick="closeWindow('driveMystery')">×</button>
+                </div>
+            </div>
+            <div class="window-content" style="text-align:center;padding:20px;background:#1b263b;color:#e0e1dd;font-family:monospace">
+                <div style="font-size:10px;line-height:1.1;margin:10px 0;white-space:pre;color:#778da9">
+    ⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣶⣶⣶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⣀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀
+    ⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀⠀
+    ⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀
+    ⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄
+    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆
+    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
+    ⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀
+    ⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀
+    ⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀
+    ⠀⠀⠀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⠟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                </div>
+                <p style="font-style:italic;color:#778da9;margin:15px 0;font-size:12px">"C: Drive contains 847GB of uncompressed horse thoughts."</p>
+                <p style="font-size:10px;color:#415a77">Disk is write-protected.<br>The horse protects what matters.</p>
+                <div style="margin-top:15px;background:#0d1b2a;border:1px inset #415a77;padding:10px">
+                    <p style="font-size:9px;color:#e0e1dd;text-align:left;margin:0">
+    Volume in drive C is HORSE_OS<br>
+    Volume Serial Number is NE1GH-8474<br>
+    Directory of C:\\<br><br>
+    &lt;DIR&gt;          .<br>
+    &lt;DIR&gt;          ..<br>
+    HORSE     SYS      1,337,000,000 bytes<br>
+    NEIGH     EXE             42 bytes<br>
+                   1 file(s)         1,337,000,042 bytes
+                    </p>
+                </div>
+                <button class="btn-98" onclick="closeWindow('driveMystery')" style="margin-top:15px;background:#00695c;color:#fff">Eject</button>
+            </div>
+        </div>
+
+        <!-- Control Panel Mystery -->
+        <div class="window" id="controlMystery" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:380px;z-index:9999">
+            <div class="window-title" style="background:linear-gradient(90deg,#4a148c,#7b1fa2)">
+                <span>🌐 Control Panel - HORSE_SETTINGS</span>
+                <div class="window-buttons">
+                    <button class="win-btn" onclick="closeWindow('controlMystery')">×</button>
+                </div>
+            </div>
+            <div class="window-content" style="text-align:center;padding:20px;background:#2e1a47;color:#e1bee7;font-family:monospace">
+                <div style="font-size:10px;line-height:1.1;margin:10px 0;white-space:pre;color:#9c27b0">
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀
+    ⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀
+    ⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀
+    ⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀
+    ⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
+    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
+    ⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇
+    ⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀
+    ⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀
+                </div>
+                <p style="font-style:italic;color:#ce93d8;margin:15px 0;font-size:12px">"The Control Panel has no settings. The horse controls all."</p>
+                <div style="text-align:left;background:#1a1a2e;border:1px inset #7b1fa2;padding:10px;margin:10px 0">
+                    <p style="font-size:10px;color:#e1bee7;margin:0">
+    ☑ Horse Moments: [ALWAYS ON]<br>
+    ☑ Judgment: [ENABLED]<br>
+    ☑ Existential Dread: [MAXIMUM]<br>
+    ☐ Skip Option: [DISABLED]<br>
+    ☑ Soul Monitoring: [ACTIVE]
+                    </p>
+                </div>
+                <p style="font-size:9px;color:#9c27b0">Attempting to change settings will alert the horse.</p>
+                <button class="btn-98" onclick="showNotification('🐴 The horse has denied your request.');closeWindow('controlMystery')" style="margin-top:10px;background:#7b1fa2;color:#fff">Apply Changes</button>
             </div>
         </div>
 
