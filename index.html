@@ -50,16 +50,21 @@
         </div>
 
         <!-- Horse Window -->
-        <div class="window horse-win" id="horseWindow">
+        <div class="window horse-win" id="horseWindow" style="display:block">
             <div class="title">
-                <span>🐴 Scheduled Horse Moment</span>
-                <button onclick="hideWindow('horseWindow')">×</button>
+                <span>🐴 Scheduled_Horse_Moment.exe</span>
+                <button id="horseCloseBtn" onclick="alert('⚠️ You cannot close this. Contemplation is mandatory.')" style="cursor:not-allowed;opacity:0.5">×</button>
             </div>
             <div class="content">
-                <div class="horse-text">Please stand by for a scheduled Horse Moment.</div>
+                <div class="horse-text">
+                    <p>Please stand by for a scheduled Horse Moment.</p>
+                    <p>You will now contemplate and reflect.</p>
+                    <p style="color:#800000;font-weight:bold">This is a time of seriousness.</p>
+                    <p style="font-size:12px">You cannot change this in settings.</p>
+                </div>
                 <div class="timer" id="horseTimer">60</div>
                 <div style="text-align:center">
-                    <button onclick="startHorse()" id="horseBtn">Start Contemplating</button>
+                    <button onclick="startHorse()" id="horseBtn">I am Contemplating</button>
                 </div>
             </div>
         </div>
@@ -135,23 +140,54 @@
             document.getElementById(id).style.display = 'none';
         }
 
-        // Horse Moment
+        // Horse Moment - AUTO START
         let horseInterval;
+        let horseTime = 60;
+        let horseStarted = false;
+        
         function startHorse() {
-            let time = 60;
+            if (horseStarted) return;
+            horseStarted = true;
+            
             document.getElementById('horseBtn').disabled = true;
             document.getElementById('horseBtn').textContent = 'Contemplating...';
+            document.getElementById('horseCloseBtn').style.opacity = '0.3';
             
             horseInterval = setInterval(() => {
-                time--;
-                document.getElementById('horseTimer').textContent = time;
-                if (time <= 0) {
+                horseTime--;
+                document.getElementById('horseTimer').textContent = horseTime;
+                if (horseTime <= 0) {
                     clearInterval(horseInterval);
-                    document.getElementById('horseTimer').textContent = '✓ Complete!';
+                    document.getElementById('horseTimer').innerHTML = '<span style="color:green">✓ Complete!</span>';
                     document.getElementById('horseBtn').textContent = 'Contemplation Complete';
+                    document.getElementById('horseBtn').disabled = false;
+                    document.getElementById('horseBtn').onclick = closeAndResetHorse;
+                    document.getElementById('horseBtn').textContent = 'Click to Return to Desktop';
+                    document.getElementById('horseCloseBtn').style.opacity = '1';
+                    document.getElementById('horseCloseBtn').onclick = closeAndResetHorse;
                 }
             }, 1000);
         }
+        
+        function closeAndResetHorse() {
+            hideWindow('horseWindow');
+            // Reset for next time
+            horseTime = 60;
+            horseStarted = false;
+            document.getElementById('horseTimer').textContent = '60';
+            document.getElementById('horseBtn').textContent = 'I am Contemplating';
+            document.getElementById('horseBtn').disabled = false;
+            document.getElementById('horseBtn').onclick = startHorse;
+            document.getElementById('horseCloseBtn').style.opacity = '0.5';
+            document.getElementById('horseCloseBtn').onclick = function() {
+                alert('⚠️ You cannot close this. Contemplation is mandatory.');
+            };
+        }
+        
+        // Auto-open horse moment on load (after 1 second)
+        setTimeout(() => {
+            document.getElementById('horseWindow').style.display = 'block';
+        }, 1000);
 
         // Calculator
         let calcVal = '0', calcPrev = null, calcOp = null, calcNew = true;
