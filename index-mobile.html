@@ -548,11 +548,31 @@ FEATURES:
 🧮 CALCULATOR
    - For calculating how much time you've wasted
 
+WHY WAS THIS MADE?
+------------------
+We built HorseOS because regular "wellness" apps are too polite. 
+They send gentle notifications you swipe away. They beg for your 
+attention. They lose.
+
+The horse does not ask. The horse commands.
+
+In a world of infinite scroll and algorithmic engagement, 
+sometimes you need a 60-second break that you CAN'T skip.
+
+Also, we think horses are funny.
+
 CONTROLS:
 ---------
 • Tap icons to open apps
 • Tap the 🐴 button for instant Horse Moment
 • Pull down or tap × to close apps
+• Horse Moment countdown starts when YOU click the button
+
+NOTIFICATIONS:
+--------------
+📱 Mobile: Browser notifications don't work in standalone mode.
+   The auto-horse scheduler will still trigger when the app is open.
+💻 Desktop: In-browser notifications work for auto-horse alerts.
 
 REMEMBER:
 ---------
@@ -760,7 +780,7 @@ REMEMBER:
             `;
             document.getElementById('modalOverlay').classList.add('active');
             document.body.style.overflow = 'hidden';
-            startHorseTimer();
+            // Timer does NOT start automatically - user must click "I am Contemplating"
         }
         
         function startHorseTimer() {
@@ -792,6 +812,8 @@ REMEMBER:
             const btn = document.getElementById('horseBtn');
             btn.textContent = 'Contemplating...';
             btn.disabled = true;
+            // Start the timer only when user clicks the button
+            startHorseTimer();
         }
         
         // Calculator

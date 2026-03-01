@@ -1051,6 +1051,29 @@ FEATURES:
    - Delete your screen time guilt
    - (It comes back, guilt always does)
 
+WHY WAS THIS MADE?
+------------------
+We built HorseOS because regular "wellness" apps are too polite. 
+They send gentle notifications you swipe away. They beg for your 
+attention. They lose.
+
+The horse does not ask. The horse commands.
+
+In a world of infinite scroll and algorithmic engagement, 
+sometimes you need a 60-second break that you CAN'T skip.
+
+Also, we think horses are funny.
+
+NOTIFICATIONS:
+--------------
+💻 Desktop: In-browser notifications work for auto-horse alerts.
+   The browser must be open for notifications to appear.
+📱 Mobile: Browser notifications don't work in standalone mode.
+   Use the mobile version at thehorsemoment.com on your phone.
+
+The auto-horse scheduler will trigger when the app is open and 
+the scheduled time arrives.
+
 FAQ:
 ----
 Q: Can I turn off Horse Moments?
@@ -1963,9 +1986,12 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         let pausedTimeRemaining = 0;
         
         // Use mouseout on documentElement for better detection
+        // ONLY show popup during Horse Moment - not otherwise
         document.documentElement.addEventListener('mouseleave', (e) => {
             console.log('Mouse leave detected', e.clientY, e.clientX);
-            if (leavePopupShown) return;
+            // Only show popup if horse moment is actively running
+            if (!horseRunning || leavePopupShown) return;
+            
             // Check if mouse left the viewport
             if (e.relatedTarget === null || e.clientY <= 0 || e.clientY >= window.innerHeight) {
                 leavePopupShown = true;
@@ -1973,8 +1999,8 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 document.getElementById('leaveText').textContent = randomMsg;
                 document.getElementById('horseLeavePopup').classList.add('show');
                 
-                // Pause the timer if running
-                if (horseRunning && horseInterval) {
+                // Pause the timer
+                if (horseInterval) {
                     clearInterval(horseInterval);
                     horseTimerPaused = true;
                     pausedTimeRemaining = horseTime;
@@ -1983,20 +2009,21 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             }
         });
         
-        // Also detect when window loses focus
+        // Also detect when window loses focus - ONLY during Horse Moment
         window.addEventListener('blur', () => {
             console.log('Window lost focus');
-            if (horseRunning && !leavePopupShown) {
-                leavePopupShown = true;
-                const randomMsg = leaveMessages[Math.floor(Math.random() * leaveMessages.length)];
-                document.getElementById('leaveText').textContent = randomMsg;
-                document.getElementById('horseLeavePopup').classList.add('show');
-                
-                if (horseInterval) {
-                    clearInterval(horseInterval);
-                    horseTimerPaused = true;
-                    pausedTimeRemaining = horseTime;
-                }
+            // Only show popup if horse moment is actively running
+            if (!horseRunning || leavePopupShown) return;
+            
+            leavePopupShown = true;
+            const randomMsg = leaveMessages[Math.floor(Math.random() * leaveMessages.length)];
+            document.getElementById('leaveText').textContent = randomMsg;
+            document.getElementById('horseLeavePopup').classList.add('show');
+            
+            if (horseInterval) {
+                clearInterval(horseInterval);
+                horseTimerPaused = true;
+                pausedTimeRemaining = horseTime;
             }
         });
         
