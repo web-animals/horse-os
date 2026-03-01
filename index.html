@@ -2045,6 +2045,67 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         let horseDuration = 60;
         let autoInterval = 0;
         let autoHorseTimer = null;
+        let lastHorseMoment = 0;
+        
+        // Load saved settings on startup
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('horseos_settings') || '{}');
+            if (settings.duration) {
+                horseDuration = settings.duration;
+                const durationSelect = document.getElementById('durationSelect');
+                if (durationSelect) durationSelect.value = horseDuration;
+            }
+            if (settings.interval !== undefined) {
+                autoInterval = settings.interval;
+                const intervalSelect = document.getElementById('intervalSelect');
+                if (intervalSelect) intervalSelect.value = autoInterval;
+            }
+            if (settings.lastHorse) {
+                lastHorseMoment = settings.lastHorse;
+            }
+            
+            updateDuration();
+            updateInterval();
+            
+            // Restart auto-horse if it was enabled
+            if (autoInterval > 0) {
+                startAutoHorse();
+            }
+        }
+        
+        function startAutoHorse() {
+            // Clear existing timer
+            if (autoHorseTimer) {
+                clearInterval(autoHorseTimer);
+                autoHorseTimer = null;
+            }
+            
+            if (autoInterval <= 0) return;
+            
+            // Check every minute if it's time for a Horse Moment
+            autoHorseTimer = setInterval(() => {
+                const now = Date.now();
+                const minutesSinceLastHorse = (now - lastHorseMoment) / (1000 * 60);
+                
+                if (minutesSinceLastHorse >= autoInterval) {
+                    // Time for a Horse Moment!
+                    if (!horseRunning) {
+                        openHorse();
+                        showNotification('🐴 Scheduled Horse Moment! Time to contemplate.');
+                        lastHorseMoment = now;
+                        saveSettings();
+                    }
+                }
+            }, 60000); // Check every minute
+        }
+        
+        function saveSettings() {
+            localStorage.setItem('horseos_settings', JSON.stringify({
+                duration: horseDuration,
+                interval: autoInterval,
+                lastHorse: lastHorseMoment
+            }));
+        }
         
         const horsePrompts = {
             standard: [
@@ -2106,18 +2167,16 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             
             // Set up auto-horse if enabled
             if (autoInterval > 0) {
-                autoHorseTimer = setInterval(() => {
-                    if (!horseRunning) {
-                        openHorse();
-                        showNotification('🐴 Scheduled Horse Moment! Time to contemplate.');
-                    }
-                }, autoInterval * 60 * 1000);
+                startAutoHorse();
                 document.getElementById('autoStatus').textContent = 'ON';
                 document.getElementById('autoStatus').style.color = 'green';
             } else {
                 document.getElementById('autoStatus').textContent = 'OFF';
                 document.getElementById('autoStatus').style.color = 'red';
             }
+            
+            // Save settings to localStorage
+            saveSettings();
             
             // Show confirmation
             const msg = document.getElementById('scheduleMsg');
@@ -2135,12 +2194,14 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             }, 300);
         }
         
-        // Override startHorse to use custom duration
+        // Override startHorse to use custom duration and track time
         const originalStartHorse = startHorse;
         startHorse = function() {
             if (horseRunning) return;
             horseRunning = true;
             horseTime = horseDuration;
+            lastHorseMoment = Date.now();
+            saveSettings();
             
             const btn = document.getElementById('horseBtn');
             btn.disabled = true;
@@ -2454,8 +2515,11 @@ P.S. - Your horse knows you read this far. They're watching.`
             centerWindowOnMobile(id);
         };
 
-        // Show README on first load
+        // Show README on first load and init settings
         window.addEventListener('load', function() {
+            // Load scheduler settings
+            loadSettings();
+            
             if (!localStorage.getItem('horseos_readme_seen')) {
                 openWindow('welcome');
                 localStorage.setItem('horseos_readme_seen', 'true');
