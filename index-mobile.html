@@ -559,11 +559,11 @@ REMEMBER:
                 title: '⏰ Scheduler',
                 closable: true,
                 content: `
-                <div class="scheduler-status">
+                <div class="scheduler-status" id="schedulerStatus">
                     <strong>Current Settings:</strong><br>
-                    Auto-Horse: <span style="color:red">OFF</span><br>
-                    Interval: Manual<br>
-                    Duration: 60 seconds
+                    Auto-Horse: <span id="autoHorseStatus" style="color:red">OFF</span><br>
+                    Interval: <span id="intervalStatus">Manual</span><br>
+                    Duration: <span id="durationStatus">60</span> seconds
                 </div>
                 
                 <div class="scheduler-option">
@@ -588,6 +588,7 @@ REMEMBER:
                 </div>
                 
                 <button class="btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+                <button class="btn-primary" onclick="triggerHorseNow()" style="margin-top:10px; background:#800000;">🐴 Trigger Horse Moment Now</button>
                 `
             },
             computer: {
@@ -699,7 +700,12 @@ REMEMBER:
             document.body.style.overflow = 'hidden';
             
             // Initialize app-specific features
-            if (appName === 'minesweeper') initMines();
+            if (appName === 'minesweeper') {
+                initMines();
+            } else if (appName === 'scheduler') {
+                // Small delay to let DOM render, then update with saved values
+                setTimeout(updateSchedulerDisplay, 10);
+            }
         }
         
         function closeModal(e) {
@@ -1041,10 +1047,127 @@ REMEMBER:
             }
         }
         
-        // Settings
+        // Auto-Horse Scheduler
+        let autoHorseIntervalId = null;
+        let lastHorseMoment = 0;
+        
+        // Load saved settings on startup
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('horseos_settings') || '{}');
+            if (settings.duration) {
+                localStorage.setItem('horseos_duration', settings.duration);
+            }
+            if (settings.interval) {
+                localStorage.setItem('horseos_interval', settings.interval);
+            }
+            if (settings.lastHorse) {
+                lastHorseMoment = settings.lastHorse;
+            }
+            
+            // Update scheduler display if open
+            updateSchedulerDisplay();
+            
+            // Start auto-horse if enabled
+            startAutoHorse();
+        }
+        
+        function updateSchedulerDisplay() {
+            const interval = parseInt(localStorage.getItem('horseos_interval') || '0');
+            const duration = parseInt(localStorage.getItem('horseos_duration') || '60');
+            
+            const autoHorseStatus = document.getElementById('autoHorseStatus');
+            const intervalStatus = document.getElementById('intervalStatus');
+            const durationStatus = document.getElementById('durationStatus');
+            const durationSelect = document.getElementById('durationSelect');
+            const intervalSelect = document.getElementById('intervalSelect');
+            
+            if (autoHorseStatus) {
+                if (interval > 0) {
+                    autoHorseStatus.textContent = 'ON';
+                    autoHorseStatus.style.color = 'green';
+                } else {
+                    autoHorseStatus.textContent = 'OFF';
+                    autoHorseStatus.style.color = 'red';
+                }
+            }
+            
+            if (intervalStatus) {
+                intervalStatus.textContent = interval > 0 ? `Every ${interval} minutes` : 'Manual';
+            }
+            
+            if (durationStatus) {
+                durationStatus.textContent = duration;
+            }
+            
+            if (durationSelect) {
+                durationSelect.value = String(duration);
+            }
+            
+            if (intervalSelect) {
+                intervalSelect.value = String(interval);
+            }
+        }
+        
         function saveSettings() {
+            const durationSelect = document.getElementById('durationSelect');
+            const intervalSelect = document.getElementById('intervalSelect');
+            
+            const duration = parseInt(durationSelect?.value || '60');
+            const interval = parseInt(intervalSelect?.value || '0');
+            
+            localStorage.setItem('horseos_duration', String(duration));
+            localStorage.setItem('horseos_interval', String(interval));
+            localStorage.setItem('horseos_settings', JSON.stringify({
+                duration: duration,
+                interval: interval,
+                lastHorse: lastHorseMoment
+            }));
+            
+            updateSchedulerDisplay();
+            startAutoHorse();
+            
             alert('💾 Settings saved! The horse appreciates your planning.');
             closeModal();
+        }
+        
+        function startAutoHorse() {
+            // Clear existing interval
+            if (autoHorseIntervalId) {
+                clearInterval(autoHorseIntervalId);
+                autoHorseIntervalId = null;
+            }
+            
+            const interval = parseInt(localStorage.getItem('horseos_interval') || '0');
+            if (interval <= 0) return;
+            
+            // Check every minute if it's time for a Horse Moment
+            autoHorseIntervalId = setInterval(() => {
+                const now = Date.now();
+                const minutesSinceLastHorse = (now - lastHorseMoment) / (1000 * 60);
+                
+                if (minutesSinceLastHorse >= interval) {
+                    // Time for a Horse Moment!
+                    if (!document.getElementById('modalOverlay')?.classList.contains('active')) {
+                        openHorseMoment();
+                        lastHorseMoment = now;
+                        localStorage.setItem('horseos_settings', JSON.stringify({
+                            duration: parseInt(localStorage.getItem('horseos_duration') || '60'),
+                            interval: interval,
+                            lastHorse: lastHorseMoment
+                        }));
+                    }
+                }
+            }, 60000); // Check every minute
+        }
+        
+        function triggerHorseNow() {
+            lastHorseMoment = Date.now();
+            openHorseMoment();
+            localStorage.setItem('horseos_settings', JSON.stringify({
+                duration: parseInt(localStorage.getItem('horseos_duration') || '60'),
+                interval: parseInt(localStorage.getItem('horseos_interval') || '0'),
+                lastHorse: lastHorseMoment
+            }));
         }
         
         // Recycle Bin
@@ -1059,8 +1182,11 @@ REMEMBER:
             `;
         }
         
-        // Show README on first load
+        // Show README on first load and init scheduler
         window.addEventListener('load', function() {
+            // Load scheduler settings
+            loadSettings();
+            
             // Check if this is first visit
             if (!localStorage.getItem('horseos_readme_seen')) {
                 openApp('readme');
