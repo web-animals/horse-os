@@ -1889,7 +1889,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             if (desktopNotificationsEnabled && 'Notification' in window && Notification.permission === 'granted') {
                 try {
                     new Notification('HorseOS', {
-                        body: text.replace(/[HORSE]|!|[OK]/g, '').trim(),
+                        body: text.replace(/🐴|!|✓/g, '').trim(),
                         icon: '🐴',
                         badge: '🐴',
                         tag: options.tag || 'horseos-' + Date.now(),
