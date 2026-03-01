@@ -2454,6 +2454,14 @@ P.S. - Your horse knows you read this far. They're watching.`
             centerWindowOnMobile(id);
         };
 
+        // Show README on first load
+        window.addEventListener('load', function() {
+            if (!localStorage.getItem('horseos_readme_seen')) {
+                openWindow('welcome');
+                localStorage.setItem('horseos_readme_seen', 'true');
+            }
+        });
+
         console.log('🐴 HorseOS v2.0 - Super Retro Edition loaded!');
         console.log('Contemplation is mandatory.');
         console.log('Type openWindow("welcome") to read the manual.');

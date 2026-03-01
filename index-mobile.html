@@ -270,6 +270,11 @@
             border-color: var(--win-black) var(--win-light) var(--win-light) var(--win-black);
         }
         
+        .mine-cell.revealed {
+            border: 1px solid var(--win-dark);
+            background: #c0c0c0;
+        }
+        
         /* Horse Moment */
         .horse-content {
             text-align: center;
@@ -811,36 +816,202 @@ REMEMBER:
             display.textContent = calcDisplay;
         }
         
-        // Minesweeper (Simple version)
+        // Minesweeper - Optimized for mobile
+        let mineGrid = [];
+        let mineRevealed = [];
+        let mineFlags = [];
+        let mineGameOver = false;
+        let mineTimer = 0;
+        let mineTimerInterval = null;
+        const MINE_ROWS = 8;
+        const MINE_COLS = 8;
+        const MINE_COUNT = 10;
+        
         function initMines() {
             const grid = document.getElementById('mineGrid');
             if (!grid) return;
+            
+            // Reset game state
             grid.innerHTML = '';
-            for (let i = 0; i < 64; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'mine-cell';
-                cell.textContent = '';
-                cell.onclick = () => revealMine(cell);
-                cell.oncontextmenu = (e) => { e.preventDefault(); flagMine(cell); };
-                grid.appendChild(cell);
+            mineGrid = [];
+            mineRevealed = [];
+            mineFlags = [];
+            mineGameOver = false;
+            mineTimer = 0;
+            clearInterval(mineTimerInterval);
+            document.getElementById('mineTime').textContent = '000';
+            
+            // Create grid with document fragment for performance
+            const fragment = document.createDocumentFragment();
+            
+            for (let r = 0; r < MINE_ROWS; r++) {
+                mineGrid[r] = [];
+                mineRevealed[r] = [];
+                mineFlags[r] = [];
+                for (let c = 0; c < MINE_COLS; c++) {
+                    mineGrid[r][c] = 0;
+                    mineRevealed[r][c] = false;
+                    mineFlags[r][c] = false;
+                    
+                    const cell = document.createElement('div');
+                    cell.className = 'mine-cell';
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    cell.addEventListener('click', () => clickMineCell(r, c));
+                    cell.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        rightClickMineCell(r, c);
+                    });
+                    fragment.appendChild(cell);
+                }
+            }
+            
+            grid.appendChild(fragment);
+            
+            // Place mines randomly
+            let minesPlaced = 0;
+            while (minesPlaced < MINE_COUNT) {
+                const r = Math.floor(Math.random() * MINE_ROWS);
+                const c = Math.floor(Math.random() * MINE_COLS);
+                if (mineGrid[r][c] !== -1) {
+                    mineGrid[r][c] = -1;
+                    minesPlaced++;
+                }
+            }
+            
+            // Calculate neighbor counts
+            for (let r = 0; r < MINE_ROWS; r++) {
+                for (let c = 0; c < MINE_COLS; c++) {
+                    if (mineGrid[r][c] !== -1) {
+                        mineGrid[r][c] = countAdjacentMines(r, c);
+                    }
+                }
+            }
+            
+            updateMineCounter();
+        }
+        
+        function countAdjacentMines(row, col) {
+            let count = 0;
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    const r = row + dr;
+                    const c = col + dc;
+                    if (r >= 0 && r < MINE_ROWS && c >= 0 && c < MINE_COLS) {
+                        if (mineGrid[r][c] === -1) count++;
+                    }
+                }
+            }
+            return count;
+        }
+        
+        function clickMineCell(row, col) {
+            if (mineGameOver || mineRevealed[row][col] || mineFlags[row][col]) return;
+            
+            // Start timer on first click
+            if (!mineTimerInterval) {
+                mineTimerInterval = setInterval(() => {
+                    mineTimer++;
+                    document.getElementById('mineTime').textContent = mineTimer.toString().padStart(3, '0');
+                }, 1000);
+            }
+            
+            revealCell(row, col);
+            
+            if (mineGrid[row][col] === -1) {
+                gameOver();
+            } else if (checkWin()) {
+                gameWin();
             }
         }
         
-        function revealMine(cell) {
-            if (cell.textContent === '🚩') return;
-            if (Math.random() < 0.15) {
+        function revealCell(row, col) {
+            if (row < 0 || row >= MINE_ROWS || col < 0 || col >= MINE_COLS) return;
+            if (mineRevealed[row][col] || mineFlags[row][col]) return;
+            
+            mineRevealed[row][col] = true;
+            const cell = document.querySelector(`.mine-cell[data-row="${row}"][data-col="${col}"]`);
+            if (!cell) return;
+            
+            cell.classList.add('revealed');
+            
+            if (mineGrid[row][col] === -1) {
                 cell.textContent = '💣';
                 cell.style.background = '#ff4444';
-                setTimeout(() => alert('💥 Boom! The horse is disappointed.'), 100);
+            } else if (mineGrid[row][col] > 0) {
+                cell.textContent = mineGrid[row][col];
+                cell.style.color = getNumberColor(mineGrid[row][col]);
             } else {
-                const count = Math.floor(Math.random() * 3);
-                cell.textContent = count > 0 ? count : '';
-                cell.style.background = '#c0c0c0';
+                // Reveal adjacent cells for empty cells
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        revealCell(row + dr, col + dc);
+                    }
+                }
             }
         }
         
-        function flagMine(cell) {
-            cell.textContent = cell.textContent === '🚩' ? '' : '🚩';
+        function getNumberColor(num) {
+            const colors = ['', 'blue', 'green', 'red', 'purple', 'maroon', 'turquoise', 'black', 'gray'];
+            return colors[num] || 'black';
+        }
+        
+        function rightClickMineCell(row, col) {
+            if (mineGameOver || mineRevealed[row][col]) return;
+            
+            mineFlags[row][col] = !mineFlags[row][col];
+            const cell = document.querySelector(`.mine-cell[data-row="${row}"][data-col="${col}"]`);
+            if (cell) {
+                cell.textContent = mineFlags[row][col] ? '🚩' : '';
+            }
+            updateMineCounter();
+        }
+        
+        function updateMineCounter() {
+            let flags = 0;
+            for (let r = 0; r < MINE_ROWS; r++) {
+                for (let c = 0; c < MINE_COLS; c++) {
+                    if (mineFlags[r][c]) flags++;
+                }
+            }
+            document.getElementById('mineCount').textContent = (MINE_COUNT - flags).toString().padStart(3, '0');
+        }
+        
+        function gameOver() {
+            mineGameOver = true;
+            clearInterval(mineTimerInterval);
+            
+            // Reveal all mines
+            for (let r = 0; r < MINE_ROWS; r++) {
+                for (let c = 0; c < MINE_COLS; c++) {
+                    if (mineGrid[r][c] === -1) {
+                        const cell = document.querySelector(`.mine-cell[data-row="${r}"][data-col="${c}"]`);
+                        if (cell) {
+                            cell.textContent = '💣';
+                            cell.style.background = '#ff4444';
+                        }
+                    }
+                }
+            }
+            
+            setTimeout(() => alert('💥 Boom! The horse is disappointed.'), 300);
+        }
+        
+        function gameWin() {
+            mineGameOver = true;
+            clearInterval(mineTimerInterval);
+            setTimeout(() => alert('🎉 You win! The horse is impressed.'), 300);
+        }
+        
+        function checkWin() {
+            for (let r = 0; r < MINE_ROWS; r++) {
+                for (let c = 0; c < MINE_COLS; c++) {
+                    if (mineGrid[r][c] !== -1 && !mineRevealed[r][c]) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
         
         // Horse Facts
