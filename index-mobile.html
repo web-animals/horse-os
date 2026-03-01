@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HorseOS Mobile</title>
+    <style>
+        :root {
+            --win-teal: #008080;
+            --win-gray: #c0c0c0;
+            --win-dark: #808080;
+            --win-light: #ffffff;
+            --win-black: #000000;
+            --win-blue: #000080;
+            --win-navy: #0a246a;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
+            background: var(--win-teal);
+            min-height: 100vh;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        
+        /* Mobile Desktop Grid */
+        .desktop {
+            padding: 15px;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        /* App Grid - Mobile Friendly */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px 5px;
+            border-radius: 12px;
+            transition: transform 0.1s, background 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .app-icon:active {
+            transform: scale(0.95);
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .app-icon .icon-img {
+            font-size: 36px;
+            margin-bottom: 6px;
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
+        }
+        
+        .app-icon .icon-label {
+            color: white;
+            font-size: 11px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            line-height: 1.2;
+        }
+        
+        /* Modal/Window - Full Screen Mobile */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+            animation: fadeIn 0.2s;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-window {
+            background: var(--win-gray);
+            width: 100%;
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease-out;
+            box-shadow: 0 -5px 30px rgba(0,0,0,0.5);
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        /* Modal Header - Big Close Button */
+        .modal-header {
+            background: linear-gradient(90deg, var(--win-navy), #a6caf0);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 20px 20px 0 0;
+            min-height: 56px;
+        }
+        
+        .modal-header.horse-moment {
+            background: linear-gradient(90deg, #800000, #ff4444);
+        }
+        
+        .modal-title {
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .close-btn {
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .close-btn:active {
+            background: rgba(255,255,255,0.4);
+        }
+        
+        /* Modal Content */
+        .modal-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Bottom Sheet Handle */
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 2px;
+            margin: 8px auto;
+        }
+        
+        /* App Styles */
+        .readme-content {
+            font-family: "Courier New", monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        /* Calculator */
+        .calc-display {
+            background: white;
+            border: 2px inset var(--win-gray);
+            padding: 15px;
+            font-size: 32px;
+            text-align: right;
+            margin-bottom: 15px;
+            font-family: "Courier New", monospace;
+            border-radius: 8px;
+        }
+        
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        .calc-btn {
+            padding: 20px;
+            font-size: 20px;
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+            cursor: pointer;
+            border-radius: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .calc-btn:active {
+            border-color: var(--win-black) var(--win-light) var(--win-light) var(--win-black);
+            background: #b0b0b0;
+        }
+        
+        .calc-btn.equals {
+            grid-column: span 2;
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        /* Minesweeper */
+        .mine-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: var(--win-gray);
+            border: 2px inset;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        
+        .mine-counter {
+            background: black;
+            color: red;
+            font-family: "Courier New", monospace;
+            font-size: 24px;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        .mine-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+        
+        .mine-cell {
+            aspect-ratio: 1;
+            background: var(--win-gray);
+            border: 2px solid;
+            border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .mine-cell:active {
+            border-color: var(--win-black) var(--win-light) var(--win-light) var(--win-black);
+        }
+        
+        /* Horse Moment */
+        .horse-content {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .horse-ascii {
+            font-family: "Courier New", monospace;
+            font-size: 10px;
+            line-height: 1;
+            color: #5D4037;
+            margin: 15px 0;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        .horse-timer {
+            font-size: 48px;
+            font-weight: bold;
+            color: #0f0;
+            background: #000;
+            padding: 15px 30px;
+            border-radius: 8px;
+            display: inline-block;
+            font-family: "Courier New", monospace;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: var(--win-dark);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #000080, #1084d0, #00ff00);
+            transition: width 1s linear;
+        }
+        
+        .btn-primary {
+            padding: 15px 40px;
+            font-size: 18px;
+            background: #000080;
+            color: white;
+            border: 3px solid;
+            border-color: #4444ff #000044 #000044 #4444ff;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-top: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #800000, #ff4444);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            cursor: pointer;
+            z-index: 100;
+            animation: pulse 2s infinite;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .fab:active {
+            transform: scale(0.95);
+        }
+        
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(90deg, var(--win-navy), #a6caf0);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            margin: -15px -15px 15px -15px;
+        }
+        
+        .welcome-banner h1 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .welcome-banner p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        /* Scheduler */
+        .scheduler-option {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 2px solid var(--win-gray);
+        }
+        
+        .scheduler-option label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .scheduler-option select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px inset var(--win-gray);
+            border-radius: 4px;
+        }
+        
+        .scheduler-status {
+            background: #ffffcc;
+            border: 1px solid #cc0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        /* Responsive */
+        @media (min-width: 480px) {
+            .modal-window {
+                max-width: 450px;
+                border-radius: 20px;
+                margin: 20px;
+                max-height: calc(100vh - 40px);
+            }
+            
+            .modal-overlay.active {
+                align-items: center;
+            }
+        }
+        
+        /* Utility */
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="desktop">
+        <div class="welcome-banner">
+            <h1>🐴 HorseOS Mobile</h1>
+            <p>The Operating System You Can't Ignore</p>
+        </div>
+        
+        <div class="app-grid">
+            <div class="app-icon" onclick="openApp('readme')">
+                <div class="icon-img">📖</div>
+                <div class="icon-label">README</div>
+            </div>
+            <div class="app-icon" onclick="openApp('scheduler')">
+                <div class="icon-img">⏰</div>
+                <div class="icon-label">Scheduler</div>
+            </div>
+            <div class="app-icon" onclick="openHorseMoment()">
+                <div class="icon-img">🐴</div>
+                <div class="icon-label">Horse<br>Moment</div>
+            </div>
+            <div class="app-icon" onclick="openApp('computer')">
+                <div class="icon-img">💻</div>
+                <div class="icon-label">My<br>Computer</div>
+            </div>
+            <div class="app-icon" onclick="openApp('calc')">
+                <div class="icon-img">🧮</div>
+                <div class="icon-label">Calculator</div>
+            </div>
+            <div class="app-icon" onclick="openApp('minesweeper')">
+                <div class="icon-img">💣</div>
+                <div class="icon-label">Minesweeper</div>
+            </div>
+            <div class="app-icon" onclick="openApp('facts')">
+                <div class="icon-img">📝</div>
+                <div class="icon-label">Horse Facts</div>
+            </div>
+            <div class="app-icon" onclick="openApp('recycle')">
+                <div class="icon-img">🗑️</div>
+                <div class="icon-label">Recycle Bin</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Floating Action Button -->
+    <div class="fab" onclick="openHorseMoment()">🐴</div>
+    
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal-window" id="modalWindow" onclick="event.stopPropagation()">
+            <div class="sheet-handle"></div>
+            <div class="modal-header" id="modalHeader">
+                <span class="modal-title" id="modalTitle">📖 README.txt</span>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-content" id="modalContent">
+                <!-- Content injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // App Content Templates
+        const apps = {
+            readme: {
+                title: '📖 README.txt',
+                headerClass: '',
+                closable: true,
+                content: `<div class="readme-content">╔══════════════════════════════════════════════════════════════╗
+║                    🐴 WELCOME TO HORSEOS 🐴                  ║
+║              "The Operating System You Can't Ignore"          ║
+╚══════════════════════════════════════════════════════════════╝
+
+WHAT IS THIS?
+-------------
+HorseOS is a digital wellness platform designed to force you to 
+take breaks using the power of ABSURDITY and HORSES.
+
+THE SCIENCE (we made it up):
+---------------------------
+Studies show* that humans need mandatory contemplation breaks 
+every 20 minutes. But regular wellness apps are BORING and you 
+ignore them.
+
+*Studies conducted by horses
+
+HOW IT WORKS:
+-------------
+1. HorseOS INTERRUPTS your doomscrolling
+2. You MUST contemplate for 60 seconds
+3. The horse judges you silently
+4. You return to your life, slightly more equine
+
+FEATURES:
+---------
+🐴 SCHEDULED HORSE MOMENTS
+   - 60-second contemplation sessions
+   - Random existential prompts
+   - Progress bar for your suffering
+   
+💣 MINESWEEPER
+   - Because you need something to do
+   - 10 mines, infinite regrets
+   
+🧮 CALCULATOR
+   - For calculating how much time you've wasted
+
+CONTROLS:
+---------
+• Tap icons to open apps
+• Tap the 🐴 button for instant Horse Moment
+• Pull down or tap × to close apps
+
+REMEMBER:
+---------
+"The horse is always watching."
+"Contemplation is mandatory."
+"This is not a suggestion."
+
+- HorseOS Development Team
+  (just a horse with a keyboard)</div>`
+            },
+            scheduler: {
+                title: '⏰ Scheduler',
+                closable: true,
+                content: `
+                <div class="scheduler-status">
+                    <strong>Current Settings:</strong><br>
+                    Auto-Horse: <span style="color:red">OFF</span><br>
+                    Interval: Manual<br>
+                    Duration: 60 seconds
+                </div>
+                
+                <div class="scheduler-option">
+                    <label>⏱️ Horse Moment Duration:</label>
+                    <select id="durationSelect">
+                        <option value="30">30 seconds (Casual)</option>
+                        <option value="60" selected>60 seconds (Standard)</option>
+                        <option value="120">2 minutes (Serious)</option>
+                        <option value="300">5 minutes (Existential Crisis)</option>
+                    </select>
+                </div>
+                
+                <div class="scheduler-option">
+                    <label>🔄 Auto-Horse Interval:</label>
+                    <select id="intervalSelect">
+                        <option value="0" selected>Manual Only</option>
+                        <option value="5">Every 5 minutes</option>
+                        <option value="15">Every 15 minutes</option>
+                        <option value="20">Every 20 minutes (Recommended)</option>
+                        <option value="30">Every 30 minutes</option>
+                    </select>
+                </div>
+                
+                <button class="btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+                `
+            },
+            computer: {
+                title: '💻 My Computer',
+                closable: true,
+                content: `
+                <div style="text-align:center; padding:20px;">
+                    <div style="margin:15px 0; padding:15px; background:white; border-radius:8px;">
+                        <div style="font-size:32px; margin-bottom:10px;">💾</div>
+                        <div>3½ Floppy (A:)</div>
+                        <div style="font-size:12px; color:#666; margin-top:5px;">Not accessible</div>
+                    </div>
+                    <div style="margin:15px 0; padding:15px; background:white; border-radius:8px;">
+                        <div style="font-size:32px; margin-bottom:10px;">💿</div>
+                        <div>Local Disk (C:)</div>
+                        <div style="font-size:12px; color:#666; margin-top:5px;">847GB of horse thoughts</div>
+                    </div>
+                    <div style="margin:15px 0; padding:15px; background:white; border-radius:8px;">
+                        <div style="font-size:32px; margin-bottom:10px;">🐴</div>
+                        <div>HorseOS System</div>
+                        <div style="font-size:12px; color:#666; margin-top:5px;">Version 1.0</div>
+                    </div>
+                </div>
+                `
+            },
+            calc: {
+                title: '🧮 Calculator',
+                closable: true,
+                content: `
+                <div class="calc-display" id="calcDisplay">0</div>
+                <div class="calc-buttons">
+                    <button class="calc-btn" onclick="calc('C')">C</button>
+                    <button class="calc-btn" onclick="calc('CE')">CE</button>
+                    <button class="calc-btn" onclick="calc('⌫')">⌫</button>
+                    <button class="calc-btn" onclick="calc('/')">÷</button>
+                    <button class="calc-btn" onclick="calc('7')">7</button>
+                    <button class="calc-btn" onclick="calc('8')">8</button>
+                    <button class="calc-btn" onclick="calc('9')">9</button>
+                    <button class="calc-btn" onclick="calc('*')">×</button>
+                    <button class="calc-btn" onclick="calc('4')">4</button>
+                    <button class="calc-btn" onclick="calc('5')">5</button>
+                    <button class="calc-btn" onclick="calc('6')">6</button>
+                    <button class="calc-btn" onclick="calc('-')">−</button>
+                    <button class="calc-btn" onclick="calc('1')">1</button>
+                    <button class="calc-btn" onclick="calc('2')">2</button>
+                    <button class="calc-btn" onclick="calc('3')">3</button>
+                    <button class="calc-btn" onclick="calc('+')">+</button>
+                    <button class="calc-btn" onclick="calc('0')" style="grid-column: span 2;">0</button>
+                    <button class="calc-btn" onclick="calc('.')">.</button>
+                    <button class="calc-btn equals" onclick="calc('=')">=</button>
+                </div>
+                `
+            },
+            minesweeper: {
+                title: '💣 Minesweeper',
+                closable: true,
+                content: `
+                <div class="mine-header">
+                    <div class="mine-counter" id="mineCount">010</div>
+                    <button class="calc-btn" onclick="initMines()" style="padding:10px 20px;">😊</button>
+                    <div class="mine-counter" id="mineTime">000</div>
+                </div>
+                <div class="mine-grid" id="mineGrid"></div>
+                <div style="text-align:center; margin-top:15px; font-size:12px; color:#666;">
+                    Tap to reveal • Long press to flag 🚩
+                </div>
+                `
+            },
+            facts: {
+                title: '📝 Horse Facts',
+                closable: true,
+                content: `
+                <div style="padding:10px;">
+                    <div id="factDisplay" style="background:white; padding:20px; border-radius:12px; margin-bottom:15px; font-size:16px; line-height:1.6;">
+                        Tap "New Fact" to learn something amazing!
+                    </div>
+                    <button class="btn-primary" onclick="newFact()">🎲 New Fact</button>
+                </div>
+                `
+            },
+            recycle: {
+                title: '🗑️ Recycle Bin',
+                closable: true,
+                content: `
+                <div style="text-align:center; padding:30px;">
+                    <div style="font-size:64px; margin-bottom:20px;">🗑️</div>
+                    <div style="margin:15px 0; padding:15px; background:white; border-radius:8px;">
+                        Your Screen Time Guilt
+                    </div>
+                    <div style="margin:15px 0; padding:15px; background:white; border-radius:8px;">
+                        Doomscrolling Addiction
+                    </div>
+                    <div style="margin:15px 0; padding:15px; background:white; border-radius:8px;">
+                        Productivity Anxiety
+                    </div>
+                    <button class="btn-primary" onclick="emptyTrash()" style="margin-top:20px;">Empty Recycle Bin</button>
+                </div>
+                `
+            }
+        };
+        
+        // Modal Functions
+        function openApp(appName) {
+            const app = apps[appName];
+            document.getElementById('modalTitle').textContent = app.title;
+            document.getElementById('modalContent').innerHTML = app.content;
+            document.getElementById('modalHeader').className = 'modal-header ' + (app.headerClass || '');
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Initialize app-specific features
+            if (appName === 'minesweeper') initMines();
+        }
+        
+        function closeModal(e) {
+            if (e && e.target !== document.getElementById('modalOverlay')) return;
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Horse Moment
+        let horseTimer = null;
+        let horseTimeLeft = 60;
+        
+        function openHorseMoment() {
+            horseTimeLeft = parseInt(document.getElementById('durationSelect')?.value || 60);
+            document.getElementById('modalTitle').textContent = '⚠️ Scheduled Horse Moment';
+            document.getElementById('modalHeader').className = 'modal-header horse-moment';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="horse-content">
+                    <div class="horse-ascii">⠀⢱⠐⠄⠙⠽⡲⣤⡀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⡾⠃⠀⠀⢀⠈⠻⣿⣿⣶⡶⢃⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⡼⣧⣀⣠⡴⠀⢂⠀⠙⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⢸⣅⣩⠟⠁⢰⠀⠸⡄⠀⠐⢻⣿⣿⡿⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠈⠙⠁⠀⠀⢀⠀⠀⡇⠀⠀⠄⠻⠿⢷⣋⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</div>
+                    <p><strong>Please stand by for a scheduled Horse Moment.</strong></p>
+                    <p>You will now contemplate and reflect.</p>
+                    <p style="color:#800000; font-weight:bold;">This is a time of seriousness.</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="horseProgress" style="width:100%"></div>
+                    </div>
+                    <div class="horse-timer" id="horseTimer">${horseTimeLeft}</div>
+                    <button class="btn-primary" id="horseBtn" onclick="startContemplation()">I am Contemplating</button>
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            startHorseTimer();
+        }
+        
+        function startHorseTimer() {
+            const totalTime = horseTimeLeft;
+            const progressEl = document.getElementById('horseProgress');
+            const timerEl = document.getElementById('horseTimer');
+            const btnEl = document.getElementById('horseBtn');
+            
+            if (horseTimer) clearInterval(horseTimer);
+            
+            horseTimer = setInterval(() => {
+                horseTimeLeft--;
+                if (timerEl) timerEl.textContent = horseTimeLeft;
+                if (progressEl) progressEl.style.width = ((horseTimeLeft / totalTime) * 100) + '%';
+                
+                if (horseTimeLeft <= 0) {
+                    clearInterval(horseTimer);
+                    if (btnEl) {
+                        btnEl.textContent = '✓ Contemplation Complete';
+                        btnEl.disabled = true;
+                    }
+                    if (timerEl) timerEl.textContent = '✓';
+                    setTimeout(() => closeModal(), 1500);
+                }
+            }, 1000);
+        }
+        
+        function startContemplation() {
+            const btn = document.getElementById('horseBtn');
+            btn.textContent = 'Contemplating...';
+            btn.disabled = true;
+        }
+        
+        // Calculator
+        let calcDisplay = '0';
+        let calcPrev = null;
+        let calcOp = null;
+        let calcNew = true;
+        
+        function calc(key) {
+            const display = document.getElementById('calcDisplay');
+            if (!display) return;
+            
+            if (key === 'C') {
+                calcDisplay = '0';
+                calcPrev = null;
+                calcOp = null;
+            } else if (key === 'CE') {
+                calcDisplay = '0';
+            } else if (key === '⌫') {
+                calcDisplay = calcDisplay.length > 1 ? calcDisplay.slice(0, -1) : '0';
+            } else if (key === '=') {
+                if (calcOp && calcPrev !== null) {
+                    const curr = parseFloat(calcDisplay);
+                    const prev = parseFloat(calcPrev);
+                    switch(calcOp) {
+                        case '+': calcDisplay = String(prev + curr); break;
+                        case '-': calcDisplay = String(prev - curr); break;
+                        case '*': calcDisplay = String(prev * curr); break;
+                        case '/': calcDisplay = curr !== 0 ? String(prev / curr) : 'Error'; break;
+                    }
+                    calcOp = null;
+                    calcPrev = null;
+                    calcNew = true;
+                }
+            } else if ('+-*/'.includes(key)) {
+                calcPrev = calcDisplay;
+                calcOp = key;
+                calcNew = true;
+            } else {
+                if (calcNew || calcDisplay === '0') {
+                    calcDisplay = key;
+                    calcNew = false;
+                } else {
+                    calcDisplay += key;
+                }
+            }
+            display.textContent = calcDisplay;
+        }
+        
+        // Minesweeper (Simple version)
+        function initMines() {
+            const grid = document.getElementById('mineGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            for (let i = 0; i < 64; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'mine-cell';
+                cell.textContent = '';
+                cell.onclick = () => revealMine(cell);
+                cell.oncontextmenu = (e) => { e.preventDefault(); flagMine(cell); };
+                grid.appendChild(cell);
+            }
+        }
+        
+        function revealMine(cell) {
+            if (cell.textContent === '🚩') return;
+            if (Math.random() < 0.15) {
+                cell.textContent = '💣';
+                cell.style.background = '#ff4444';
+                setTimeout(() => alert('💥 Boom! The horse is disappointed.'), 100);
+            } else {
+                const count = Math.floor(Math.random() * 3);
+                cell.textContent = count > 0 ? count : '';
+                cell.style.background = '#c0c0c0';
+            }
+        }
+        
+        function flagMine(cell) {
+            cell.textContent = cell.textContent === '🚩' ? '' : '🚩';
+        }
+        
+        // Horse Facts
+        const facts = [
+            "Horses can sleep both lying down and standing up.",
+            "A horse's heart weighs approximately 9 to 10 pounds.",
+            "Horses have 205 bones in their skeleton.",
+            "The average lifespan of a horse is 25-30 years.",
+            "Horses can see nearly 360 degrees at once.",
+            "A horse's teeth take up more space than its brain.",
+            "Horses cannot vomit due to their digestive system anatomy.",
+            "The fastest recorded speed of a horse was 55 mph.",
+            "Horses have better hearing than dogs.",
+            "There are over 300 different breeds of horses.",
+            "Horses can run within hours of being born.",
+            "A horse's height is measured in 'hands' (4 inches each).",
+            "Horses have the largest eyes of any land mammal.",
+            "The oldest horse on record lived to be 62 years old.",
+            "Horses can recognize themselves in mirrors."
+        ];
+        
+        function newFact() {
+            const display = document.getElementById('factDisplay');
+            if (display) {
+                const fact = facts[Math.floor(Math.random() * facts.length)];
+                display.textContent = fact;
+            }
+        }
+        
+        // Settings
+        function saveSettings() {
+            alert('💾 Settings saved! The horse appreciates your planning.');
+            closeModal();
+        }
+        
+        // Recycle Bin
+        function emptyTrash() {
+            const content = document.getElementById('modalContent');
+            content.innerHTML = `
+                <div style="text-align:center; padding:40px;">
+                    <div style="font-size:64px; margin-bottom:20px;">🗑️</div>
+                    <p>Your guilt has been successfully deleted.</p>
+                    <p style="font-size:12px; color:#666; margin-top:10px;">(It will come back. Guilt always does.)</p>
+                </div>
+            `;
+        }
+        
+        // Prevent zoom on double-tap
+        document.addEventListener('dblclick', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+    </script>
+</body>
+</html>
