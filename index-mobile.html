@@ -366,23 +366,29 @@
             transform: scale(0.95);
         }
         
-        /* Welcome Banner */
+        /* Welcome Banner - Classic Windows 98 Style */
         .welcome-banner {
-            background: linear-gradient(90deg, var(--win-navy), #a6caf0);
+            background: linear-gradient(180deg, #1f91e5 0%, #1a7bc8 100%);
             color: white;
-            padding: 15px;
+            padding: 20px 15px;
             text-align: center;
             margin: -15px -15px 15px -15px;
+            border-bottom: 2px solid var(--win-dark);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         .welcome-banner h1 {
-            font-size: 20px;
-            margin-bottom: 5px;
+            font-size: 22px;
+            margin-bottom: 6px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            letter-spacing: 0.5px;
         }
         
         .welcome-banner p {
-            font-size: 12px;
-            opacity: 0.9;
+            font-size: 13px;
+            color: #e0e0e0;
+            font-style: italic;
         }
         
         /* Scheduler */
