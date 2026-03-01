@@ -1935,17 +1935,6 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             }
         }
 
-        // Override welcome window open to end tutorial
-        const originalOpenWindow = openWindow;
-        openWindow = function(id) {
-            if (id === 'welcome' && tutorialMode) {
-                endTutorial();
-                // Clear the 8-second timeout since they clicked README
-                // (We can't actually clear it, but tutorialMode prevents it from doing harm)
-            }
-            originalOpenWindow(id);
-        };
-
         // Mouse leave detection - more reliable
         const leaveMessages = [
             "Where do you think you're going?",
