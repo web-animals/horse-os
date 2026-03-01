@@ -1178,6 +1178,16 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                     </button>
                 </div>
                 
+                <div style="margin-top:15px;padding:10px;background:#e8f4e8;border:1px solid #0a0;border-radius:4px">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                        <input type="checkbox" id="desktopNotifs" onchange="toggleDesktopNotifications()">
+                        <span>Enable Desktop Notifications (recommended)</span>
+                    </label>
+                    <p style="font-size:9px;color:#666;margin-top:5px;margin-left:20px">
+                        Shows native OS alerts when Horse Moment is triggered. Only works on desktop.
+                    </p>
+                </div>
+                
                 <div id="scheduleMsg" style="text-align:center;margin-top:10px;font-size:10px;color:green;min-height:15px"></div>
             </div>
         </div>
@@ -1841,11 +1851,66 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         }
 
         // Notification
-        function showNotification(text) {
+        // Desktop Notification Support
+        let desktopNotificationsEnabled = localStorage.getItem('horseos_desktop_notifs') === 'true';
+        
+        function showNotification(text, options = {}) {
+            // Always show in-app notification
             const n = document.getElementById('notification');
             document.getElementById('notifText').textContent = text;
             n.classList.add('show');
             setTimeout(() => n.classList.remove('show'), 3000);
+            
+            // Also show desktop notification if enabled and supported
+            if (desktopNotificationsEnabled && 'Notification' in window && Notification.permission === 'granted') {
+                try {
+                    new Notification('HorseOS', {
+                        body: text.replace(/🐴|!|✓/g, '').trim(),
+                        icon: '🐴',
+                        badge: '🐴',
+                        tag: options.tag || 'horseos-' + Date.now(),
+                        requireInteraction: options.requireInteraction || false
+                    });
+                } catch (e) {
+                    console.log('Desktop notification failed:', e);
+                }
+            }
+        }
+        
+        function toggleDesktopNotifications() {
+            const checkbox = document.getElementById('desktopNotifs');
+            if (!checkbox) return;
+            
+            if (checkbox.checked) {
+                // Request permission
+                if ('Notification' in window) {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            desktopNotificationsEnabled = true;
+                            localStorage.setItem('horseos_desktop_notifs', 'true');
+                            showNotification('✓ Desktop notifications enabled!');
+                        } else {
+                            checkbox.checked = false;
+                            showNotification('Notification permission denied');
+                        }
+                    });
+                } else {
+                    checkbox.checked = false;
+                    showNotification('Notifications not supported in this browser');
+                }
+            } else {
+                desktopNotificationsEnabled = false;
+                localStorage.setItem('horseos_desktop_notifs', 'false');
+                showNotification('Desktop notifications disabled');
+            }
+        }
+        
+        function initNotificationSettings() {
+            // Restore checkbox state
+            const checkbox = document.getElementById('desktopNotifs');
+            if (checkbox) {
+                checkbox.checked = desktopNotificationsEnabled;
+            }
         }
 
         // First time visitor check - NEW FLOW
@@ -2098,6 +2163,9 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             if (autoInterval > 0) {
                 startAutoHorse();
             }
+            
+            // Restore notification settings
+            initNotificationSettings();
         }
         
         function startAutoHorse() {
@@ -2118,7 +2186,10 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                     // Time for a Horse Moment!
                     if (!horseRunning) {
                         openHorse();
-                        showNotification('🐴 Scheduled Horse Moment! Time to contemplate.');
+                        showNotification('🐴 Scheduled Horse Moment! Time to contemplate.', {
+                            requireInteraction: true,
+                            tag: 'horse-moment-scheduled'
+                        });
                         lastHorseMoment = now;
                         saveSettings();
                     }
