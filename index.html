@@ -689,20 +689,32 @@
             margin: 4px 0;
         }
         
-        /* Notification */
+        /* Notification - Larger and more prominent */
         .notification {
             position: fixed;
-            top: 10px;
-            right: 10px;
+            top: 20px;
+            right: 20px;
             background: #ffffcc;
-            border: 2px solid #cc0000;
-            padding: 10px;
+            border: 3px solid #cc0000;
+            padding: 20px 25px;
             z-index: 9999;
             display: none;
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.4);
+            font-size: 16px;
+            font-weight: bold;
+            min-width: 300px;
+            max-width: 450px;
+            border-radius: 0;
+            font-family: "MS Sans Serif", Tahoma, sans-serif;
         }
         
         .notification.show { display: block; }
+        
+        .notification::before {
+            content: "[!] ";
+            color: #cc0000;
+            font-weight: bold;
+        }
         
         @media (max-width: 600px) {
             .horse-modal { width: 95vw; }
@@ -1927,7 +1939,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                     <div class="leave-emoji">[HORSE]</div>
                     <div class="leave-text">Welcome to HorseOS!</div>
                     <p style="margin:10px 0;font-size:12px">Your journey to digital wellness begins...</p>
-                    <button onclick="startTutorial()" style="margin-top:10px">Click to Continue [POINT]</button>
+                    <button onclick="startTutorial()" style="margin-top:10px">Click to Continue -></button>
                 `;
                 document.getElementById('firstTimePopup').classList.add('show');
                 
@@ -2349,44 +2361,60 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         function initPaint() {
             const canvas = document.getElementById('paintCanvas');
             if (!canvas) return;
+            
+            // Get context each time to ensure it's fresh
             const ctx = canvas.getContext('2d');
             
-            canvas.addEventListener('mousedown', (e) => {
+            // Fill white background initially
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Remove old listeners to prevent duplicates
+            const newCanvas = canvas.cloneNode(true);
+            canvas.parentNode.replaceChild(newCanvas, canvas);
+            
+            newCanvas.addEventListener('mousedown', (e) => {
                 isPainting = true;
-                const rect = canvas.getBoundingClientRect();
+                const rect = newCanvas.getBoundingClientRect();
                 lastX = e.clientX - rect.left;
                 lastY = e.clientY - rect.top;
+                e.preventDefault();
             });
             
-            canvas.addEventListener('mousemove', (e) => {
+            newCanvas.addEventListener('mousemove', (e) => {
                 if (!isPainting) return;
-                const rect = canvas.getBoundingClientRect();
+                const rect = newCanvas.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 
-                ctx.beginPath();
-                ctx.moveTo(lastX, lastY);
-                ctx.lineTo(x, y);
+                const newCtx = newCanvas.getContext('2d');
+                newCtx.beginPath();
+                newCtx.moveTo(lastX, lastY);
+                newCtx.lineTo(x, y);
                 
                 if (paintTool === 'eraser') {
-                    ctx.strokeStyle = '#fff';
-                    ctx.lineWidth = 20;
+                    newCtx.strokeStyle = '#fff';
+                    newCtx.lineWidth = 20;
                 } else {
                     // Horse "guides" your brush - random brown colors
-                    const browns = ['#8B4513', '#A0522D', '#CD853F', '#D2691E', '#8B4513'];
-                    ctx.strokeStyle = browns[Math.floor(Math.random() * browns.length)];
-                    ctx.lineWidth = 3;
+                    const browns = ['#8B4513', '#A0522D', '#CD853F', '#D2691E', '#654321'];
+                    newCtx.strokeStyle = browns[Math.floor(Math.random() * browns.length)];
+                    newCtx.lineWidth = 4;
                 }
                 
-                ctx.lineCap = 'round';
-                ctx.stroke();
+                newCtx.lineCap = 'round';
+                newCtx.lineJoin = 'round';
+                newCtx.stroke();
                 
                 lastX = x;
                 lastY = y;
             });
             
-            canvas.addEventListener('mouseup', () => isPainting = false);
-            canvas.addEventListener('mouseleave', () => isPainting = false);
+            newCanvas.addEventListener('mouseup', () => isPainting = false);
+            newCanvas.addEventListener('mouseleave', () => isPainting = false);
+            
+            // Prevent dragging
+            newCanvas.addEventListener('dragstart', (e) => e.preventDefault());
         }
         
         function clearCanvas() {
@@ -2397,6 +2425,59 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 showNotification('[HORSE] Canvas cleared. The horse provides a fresh pasture.');
             }
+        }
+        
+        // Shared Minesweeper Leaderboard (works across mobile and desktop)
+        const LEADERBOARD_KEY = 'horseos_minesweeper_scores';
+        
+        function getSharedLeaderboard() {
+            try {
+                const data = localStorage.getItem(LEADERBOARD_KEY);
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+        
+        function saveSharedLeaderboard(scores) {
+            try {
+                localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(scores));
+            } catch (e) {
+                console.log('Failed to save leaderboard:', e);
+            }
+        }
+        
+        function addScoreToLeaderboard(name, time) {
+            const scores = getSharedLeaderboard();
+            scores.push({
+                name: name || 'Anonymous',
+                time: time,
+                date: new Date().toISOString(),
+                device: 'desktop'
+            });
+            // Sort by time (ascending) and keep top 10
+            scores.sort((a, b) => a.time - b.time);
+            scores.splice(10);
+            saveSharedLeaderboard(scores);
+            return scores;
+        }
+        
+        function formatLeaderboard() {
+            const scores = getSharedLeaderboard();
+            if (scores.length === 0) return 'No scores yet. Win a game!';
+            
+            let html = '<table style="width:100%;border-collapse:collapse;font-family:monospace;font-size:12px;">';
+            html += '<tr style="background:#000080;color:white;"><th style="padding:5px;">#</th><th style="padding:5px;text-align:left;">Name</th><th style="padding:5px;">Time</th><th style="padding:5px;">From</th></tr>';
+            
+            scores.forEach((score, i) => {
+                const medal = i === 0 ? '[GOLD]' : i === 1 ? '[SILVER]' : i === 2 ? '[BRONZE]' : (i + 1) + '.';
+                const device = score.device === 'mobile' ? '[PHONE]' : '[PC]';
+                const bg = i % 2 === 0 ? '#fff' : '#f0f0f0';
+                html += `<tr style="background:${bg};"><td style="padding:5px;text-align:center;font-weight:bold;">${medal}</td><td style="padding:5px;">${score.name}</td><td style="padding:5px;text-align:center;">${score.time}s</td><td style="padding:5px;text-align:center;">${device}</td></tr>`;
+            });
+            
+            html += '</table>';
+            return html;
         }
         
         // Email App

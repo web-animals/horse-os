@@ -25,20 +25,33 @@
             touch-action: manipulation;
         }
         
-        /* Mobile Desktop Grid */
+        /* Mobile Desktop Grid - Single screen layout */
         .desktop {
             padding: 15px;
-            min-height: 100vh;
-            padding-bottom: 80px;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 70px;
         }
         
-        /* App Grid - Mobile Friendly */
+        .desktop > .app-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            align-content: center;
+        }
+        
+        /* App Grid - Mobile Friendly - All on one screen */
         .app-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            max-width: 400px;
+            gap: 8px;
+            max-width: 100%;
             margin: 0 auto;
+            padding: 0 10px;
         }
         
         .app-icon {
@@ -46,10 +59,12 @@
             flex-direction: column;
             align-items: center;
             cursor: pointer;
-            padding: 10px 5px;
-            border-radius: 12px;
+            padding: 6px 3px;
+            border-radius: 8px;
             transition: transform 0.1s, background 0.2s;
             -webkit-tap-highlight-color: transparent;
+            min-height: 60px;
+            justify-content: center;
         }
         
         .app-icon:active {
@@ -58,17 +73,25 @@
         }
         
         .app-icon .icon-img {
-            font-size: 36px;
-            margin-bottom: 6px;
-            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
+            font-size: 11px;
+            margin-bottom: 3px;
+            background: rgba(255,255,255,0.9);
+            color: #000;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+            min-width: 36px;
+            text-align: center;
         }
         
         .app-icon .icon-label {
             color: white;
-            font-size: 11px;
+            font-size: 9px;
             text-align: center;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-            line-height: 1.2;
+            line-height: 1.1;
         }
         
         /* Modal/Window - Full Screen Mobile */
@@ -366,27 +389,27 @@
             transform: scale(0.95);
         }
         
-        /* Welcome Banner - Classic Windows 98 Style */
+        /* Welcome Banner - Compact for single screen */
         .welcome-banner {
             background: linear-gradient(180deg, #1f91e5 0%, #1a7bc8 100%);
             color: white;
-            padding: 20px 15px;
+            padding: 8px 10px;
             text-align: center;
-            margin: -15px -15px 15px -15px;
+            margin: -15px -15px 8px -15px;
             border-bottom: 2px solid var(--win-dark);
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         .welcome-banner h1 {
-            font-size: 22px;
-            margin-bottom: 6px;
+            font-size: 16px;
+            margin-bottom: 2px;
             font-weight: bold;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
             letter-spacing: 0.5px;
         }
         
         .welcome-banner p {
-            font-size: 13px;
+            font-size: 10px;
             color: #e0e0e0;
             font-style: italic;
         }
@@ -449,36 +472,36 @@
         
         <div class="app-grid">
             <div class="app-icon" onclick="openApp('readme')">
-                <div class="icon-img">[README]</div>
-                <div class="icon-label">README</div>
+                <div class="icon-img">README</div>
+                <div class="icon-label">Read Me</div>
             </div>
             <div class="app-icon" onclick="openApp('scheduler')">
-                <div class="icon-img">[CLOCK]</div>
-                <div class="icon-label">Scheduler</div>
+                <div class="icon-img">CLOCK</div>
+                <div class="icon-label">Schedule</div>
             </div>
             <div class="app-icon" onclick="openHorseMoment()">
-                <div class="icon-img">[HORSE]</div>
-                <div class="icon-label">Horse<br>Moment</div>
+                <div class="icon-img">HORSE</div>
+                <div class="icon-label">Moment</div>
             </div>
             <div class="app-icon" onclick="openApp('computer')">
-                <div class="icon-img">[PC]</div>
-                <div class="icon-label">My<br>Computer</div>
+                <div class="icon-img">PC</div>
+                <div class="icon-label">Computer</div>
             </div>
             <div class="app-icon" onclick="openApp('calc')">
-                <div class="icon-img">[CALC]</div>
-                <div class="icon-label">Calculator</div>
+                <div class="icon-img">CALC</div>
+                <div class="icon-label">Calc</div>
             </div>
             <div class="app-icon" onclick="openApp('minesweeper')">
-                <div class="icon-img">[MINE]</div>
-                <div class="icon-label">Minesweeper</div>
+                <div class="icon-img">MINE</div>
+                <div class="icon-label">Mines</div>
             </div>
             <div class="app-icon" onclick="openApp('facts')">
-                <div class="icon-img">[NOTE]</div>
-                <div class="icon-label">Horse Facts</div>
+                <div class="icon-img">FACTS</div>
+                <div class="icon-label">Facts</div>
             </div>
             <div class="app-icon" onclick="openApp('recycle')">
-                <div class="icon-img">[BIN]</div>
-                <div class="icon-label">Recycle Bin</div>
+                <div class="icon-img">BIN</div>
+                <div class="icon-label">Trash</div>
             </div>
         </div>
     </div>
@@ -627,21 +650,81 @@ REMEMBER:
                 title: '[PC] My Computer',
                 closable: true,
                 content: `
-                <div style="text-align:center; padding:20px;">
-                    <div style="margin:15px 0; padding:15px; background:white; border-radius:8px;">
-                        <div style="font-size:32px; margin-bottom:10px;">[FLOPPY]</div>
-                        <div>3½ Floppy (A:)</div>
-                        <div style="font-size:12px; color:#666; margin-top:5px;">Not accessible</div>
+                <div style="text-align:center; padding:15px;">
+                    <div onclick="alert('The horse has deleted all floppy disks.')" style="margin:10px 0; padding:12px; background:white; border-radius:8px; cursor:pointer; border:2px solid transparent;" onmouseover="this.style.borderColor='#008080'" onmouseout="this.style.borderColor='transparent'">
+                        <div style="font-size:24px; margin-bottom:5px; font-weight:bold;">[FLOPPY]</div>
+                        <div style="font-size:13px;">3½ Floppy (A:)</div>
+                        <div style="font-size:10px; color:#666; margin-top:3px;">Click to eject</div>
                     </div>
-                    <div style="margin:15px 0; padding:15px; background:white; border-radius:8px;">
-                        <div style="font-size:32px; margin-bottom:10px;">[CD]</div>
-                        <div>Local Disk (C:)</div>
-                        <div style="font-size:12px; color:#666; margin-top:5px;">847GB of horse thoughts</div>
+                    <div onclick="openApp('horseDrive')" style="margin:10px 0; padding:12px; background:white; border-radius:8px; cursor:pointer; border:2px solid transparent;" onmouseover="this.style.borderColor='#008080'" onmouseout="this.style.borderColor='transparent'">
+                        <div style="font-size:24px; margin-bottom:5px; font-weight:bold;">[CD]</div>
+                        <div style="font-size:13px;">Local Disk (C:)</div>
+                        <div style="font-size:10px; color:#666; margin-top:3px;">847GB of horse thoughts</div>
                     </div>
-                    <div style="margin:15px 0; padding:15px; background:white; border-radius:8px;">
-                        <div style="font-size:32px; margin-bottom:10px;">[HORSE]</div>
-                        <div>HorseOS System</div>
-                        <div style="font-size:12px; color:#666; margin-top:5px;">Version 1.0</div>
+                    <div onclick="alert('System files are protected by the horse.')" style="margin:10px 0; padding:12px; background:white; border-radius:8px; cursor:pointer; border:2px solid transparent;" onmouseover="this.style.borderColor='#008080'" onmouseout="this.style.borderColor='transparent'">
+                        <div style="font-size:24px; margin-bottom:5px; font-weight:bold;">[HORSE]</div>
+                        <div style="font-size:13px;">HorseOS System</div>
+                        <div style="font-size:10px; color:#666; margin-top:3px;">Version 1.0 - Protected</div>
+                    </div>
+                    <div onclick="openApp('internet')" style="margin:10px 0; padding:12px; background:#e8f4ff; border-radius:8px; cursor:pointer; border:2px solid transparent;" onmouseover="this.style.borderColor='#008080'" onmouseout="this.style.borderColor='transparent'">
+                        <div style="font-size:24px; margin-bottom:5px; font-weight:bold;">[NET]</div>
+                        <div style="font-size:13px;">The Internet</div>
+                        <div style="font-size:10px; color:#666; margin-top:3px;">Click to browse</div>
+                    </div>
+                </div>
+                `
+            },
+            horseDrive: {
+                title: '[CD] Local Disk (C:)',
+                closable: true,
+                content: `
+                <div style="padding:15px; font-family:monospace; font-size:12px;">
+                    <div style="background:#000; color:#0f0; padding:10px; border-radius:4px; margin-bottom:10px;">
+                        C:\> dir /w<br>
+                        [HORSE]  [NEIGH]  [GALLOP]  [MANE]<br>
+                        [HOOVE]  [TROT]  [CANTER]  [FOAL]
+                    </div>
+                    <div style="background:white; padding:10px; border-radius:4px; margin-bottom:10px;">
+                        <strong>File: horse_thoughts.txt</strong><br>
+                        <span style="color:#666; font-size:10px;">Size: 4.7 GB</span><br>
+                        "The grass is always greener... but I'm a browser horse."
+                    </div>
+                    <div style="background:white; padding:10px; border-radius:4px; margin-bottom:10px;">
+                        <strong>File: existential_dread.dll</strong><br>
+                        <span style="color:#666; font-size:10px;">Size: Infinite</span><br>
+                        System critical. Do not delete.
+                    </div>
+                    <div style="background:white; padding:10px; border-radius:4px;">
+                        <strong>Folder: /contemplation_cache</strong><br>
+                        <span style="color:#666; font-size:10px;">847 items</span><br>
+                        Cached moments of profound horse wisdom.
+                    </div>
+                </div>
+                `
+            },
+            internet: {
+                title: '[NET] Internet Explorer',
+                closable: true,
+                content: `
+                <div style="padding:15px; text-align:center;">
+                    <div style="background:#c0c0c0; padding:8px; margin-bottom:10px; font-family:monospace; font-size:11px;">
+                        Address: <span style="background:white; padding:2px 5px;">http://www.thehorsemoment.com</span>
+                    </div>
+                    <div style="background:white; padding:20px; min-height:200px; text-align:left; font-size:12px;">
+                        <h2 style="color:#000080; margin-bottom:10px; text-decoration:underline;">Welcome to the Internet</h2>
+                        <p style="margin-bottom:10px;">You are already here. There is nowhere else to go.</p>
+                        <p style="margin-bottom:10px;">The horse has indexed the entire web. It is all horses.</p>
+                        <div style="border:2px inset #c0c0c0; padding:10px; background:#ffffcc; margin:15px 0;">
+                            <strong>Search Results for "meaning of life":</strong><br>
+                            1. Neigh<br>
+                            2. Trot in circles<br>
+                            3. Eat hay<br>
+                            4. [END OF RESULTS]
+                        </div>
+                        <p style="font-size:10px; color:#666; margin-top:20px;">
+                            Loading... 56k modem sounds... [HORSE] 98%<br>
+                            Estimated time remaining: A horse's lifetime
+                        </p>
                     </div>
                 </div>
                 `
@@ -1050,23 +1133,35 @@ REMEMBER:
         
         let currentWinTime = 0;
         
+        // Shared Leaderboard Key - same as desktop
+        const LEADERBOARD_KEY = 'horseos_minesweeper_scores';
+        
         function gameWin() {
             mineGameOver = true;
             clearInterval(mineTimerInterval);
             currentWinTime = mineTimer;
             showLeaderboard();
             setTimeout(() => {
-                alert('[PARTY] You win in ' + currentWinTime + ' seconds! The horse is impressed.');
+                alert('You win in ' + currentWinTime + ' seconds! The horse is impressed.');
             }, 300);
         }
         
-        // Leaderboard Functions
+        // Leaderboard Functions - Shared with Desktop
         function getLeaderboard() {
-            return JSON.parse(localStorage.getItem('horseos_minesweeper_leaderboard') || '[]');
+            try {
+                const data = localStorage.getItem(LEADERBOARD_KEY);
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                return [];
+            }
         }
         
         function saveLeaderboard(scores) {
-            localStorage.setItem('horseos_minesweeper_leaderboard', JSON.stringify(scores));
+            try {
+                localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(scores));
+            } catch (e) {
+                console.log('Failed to save:', e);
+            }
         }
         
         function showLeaderboard() {
@@ -1082,12 +1177,14 @@ REMEMBER:
             // Sort by time (ascending)
             scores.sort((a, b) => a.time - b.time);
             
-            let html = '<table style="width:100%; border-collapse:collapse;">';
-            html += '<tr style="border-bottom:1px solid #ccc;"><th style="text-align:left; padding:5px;">#</th><th style="text-align:left; padding:5px;">Name</th><th style="text-align:right; padding:5px;">Time</th></tr>';
+            let html = '<table style="width:100%; border-collapse:collapse; font-size:12px;">';
+            html += '<tr style="background:#000080; color:white;"><th style="padding:5px;">#</th><th style="text-align:left; padding:5px;">Name</th><th style="padding:5px;">Time</th><th style="padding:5px;">From</th></tr>';
             
-            scores.slice(0, 5).forEach((score, i) => {
-                const medal = i === 0 ? '[GOLD]' : i === 1 ? '[SILVER]' : i === 2 ? '[BRONZE]' : (i + 1) + '.';
-                html += `<tr style="border-bottom:1px solid #eee;"><td style="padding:5px;">${medal}</td><td style="padding:5px;">${escapeHtml(score.name)}</td><td style="text-align:right; padding:5px;">${score.time}s</td></tr>`;
+            scores.forEach((score, i) => {
+                const medal = i === 0 ? '1st' : i === 1 ? '2nd' : i === 2 ? '3rd' : (i + 1) + 'th';
+                const device = score.device === 'mobile' ? 'Phone' : 'PC';
+                const bg = i % 2 === 0 ? '#fff' : '#f5f5f5';
+                html += `<tr style="background:${bg}; border-bottom:1px solid #ddd;"><td style="padding:5px; font-weight:bold;">${medal}</td><td style="padding:5px;">${escapeHtml(score.name)}</td><td style="padding:5px; text-align:center;">${score.time}s</td><td style="padding:5px; text-align:center; font-size:10px;">${device}</td></tr>`;
             });
             
             html += '</table>';
@@ -1107,13 +1204,14 @@ REMEMBER:
             }
             
             const nameInput = document.getElementById('playerName');
-            const name = nameInput?.value?.trim() || 'Anonymous Horse';
+            const name = nameInput?.value?.trim() || 'Anonymous';
             
             const scores = getLeaderboard();
             scores.push({
                 name: name,
                 time: currentWinTime,
-                date: new Date().toISOString()
+                date: new Date().toISOString(),
+                device: 'mobile'
             });
             
             // Keep only top 10
@@ -1126,7 +1224,7 @@ REMEMBER:
             if (nameInput) nameInput.value = '';
             currentWinTime = 0;
             
-            alert('Score saved! [TROPHY]');
+            alert('Score saved!');
         }
         
         function checkWin() {
