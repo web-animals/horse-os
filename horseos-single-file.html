@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HorseOS - Scheduled Horse Moments</title>
+    <style>
+:root {
+  --win-gray: #c0c0c0;
+  --win-dark: #808080;
+  --win-light: #ffffff;
+  --win-black: #000000;
+  --win-blue: #000080;
+  --win-teal: #008080;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: "MS Sans Serif", "Tahoma", sans-serif;
+  font-size: 11px;
+  background: var(--win-teal);
+  overflow: hidden;
+  user-select: none;
+}
+.desktop {
+  width: 100vw;
+  height: 100vh;
+  background: var(--win-teal);
+  position: relative;
+}
+.desktop-icons {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 1;
+}
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 75px;
+  cursor: pointer;
+  padding: 4px;
+}
+.desktop-icon:hover { background: rgba(0, 0, 128, 0.3); }
+.desktop-icon:hover .icon-label {
+  background: var(--win-blue);
+  color: white;
+}
+.icon-img { font-size: 32px; margin-bottom: 4px; }
+.icon-label {
+  text-align: center;
+  color: white;
+  font-size: 11px;
+  text-shadow: 1px 1px 0 #000;
+  padding: 1px 4px;
+}
+.window {
+  position: absolute;
+  background: var(--win-gray);
+  border: 2px solid;
+  border-color: var(--win-light) var(--win-dark) var(--win-dark) var(--win-light);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+  min-width: 300px;
+  z-index: 10;
+}
+.window-title {
+  background: linear-gradient(90deg, #0a246a, #a6caf0);
+  color: white;
+  padding: 2px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 11px;
+}
+.window-title.critical {
+  background: linear-gradient(90deg, #800000, #ff0000);
+}
+.window-buttons { display: flex; gap: 2px; }
+.win-btn {
+  width: 16px;
+  height: 14px;
+  background: var(--win-gray);
+  border: 1px solid;
+  border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+  font-size: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.win-btn.disabled { color: var(--win-dark); cursor: not-allowed; }
+.window-content { padding: 8px; background: var(--win-gray); }
+.modal-window {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 500px;
+  z-index: 1000;
+}
+.horse-moment { text-align: center; padding: 20px; }
+.horse-container { margin: 20px 0; position: relative; }
+.horse-3d {
+  font-size: 100px;
+  animation: horseFloat 3s ease-in-out infinite;
+  display: inline-block;
+}
+@keyframes horseFloat {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+.horse-shadow {
+  width: 80px;
+  height: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  margin: 10px auto 0;
+  animation: shadowPulse 3s ease-in-out infinite;
+}
+@keyframes shadowPulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(0.8); opacity: 0.1; }
+}
+.horse-text h2 { font-size: 14px; font-weight: bold; margin-bottom: 12px; color: var(--win-black); }
+.horse-text p { font-size: 12px; margin-bottom: 8px; line-height: 1.4; }
+.horse-text .serious { font-weight: bold; color: #800000; font-size: 13px; }
+.horse-text .warning {
+  color: #ff0000;
+  font-weight: bold;
+  background: #ffffcc;
+  padding: 4px 8px;
+  display: inline-block;
+  margin-top: 8px;
+}
+.contemplation-timer { font-size: 18px; font-weight: bold; margin: 16px 0; color: var(--win-blue); }
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background: var(--win-dark);
+  border: 2px inset var(--win-gray);
+  margin: 12px 0;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  width: 0%;
+  transition: width 1s linear;
+}
+.reflection-prompt {
+  font-style: italic;
+  font-size: 14px;
+  color: #000080;
+  background: #f0f0f0;
+  padding: 12px;
+  margin: 16px 0;
+  border: 1px dashed var(--win-dark);
+}
+.horse-buttons { margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.horse-btn {
+  padding: 6px 20px;
+  background: var(--win-gray);
+  border: 2px solid;
+  border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+  font-size: 11px;
+  cursor: pointer;
+}
+.horse-btn.disabled { color: var(--win-dark); cursor: not-allowed; }
+.explorer {
+  background: white;
+  border: 2px inset var(--win-gray);
+  padding: 4px;
+  min-height: 150px;
+}
+.folder-item { display: flex; align-items: center; gap: 8px; padding: 4px; cursor: pointer; }
+.folder-icon { font-size: 20px; }
+.recycle-content {
+  background: white;
+  border: 2px inset var(--win-gray);
+  padding: 8px;
+  min-height: 150px;
+}
+.trash-item { display: flex; align-items: center; gap: 8px; padding: 4px; border-bottom: 1px dotted var(--win-dark); }
+.trash-size { margin-left: auto; color: var(--win-dark); font-size: 10px; }
+.empty-trash { margin-top: 16px; text-align: center; }
+.ie-content {
+  background: white;
+  border: 2px inset var(--win-gray);
+  padding: 16px;
+  min-height: 300px;
+}
+.ie-content h1 { font-size: 18px; margin-bottom: 16px; color: var(--win-blue); }
+.fact-box { background: #f0f0f0; border: 1px solid var(--win-dark); padding: 16px; margin: 16px 0; font-size: 14px; }
+.horse-stats { margin-top: 24px; border-top: 2px solid var(--win-dark); padding-top: 16px; }
+.stat-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dotted var(--win-dark); }
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background: var(--win-gray);
+  border-top: 2px solid var(--win-light);
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  z-index: 1000;
+}
+.start-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background: var(--win-gray);
+  border: 2px solid;
+  border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+  font-weight: bold;
+  font-size: 11px;
+  cursor: pointer;
+}
+.start-btn span { font-size: 14px; }
+.taskbar-items { flex: 1; display: flex; gap: 2px; padding: 0 4px; }
+.taskbar-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: var(--win-gray);
+  border: 2px solid;
+  border-color: var(--win-light) var(--win-dark) var(--win-dark) var(--win-light);
+  font-size: 11px;
+  cursor: pointer;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.taskbar-item.active { border-color: var(--win-dark) var(--win-light) var(--win-light) var(--win-dark); }
+.clock {
+  margin-left: auto;
+  padding: 2px 8px;
+  border: 2px inset var(--win-gray);
+  font-size: 11px;
+  min-width: 60px;
+  text-align: center;
+}
+.start-menu {
+  position: fixed;
+  bottom: 28px;
+  left: 0;
+  width: 200px;
+  background: var(--win-gray);
+  border: 2px solid;
+  border-color: var(--win-light) var(--win-black) var(--win-black) var(--win-light);
+  z-index: 1001;
+}
+.start-header {
+  background: linear-gradient(90deg, #0a246a, #a6caf0);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.start-user { font-size: 32px; border: 2px solid var(--win-light); border-radius: 4px; padding: 2px; }
+.start-username { color: white; font-weight: bold; font-size: 14px; }
+.start-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; cursor: pointer; }
+.start-item:hover { background: var(--win-blue); color: white; }
+.start-item span { font-size: 16px; }
+.startup-screen {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.startup-content { text-align: center; color: #c0c0c0; }
+.startup-logo { font-size: 80px; margin-bottom: 20px; }
+.startup-text h1 { font-size: 32px; font-weight: normal; margin-bottom: 10px; color: white; }
+.startup-text p { font-size: 14px; margin-bottom: 30px; }
+.startup-bar { width: 300px; height: 20px; border: 2px solid var(--win-gray); margin: 0 auto; overflow: hidden; }
+.startup-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  width: 0%;
+  animation: startupLoad 3s ease-out forwards;
+}
+@keyframes startupLoad { 0% { width: 0%; } 100% { width: 100%; } }
+@media (max-width: 600px) {
+  .modal-window { width: 95vw; }
+  .horse-3d { font-size: 70px; }
+  .horse-text h2 { font-size: 12px; }
+}
+    </style>
+</head>
+<body>
+<div class="desktop">
+  <div class="desktop-icons">
+    <div class="desktop-icon" onclick="openWindow('myComputer')">
+      <div class="icon-img">💻</div>
+      <div class="icon-label">My Computer</div>
+    </div>
+    <div class="desktop-icon" onclick="openWindow('horseMoment')">
+      <div class="icon-img">🐴</div>
+      <div class="icon-label">Scheduled Horse<br>Moment.exe</div>
+    </div>
+    <div class="desktop-icon" onclick="openWindow('recycleBin')">
+      <div class="icon-img">🗑️</div>
+      <div class="icon-label">Recycle Bin</div>
+    </div>
+    <div class="desktop-icon" onclick="openWindow('internet')">
+      <div class="icon-img">🌐</div>
+      <div class="icon-label">Internet<br>Explorer</div>
+    </div>
+  </div>
+
+  <div class="window modal-window" id="horseMoment" style="display:none;">
+    <div class="window-title critical">
+      <span>🐴 Scheduled_Horse_Moment.exe</span>
+      <div class="window-buttons">
+        <button class="win-btn close disabled" title="You cannot close this">×</button>
+      </div>
+    </div>
+    <div class="window-content horse-moment">
+      <div class="horse-container">
+        <div class="horse-3d">🐴</div>
+        <div class="horse-shadow"></div>
+      </div>
+      <div class="horse-text">
+        <h2>Please stand by for a scheduled Horse Moment.</h2>
+        <p>You will now contemplate and reflect.</p>
+        <p class="serious">This is a time of seriousness.</p>
+        <p class="small">You currently have <strong>Scheduled Horse Moments</strong> turned on.</p>
+        <p class="warning">⚠️ You cannot change this in settings.</p>
+      </div>
+      <div class="contemplation-timer">Time remaining: <span id="timer">60</span> seconds</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="reflection-prompt" id="reflectionPrompt">"What would you do if you were a horse with WiFi?"</div>
+      <div class="horse-buttons">
+        <button class="horse-btn" id="contemplateBtn" onclick="contemplate()">I am Contemplating</button>
+        <button class="horse-btn disabled" disabled>Settings...</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="window" id="myComputer" style="display:none; top:50px; left:50px;">
+    <div class="window-title">
+      <span>My Computer</span>
+      <div class="window-buttons"><button class="win-btn close" onclick="closeWindow('myComputer')">×</button></div>
+    </div>
+    <div class="window-content">
+      <div class="explorer">
+        <div class="folder-item"><span class="folder-icon">💾</span><span>3½ Floppy (A:)</span></div>
+        <div class="folder-item"><span class="folder-icon">💿</span><span>Local Disk (C:)</span></div>
+        <div class="folder-item"><span class="folder-icon">🌐</span><span>Control Panel</span></div>
+        <div class="folder-item"><span class="folder-icon">🐴</span><span>HorseOS System</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="window" id="recycleBin" style="display:none; top:100px; left:100px;">
+    <div class="window-title">
+      <span>Recycle Bin</span>
+      <div class="window-buttons"><button class="win-btn close" onclick="closeWindow('recycleBin')">×</button></div>
+    </div>
+    <div class="window-content">
+      <div class="recycle-content">
+        <div class="trash-item"><span>🗑️</span><span>Your Screen Time Guilt</span><span class="trash-size">2.4 MB</span></div>
+        <div class="trash-item"><span>🗑️</span><span>Doomscrolling Addiction</span><span class="trash-size">847 KB</span></div>
+        <div class="empty-trash"><button onclick="emptyTrash()">Empty Recycle Bin</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="window" id="internet" style="display:none; top:80px; left:80px;">
+    <div class="window-title">
+      <span>Internet Explorer - Horse Facts</span>
+      <div class="window-buttons"><button class="win-btn close" onclick="closeWindow('internet')">×</button></div>
+    </div>
+    <div class="window-content ie-content">
+      <h1>🐴 Daily Horse Fact</h1>
+      <div class="fact-box"><p id="horseFact">Horses can sleep both lying down and standing up.</p></div>
+      <button onclick="newFact()">Get New Fact</button>
+      <div class="horse-stats">
+        <h3>Global Horse Moments</h3>
+        <div class="stat-item"><span>Total Contemplations:</span><span id="totalContemplations">42,847</span></div>
+        <div class="stat-item"><span>Horses Online:</span><span>1,337</span></div>
+        <div class="stat-item"><span>Seriousness Level:</span><span>Maximum</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="taskbar">
+    <button class="start-btn" onclick="toggleStartMenu()"><span>🐴</span> Start</button>
+    <div class="taskbar-items">
+      <div class="taskbar-item active" onclick="openWindow('horseMoment')"><span>🐴</span> Scheduled Horse Moment</div>
+    </div>
+    <div class="clock" id="clock">--:--</div>
+  </div>
+
+  <div class="start-menu" id="startMenu" style="display:none;">
+    <div class="start-header"><div class="start-user">🐴</div><div class="start-username">Horse User</div></div>
+    <div class="start-items">
+      <div class="start-item" onclick="openWindow('internet'); toggleStartMenu()"><span>🌐</span> Internet Explorer</div>
+      <div class="start-item" onclick="openWindow('myComputer'); toggleStartMenu()"><span>💻</span> My Computer</div>
+      <div class="start-item" onclick="openWindow('horseMoment'); toggleStartMenu()"><span>🐴</span> Scheduled Horse Moment</div>
+    </div>
+  </div>
+
+  <div class="startup-screen" id="startupScreen">
+    <div class="startup-content">
+      <div class="startup-logo">🐴</div>
+      <div class="startup-text"><h1>HorseOS</h1><p>Starting Horse Moments...</p></div>
+      <div class="startup-bar"><div class="startup-fill"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const contemplationPrompts = [
+  "What would you do if you were a horse with WiFi?",
+  "Reflect on your last email. Was it necessary?",
+  "The horse judges your browser tabs. Explain yourself.",
+  "If horses could code, what would they build?",
+  "Contemplate the last time you touched grass.",
+  "The horse asks: Have you hydrated today?",
+  "What is your favorite ponytail and why?",
+  "Reflect on your screen time. The horse is concerned.",
+  "If you were a horse, what would your LinkedIn headline be?",
+  "The horse wants to know: When did you last stretch?"
+];
+const horseFacts = [
+  "Horses can sleep both lying down and standing up.",
+  "A horse's heart weighs approximately 9 to 10 pounds.",
+  "Horses have 205 bones in their skeleton.",
+  "The average lifespan of a horse is 25-30 years.",
+  "Horses can see nearly 360 degrees at once.",
+  "A horse's teeth take up more space than its brain.",
+  "Horses cannot vomit due to their digestive system anatomy.",
+  "The fastest recorded speed of a horse was 55 mph."
+];
+let currentTimer = 60, timerInterval = null;
+function openWindow(w) {
+  const el = document.getElementById(w);
+  if (el) { el.style.display = 'block'; if (w === 'horseMoment') startHorseMoment(); }
+}
+function closeWindow(w) {
+  const el = document.getElementById(w);
+  if (el) { el.style.display = 'none'; if (w === 'horseMoment' && timerInterval) clearInterval(timerInterval); }
+}
+function toggleStartMenu() {
+  const m = document.getElementById('startMenu');
+  m.style.display = m.style.display === 'none' ? 'block' : 'none';
+}
+function startHorseMoment() {
+  currentTimer = 60;
+  document.getElementById('reflectionPrompt').textContent = '"' + contemplationPrompts[Math.floor(Math.random() * contemplationPrompts.length)] + '"';
+  updateTimerDisplay();
+  document.getElementById('progressFill').style.width = '0%';
+  const btn = document.getElementById('contemplateBtn');
+  btn.textContent = 'I am Contemplating'; btn.disabled = false; btn.classList.remove('disabled');
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    currentTimer--; updateTimerDisplay();
+    document.getElementById('progressFill').style.width = ((60 - currentTimer) / 60 * 100) + '%';
+    if (currentTimer <= 0) {
+      clearInterval(timerInterval);
+      btn.textContent = '✓ Contemplation Complete';
+      document.querySelector('.horse-3d').textContent = '🦄';
+      setTimeout(() => { document.querySelector('.horse-3d').textContent = '🐴'; }, 2000);
+    }
+  }, 1000);
+}
+function updateTimerDisplay() { document.getElementById('timer').textContent = currentTimer; }
+function contemplate() {
+  const btn = document.getElementById('contemplateBtn');
+  btn.textContent = 'Contemplating...'; btn.disabled = true; btn.classList.add('disabled');
+}
+function newFact() {
+  const el = document.getElementById('horseFact');
+  const fact = horseFacts[Math.floor(Math.random() * horseFacts.length)];
+  el.textContent = ''; let i = 0;
+  const interval = setInterval(() => { el.textContent += fact.charAt(i); i++; if (i >= fact.length) clearInterval(interval); }, 30);
+}
+function emptyTrash() {
+  document.querySelector('.recycle-content').innerHTML = '<div style="text-align:center;padding:40px;color:#808080;"><div style="font-size:48px;margin-bottom:16px;">🗑️</div><p>The Recycle Bin is empty.</p><p style="font-size:11px;margin-top:8px;">Your guilt has been successfully deleted.</p></div>';
+}
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes().toString().padStart(2, '0'), ampm = h >= 12 ? 'PM' : 'AM';
+  document.getElementById('clock').textContent = (h % 12 || 12) + ':' + m + ' ' + ampm;
+}
+window.addEventListener('DOMContentLoaded', () => {
+  updateClock(); setInterval(updateClock, 1000);
+  setTimeout(() => {
+    document.getElementById('startupScreen').style.opacity = '0';
+    document.getElementById('startupScreen').style.transition = 'opacity 0.5s';
+    setTimeout(() => { document.getElementById('startupScreen').style.display = 'none'; openWindow('horseMoment'); }, 500);
+  }, 3000);
+});
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('startMenu'), btn = document.querySelector('.start-btn');
+  if (!menu.contains(e.target) && !btn.contains(e.target)) menu.style.display = 'none';
+});
+console.log('🐴 HorseOS Loaded');
+console.log('Please stand by for scheduled Horse Moments.');
+console.log('This is not a suggestion.');
+</script>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HorseOS - Scheduled Horse Moments</title>
+    <link rel="stylesheet" href="css/horseos.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐴</text></svg>">
+</head>
+<body>
+    <!-- Desktop Background -->
+    <div class="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" onclick="openWindow('myComputer')">
+                <div class="icon-img">💻</div>
+                <div class="icon-label">My Computer</div>
+            </div>
+            
+            <div class="desktop-icon" onclick="openWindow('horseMoment')">
+                <div class="icon-img">🐴</div>
+                <div class="icon-label">Scheduled Horse<br>Moment.exe</div>
+            </div>
+            
+            <div class="desktop-icon" onclick="openWindow('recycleBin')">
+                <div class="icon-img">🗑️</div>
+                <div class="icon-label">Recycle Bin</div>
+            </div>
+            
+            <div class="desktop-icon" onclick="openWindow('internet')">
+                <div class="icon-img">🌐</div>
+                <div class="icon-label">Internet<br>Explorer</div>
+            </div>
+            
+            <div class="desktop-icon" onclick="openWindow('notepad')">
+                <div class="icon-img">📝</div>
+                <div class="icon-label">Horse Facts.txt</div>
+            </div>
+            
+            <div class="desktop-icon" onclick="openWindow('minesweeper')">
+                <div class="icon-img">💣</div>
+                <div class="icon-label">Minesweeper</div>
+            </div>
+            
+            <div class="desktop-icon" onclick="openWindow('calculator')">
+                <div class="icon-img">🧮</div>
+                <div class="icon-label">Calculator</div>
+            </div>
+        </div>
+
+        <!-- Windows -->
+        
+        <!-- My Computer Window -->
+        <div class="window" id="myComputer" style="display:none; top:50px; left:50px;">
+            <div class="window-title">
+                <span>My Computer</span>
+                <div class="window-buttons">
+                    <button class="win-btn minimize">_</button>
+                    <button class="win-btn maximize">□</button>
+                    <button class="win-btn close" onclick="closeWindow('myComputer')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="toolbar">
+                    <button>File</button>
+                    <button>Edit</button>
+                    <button>View</button>
+                    <button>Help</button>
+                </div>
+                <div class="explorer">
+                    <div class="folder-item">
+                        <span class="folder-icon">💾</span>
+                        <span>3½ Floppy (A:)</span>
+                    </div>
+                    <div class="folder-item">
+                        <span class="folder-icon">💿</span>
+                        <span>Local Disk (C:)</span>
+                    </div>
+                    <div class="folder-item">
+                        <span class="folder-icon">🌐</span>
+                        <span>Control Panel</span>
+                    </div>
+                    <div class="folder-item">
+                        <span class="folder-icon">🐴</span>
+                        <span>HorseOS System</span>
+                    </div>
+                </div>
+                <div class="window-status">
+                    4 object(s)
+                </div>
+            </div>
+        </div>
+
+        <!-- Scheduled Horse Moment Window -->
+        <div class="window modal-window" id="horseMoment" style="display:none;">
+            <div class="window-title critical">
+                <span>🐴 Scheduled_Horse_Moment.exe</span>
+                <div class="window-buttons">
+                    <button class="win-btn close disabled" title="You cannot close this">×</button>
+                </div>
+            </div>
+            <div class="window-content horse-moment">
+                <div class="horse-container">
+                    <div class="horse-3d">🐴</div>
+                    <div class="horse-shadow"></div>
+                </div>
+                
+                <div class="horse-text">
+                    <h2>Please stand by for a scheduled Horse Moment.</h2>
+                    <p>You will now contemplate and reflect.</p>
+                    <p class="serious">This is a time of seriousness.</p>
+                    <p class="small">You currently have <strong>Scheduled Horse Moments</strong> turned on.</p>
+                    <p class="warning">⚠️ You cannot change this in settings.</p>
+                </div>
+
+                <div class="contemplation-timer">
+                    Time remaining: <span id="timer">60</span> seconds
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div class="reflection-prompt" id="reflectionPrompt">
+                    "What would you do if you were a horse with WiFi?"
+                </div>
+
+                <div class="horse-buttons">
+                    <button class="horse-btn" id="contemplateBtn" onclick="contemplate()">I am Contemplating</button>
+                    <button class="horse-btn disabled" disabled>Settings...</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recycle Bin Window -->
+        <div class="window" id="recycleBin" style="display:none; top:100px; left:100px;">
+            <div class="window-title">
+                <span>Recycle Bin</span>
+                <div class="window-buttons">
+                    <button class="win-btn minimize">_</button>
+                    <button class="win-btn maximize">□</button>
+                    <button class="win-btn close" onclick="closeWindow('recycleBin')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="recycle-content">
+                    <div class="trash-item">
+                        <span>🗑️</span>
+                        <span>Your Screen Time Guilt</span>
+                        <span class="trash-size">2.4 MB</span>
+                    </div>
+                    <div class="trash-item">
+                        <span>🗑️</span>
+                        <span>Doomscrolling Addiction</span>
+                        <span class="trash-size">847 KB</span>
+                    </div>
+                    <div class="trash-item">
+                        <span>🗑️</span>
+                        <span>Productivity Anxiety</span>
+                        <span class="trash-size">1.1 MB</span>
+                    </div>
+                    <div class="empty-trash">
+                        <button onclick="emptyTrash()">Empty Recycle Bin</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Internet Explorer Window -->
+        <div class="window" id="internet" style="display:none; top:80px; left:80px; width:600px;">
+            <div class="window-title">
+                <span>Internet Explorer - Horse Facts</span>
+                <div class="window-buttons">
+                    <button class="win-btn minimize">_</button>
+                    <button class="win-btn maximize">□</button>
+                    <button class="win-btn close" onclick="closeWindow('internet')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="ie-toolbar">
+                    <button>←</button>
+                    <button>→</button>
+                    <button>🔄</button>
+                    <input type="text" value="http://www.horsefacts.com" readonly>
+                </div>
+                <div class="ie-content">
+                    <h1>🐴 Daily Horse Fact</h1>
+                    <div class="fact-box">
+                        <p id="horseFact">Loading horse wisdom...</p>
+                    </div>
+                    <button onclick="newFact()">Get New Fact</button>
+                    
+                    <div class="horse-stats">
+                        <h3>Global Horse Moments</h3>
+                        <div class="stat-item">
+                            <span>Total Contemplations:</span>
+                            <span id="totalContemplations">42,847</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Horses Online:</span>
+                            <span>1,337</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Seriousness Level:</span>
+                            <span>Maximum</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notepad Window -->
+        <div class="window" id="notepad" style="display:none; top:120px; left:120px;">
+            <div class="window-title">
+                <span>Horse Facts.txt - Notepad</span>
+                <div class="window-buttons">
+                    <button class="win-btn minimize">_</button>
+                    <button class="win-btn maximize">□</button>
+                    <button class="win-btn close" onclick="closeWindow('notepad')">×</button>
+                </div>
+            </div>
+            <div class="window-content notepad-content">
+                <textarea readonly>HORSE FACTS - READ ONLY
+==================
+
+1. Horses can sleep standing up
+2. A horse's heart weighs 9-10 pounds
+3. Horses have 205 bones
+4. The average horse lives 25-30 years
+5. Horses can see nearly 360 degrees
+6. A horse's teeth take up more space
+   than its brain
+7. Horses cannot vomit
+8. The fastest recorded horse speed:
+   55 mph
+9. Horses have excellent hearing
+10. There are over 300 breeds of horses
+
+Remember: Contemplation is mandatory.
+This is not a suggestion.
+
+- HorseOS System
+</textarea>
+            </div>
+        </div>
+
+        <!-- Minesweeper Window -->
+        <div class="window" id="minesweeper" style="display:none; top:150px; left:150px;">
+            <div class="window-title">
+                <span>💣 Minesweeper</span>
+                <div class="window-buttons">
+                    <button class="win-btn minimize">_</button>
+                    <button class="win-btn maximize">□</button>
+                    <button class="win-btn close" onclick="closeWindow('minesweeper')">×</button>
+                </div>
+            </div>
+            <div class="window-content minesweeper-content">
+                <div class="minesweeper-header">
+                    <div class="mine-counter" id="mineCounter">010</div>
+                    <button class="reset-btn" id="resetBtn" onclick="resetMinesweeper()">😊</button>
+                    <div class="timer" id="mineTimer">000</div>
+                </div>
+                <div class="minesweeper-grid" id="minesweeperGrid"></div>
+            </div>
+        </div>
+
+        <!-- Calculator Window -->
+        <div class="window" id="calculator" style="display:none; top:180px; left:180px;">
+            <div class="window-title">
+                <span>🧮 Calculator</span>
+                <div class="window-buttons">
+                    <button class="win-btn minimize">_</button>
+                    <button class="win-btn maximize">□</button>
+                    <button class="win-btn close" onclick="closeWindow('calculator')">×</button>
+                </div>
+            </div>
+            <div class="window-content calculator-content">
+                <div class="calc-display" id="calcDisplay">0</div>
+                <div class="calc-buttons">
+                    <button onclick="calcClear()">C</button>
+                    <button onclick="calcOperator('/')">/</button>
+                    <button onclick="calcOperator('*')">×</button>
+                    <button onclick="calcBackspace()">←</button>
+                    <button onclick="calcNumber('7')">7</button>
+                    <button onclick="calcNumber('8')">8</button>
+                    <button onclick="calcNumber('9')">9</button>
+                    <button onclick="calcOperator('-')">-</button>
+                    <button onclick="calcNumber('4')">4</button>
+                    <button onclick="calcNumber('5')">5</button>
+                    <button onclick="calcNumber('6')">6</button>
+                    <button onclick="calcOperator('+')">+</button>
+                    <button onclick="calcNumber('1')">1</button>
+                    <button onclick="calcNumber('2')">2</button>
+                    <button onclick="calcNumber('3')">3</button>
+                    <button onclick="calcEquals()" class="calc-equals">=</button>
+                    <button onclick="calcNumber('0')" class="calc-zero">0</button>
+                    <button onclick="calcDecimal()">.</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Taskbar -->
+        <div class="taskbar">
+            <button class="start-btn" onclick="toggleStartMenu()">
+                <span>🐴</span> Start
+            </button>
+            <div class="taskbar-divider"></div>
+            <div class="taskbar-items">
+                <div class="taskbar-item active" onclick="openWindow('horseMoment')">
+                    <span>🐴</span> Scheduled Horse Moment
+                </div>
+            </div>
+            <div class="clock" id="clock">
+                --:--
+            </div>
+        </div>
+
+        <!-- Start Menu -->
+        <div class="start-menu" id="startMenu" style="display:none;">
+            <div class="start-header">
+                <div class="start-user">🐴</div>
+                <div class="start-username">Horse User</div>
+            </div>
+            <div class="start-items">
+                <div class="start-item" onclick="openWindow('internet'); toggleStartMenu()">
+                    <span>🌐</span> Internet Explorer
+                </div>
+                <div class="start-item" onclick="openWindow('notepad'); toggleStartMenu()">
+                    <span>📝</span> Notepad
+                </div>
+                <div class="start-item" onclick="openWindow('minesweeper'); toggleStartMenu()">
+                    <span>💣</span> Minesweeper
+                </div>
+                <div class="start-item" onclick="openWindow('calculator'); toggleStartMenu()">
+                    <span>🧮</span> Calculator
+                </div>
+                <div class="start-item" onclick="openWindow('myComputer'); toggleStartMenu()">
+                    <span>💻</span> My Computer
+                </div>
+                <div class="start-separator"></div>
+                <div class="start-item" onclick="openWindow('horseMoment'); toggleStartMenu()">
+                    <span>🐴</span> Scheduled Horse Moment
+                </div>
+                <div class="start-separator"></div>
+                <div class="start-item shutdown" onclick="shutdown()">
+                    <span>⏻</span> Shut Down...
+                </div>
+            </div>
+        </div>
+
+        <!-- Shutdown Screen -->
+        <div class="shutdown-screen" id="shutdownScreen" style="display:none;">
+            <div class="shutdown-content">
+                <div class="shutdown-horse">🐴</div>
+                <p>It is now safe to contemplate.</p>
+                <p class="small">Please reflect on your session.</p>
+            </div>
+        </div>
+
+        <!-- Startup Screen -->
+        <div class="startup-screen" id="startupScreen">
+            <div class="startup-content">
+                <div class="startup-logo">🐴</div>
+                <div class="startup-text">
+                    <h1>HorseOS</h1>
+                    <p>Starting Horse Moments...</p>
+                </div>
+                <div class="startup-bar">
+                    <div class="startup-fill"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/horseos.js"></script>
+</body>
+</html>

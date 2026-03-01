@@ -831,7 +831,7 @@
                 <div class="icon-label">Scheduler</div>
             </div>
             <div class="desktop-icon" onclick="openHorse()">
-                <div class="icon-img">🐴</div>
+                <div class="icon-img">[HORSE]</div>
                 <div class="icon-label">Horse Moment</div>
             </div>
             <div class="desktop-icon" onclick="openWindow('explorer')">
@@ -846,7 +846,7 @@
                 <div class="icon-img">[MINE]</div>
                 <div class="icon-label">Minesweeper</div>
             </div>
-            <div class="desktop-icon" onclick="showNotification('🐴 Horse Fact: Horses can sleep standing up!')">
+            <div class="desktop-icon" onclick="showNotification('[HORSE] Horse Fact: Horses can sleep standing up!')">
                 <div class="icon-img">[NOTE]</div>
                 <div class="icon-label">Horse Facts</div>
             </div>
@@ -932,7 +932,7 @@
                 <div class="folder-item" onclick="openWindow('floppyMystery')" style="cursor:pointer"><span class="folder-icon">[FLOP]</span><span>3½ Floppy (A:)</span></div>
                 <div class="folder-item" onclick="openWindow('driveMystery')" style="cursor:pointer"><span class="folder-icon">[DISK]</span><span>Local Disk (C:)</span></div>
                 <div class="folder-item" onclick="openWindow('controlMystery')" style="cursor:pointer"><span class="folder-icon">[NET]</span><span>Control Panel</span></div>
-                <div class="folder-item" onclick="openHorse()" style="cursor:pointer"><span class="folder-icon">🐴</span><span>HorseOS System</span></div>
+                <div class="folder-item" onclick="openHorse()" style="cursor:pointer"><span class="folder-icon">[HORSE]</span><span>HorseOS System</span></div>
             </div>
             <div class="window-status">4 object(s)</div>
         </div>
@@ -986,7 +986,7 @@
             <div class="window-content">
                 <div class="mine-header">
                     <div class="mine-counter" id="mineCount">010</div>
-                    <button class="btn-98 mine-btn" onclick="initMine()">😊</button>
+                    <button class="btn-98 mine-btn" onclick="initMine()">[SMILE]</button>
                     <div class="mine-counter" id="mineTime">000</div>
                 </div>
                 <div class="mine-grid" id="mineGrid"></div>
@@ -1009,7 +1009,7 @@
             <div class="window-content" style="background:#fff;padding:15px;font-family:'Courier New',monospace;font-size:12px;line-height:1.6;max-height:400px;overflow-y:auto">
                 <pre style="white-space:pre-wrap;font-family:inherit">
 ╔══════════════════════════════════════════════════════════════╗
-║                    🐴 WELCOME TO HORSEOS 🐴                  ║
+║                    [HORSE] WELCOME TO HORSEOS [HORSE]                  ║
 ║              "The Operating System You Can't Ignore"          ║
 ╚══════════════════════════════════════════════════════════════╝
 
@@ -1035,7 +1035,7 @@ HOW IT WORKS:
 
 FEATURES:
 ---------
-🐴 SCHEDULED HORSE MOMENTS
+[HORSE] SCHEDULED HORSE MOMENTS
    - Uncloseable 60-second contemplation sessions
    - Random existential prompts
    - Progress bar for your suffering
@@ -1066,9 +1066,9 @@ Also, we think horses are funny.
 
 NOTIFICATIONS:
 --------------
-💻 Desktop: In-browser notifications work for auto-horse alerts.
+[PC] Desktop: In-browser notifications work for auto-horse alerts.
    The browser must be open for notifications to appear.
-📱 Mobile: Browser notifications don't work in standalone mode.
+[PHONE] Mobile: Browser notifications don't work in standalone mode.
    Use the mobile version at thehorsemoment.com on your phone.
 
 The auto-horse scheduler will trigger when the app is open and 
@@ -1123,7 +1123,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             </div>
             <div class="window-content" style="padding:15px">
                 <div style="text-align:center;margin-bottom:15px">
-                    <div style="font-size:40px;margin-bottom:10px">🐴 [CLK]</div>
+                    <div style="font-size:40px;margin-bottom:10px">[HORSE] [CLK]</div>
                     <h3 style="margin-bottom:5px">Schedule Your Destiny</h3>
                     <p style="color:#666;font-size:10px">(The horse appreciates planning)</p>
                 </div>
@@ -1174,7 +1174,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                         [FLOP] Save Settings
                     </button>
                     <button class="btn-98" onclick="testHorseNow()" style="margin-left:10px">
-                        🐴 Test Horse Moment
+                        [HORSE] Test Horse Moment
                     </button>
                 </div>
                 
@@ -1229,15 +1229,15 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             </div>
             <div class="window-content" style="padding:0">
                 <div style="background:#c0c0c0;padding:5px;border-bottom:2px solid #808080">
-                    <button class="btn-98" style="font-size:16px" onclick="setPaintTool('brush')" title="Brush">🖌️</button>
-                    <button class="btn-98" style="font-size:16px" onclick="setPaintTool('eraser')" title="Eraser">🧼</button>
+                    <button class="btn-98" style="font-size:16px" onclick="setPaintTool('brush')" title="Brush">[BRUSH]</button>
+                    <button class="btn-98" style="font-size:16px" onclick="setPaintTool('eraser')" title="Eraser">[ERASE]</button>
                     <button class="btn-98" style="font-size:16px" onclick="clearCanvas()" title="Clear">[BIN]</button>
                     <span style="margin-left:10px">|</span>
-                    <button class="btn-98" style="font-size:16px" onclick="showNotification('🐴 The horse decides what color you use.')" title="Color">[ART]</button>
+                    <button class="btn-98" style="font-size:16px" onclick="showNotification('[HORSE] The horse decides what color you use.')" title="Color">[ART]</button>
                 </div>
                 <canvas id="paintCanvas" width="480" height="300" style="background:white;cursor:crosshair;display:block;margin:10px auto;border:1px solid #808080"></canvas>
                 <div style="text-align:center;padding:5px;font-size:11px;color:#666">
-                    🐴 <em>The horse guides your brush. You cannot draw anything else.</em>
+                    [HORSE] <em>The horse guides your brush. You cannot draw anything else.</em>
                 </div>
             </div>
         </div>
@@ -1257,12 +1257,12 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             </div>
             <div class="window-content" style="background:#fff;padding:0">
                 <div style="background:#c0c0c0;padding:5px;border-bottom:1px solid #808080">
-                    <button class="btn-98" onclick="showNotification('🐴 You cannot send mail. Only receive judgment.')">📤 Send</button>
-                    <button class="btn-98" onclick="showNotification('🐴 Refreshing... 0 new messages.')">R Check</button>
+                    <button class="btn-98" onclick="showNotification('[HORSE] You cannot send mail. Only receive judgment.')">[SEND] Send</button>
+                    <button class="btn-98" onclick="showNotification('[HORSE] Refreshing... 0 new messages.')">R Check</button>
                 </div>
                 <div style="border-bottom:1px solid #c0c0c0;padding:10px;background:#f0f0f0;cursor:pointer" onclick="openEmail('judgment')">
                     <div style="display:flex;align-items:center;gap:10px">
-                        <span style="font-size:20px">🐴</span>
+                        <span style="font-size:20px">[HORSE]</span>
                         <div style="flex:1">
                             <div style="font-weight:bold;color:#000080">The Horse</div>
                             <div style="color:#333">RE: Your Life Choices</div>
@@ -1273,7 +1273,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 </div>
                 <div style="border-bottom:1px solid #c0c0c0;padding:10px;background:#fff;cursor:pointer" onclick="openEmail('performance')">
                     <div style="display:flex;align-items:center;gap:10px">
-                        <span style="font-size:20px">🐴</span>
+                        <span style="font-size:20px">[HORSE]</span>
                         <div style="flex:1">
                             <div style="font-weight:bold;color:#000080">HR Department</div>
                             <div style="color:#333">Performance Review</div>
@@ -1284,7 +1284,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 </div>
                 <div style="border-bottom:1px solid #c0c0c0;padding:10px;background:#fff;cursor:pointer" onclick="openEmail('promo')">
                     <div style="display:flex;align-items:center;gap:10px">
-                        <span style="font-size:20px">📢</span>
+                        <span style="font-size:20px">[BULLHORN]</span>
                         <div style="flex:1">
                             <div style="font-weight:bold;color:#000080">Hay.com</div>
                             <div style="color:#333">[HAY] 50% OFF Premium Hay!</div>
@@ -1301,7 +1301,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                     <div id="emailBody" style="font-family:'Courier New',monospace;font-size:12px;line-height:1.6;white-space:pre-wrap"></div>
                     <div style="margin-top:15px;text-align:center">
                         <button class="btn-98" onclick="document.getElementById('emailContent').style.display='none'">Close</button>
-                        <button class="btn-98 primary" onclick="showNotification('🐴 Reply blocked. The horse does not negotiate.')">Reply</button>
+                        <button class="btn-98 primary" onclick="showNotification('[HORSE] Reply blocked. The horse does not negotiate.')">Reply</button>
                     </div>
                 </div>
             </div>
@@ -1339,10 +1339,10 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 <div style="background:#c0c0c0;padding:10px">
                     <div style="font-size:11px;margin-bottom:5px"><strong>📋 Live Chat:</strong></div>
                     <div id="horseChat" style="background:#000;color:#0f0;padding:8px;font-family:monospace;font-size:10px;height:60px;overflow-y:auto">
-                        > 🐴: *chewing sounds*<br>
-                        > 🐴: *tail swish*<br>
+                        > [HORSE]: *chewing sounds*<br>
+                        > [HORSE]: *tail swish*<br>
                         > [U]: beautiful creature<br>
-                        > 🐴: *stares into camera*<br>
+                        > [HORSE]: *stares into camera*<br>
                     </div>
                     <div style="margin-top:5px;display:flex;gap:5px">
                         <input type="text" placeholder="Say something nice to the horse..." style="flex:1;padding:3px;font-size:11px" onkeypress="if(event.key==='Enter')sendHorseChat(this.value);this.value=''">
@@ -1384,7 +1384,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                         <th style="padding:3px;text-align:right">Memory</th>
                     </tr>
                     <tr style="background:#f0f0f0">
-                        <td style="padding:3px">🐴 Contemplating.exe</td>
+                        <td style="padding:3px">[HORSE] Contemplating.exe</td>
                         <td style="padding:3px;text-align:right">99%</td>
                         <td style="padding:3px;text-align:right">4,096 MB</td>
                     </tr>
@@ -1399,14 +1399,14 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                         <td style="padding:3px;text-align:right">512 MB</td>
                     </tr>
                     <tr>
-                        <td style="padding:3px">💭 Existential_Dread.dll</td>
+                        <td style="padding:3px">[THOUGHT] Existential_Dread.dll</td>
                         <td style="padding:3px;text-align:right">∞%</td>
                         <td style="padding:3px;text-align:right">Unknown</td>
                     </tr>
                 </table>
                 <div style="text-align:center;margin-top:10px">
-                    <button class="btn-98" onclick="showNotification('🐴 You cannot end this process. It is you.')">End Process</button>
-                    <button class="btn-98" onclick="showNotification('🐴 All processes serve the horse.')">New Task...</button>
+                    <button class="btn-98" onclick="showNotification('[HORSE] You cannot end this process. It is you.')">End Process</button>
+                    <button class="btn-98" onclick="showNotification('[HORSE] All processes serve the horse.')">New Task...</button>
                 </div>
             </div>
         </div>
@@ -1428,7 +1428,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
 
         <!-- Mouse Leave Popup -->
         <div class="horse-leave-popup" id="horseLeavePopup">
-            <div class="leave-emoji">🐴</div>
+            <div class="leave-emoji">[HORSE]</div>
             <div class="leave-text" id="leaveText">Where do you think you're going?</div>
             <button onclick="dismissLeavePopup()">I was just stretching...</button>
         </div>
@@ -1463,8 +1463,8 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 <p style="font-size:10px;color:#415a77">General Failure reading drive A:<br>Abort, Retry, Fail?</p>
                 <div style="margin-top:15px">
                     <button class="btn-98" onclick="closeWindow('floppyMystery')" style="background:#3949ab;color:#fff">Abort</button>
-                    <button class="btn-98" onclick="showNotification('🐴 The horse rejects your retry.')" style="margin:0 5px">Retry</button>
-                    <button class="btn-98" onclick="showNotification('🐴 You cannot fail the horse.')">Fail</button>
+                    <button class="btn-98" onclick="showNotification('[HORSE] The horse rejects your retry.')" style="margin:0 5px">Retry</button>
+                    <button class="btn-98" onclick="showNotification('[HORSE] You cannot fail the horse.')">Fail</button>
                 </div>
             </div>
         </div>
@@ -1542,21 +1542,21 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 <p style="font-style:italic;color:#ce93d8;margin:15px 0;font-size:12px">"The Control Panel has no settings. The horse controls all."</p>
                 <div style="text-align:left;background:#1a1a2e;border:1px inset #7b1fa2;padding:10px;margin:10px 0">
                     <p style="font-size:10px;color:#e1bee7;margin:0">
-    ☑ Horse Moments: [ALWAYS ON]<br>
-    ☑ Judgment: [ENABLED]<br>
-    ☑ Existential Dread: [MAXIMUM]<br>
+    [CHECKBOX] Horse Moments: [ALWAYS ON]<br>
+    [CHECKBOX] Judgment: [ENABLED]<br>
+    [CHECKBOX] Existential Dread: [MAXIMUM]<br>
     ☐ Skip Option: [DISABLED]<br>
-    ☑ Soul Monitoring: [ACTIVE]
+    [CHECKBOX] Soul Monitoring: [ACTIVE]
                     </p>
                 </div>
                 <p style="font-size:9px;color:#9c27b0">Attempting to change settings will alert the horse.</p>
-                <button class="btn-98" onclick="showNotification('🐴 The horse has denied your request.');closeWindow('controlMystery')" style="margin-top:10px;background:#7b1fa2;color:#fff">Apply Changes</button>
+                <button class="btn-98" onclick="showNotification('[HORSE] The horse has denied your request.');closeWindow('controlMystery')" style="margin-top:10px;background:#7b1fa2;color:#fff">Apply Changes</button>
             </div>
         </div>
 
         <!-- First Time Welcome Popup -->
         <div class="horse-leave-popup" id="firstTimePopup" style="z-index:10001">
-            <div class="leave-emoji">🐴</div>
+            <div class="leave-emoji">[HORSE]</div>
             <div class="leave-text">Welcome to HorseOS!</div>
             <p style="margin:10px 0;font-size:12px">Click [TXT] README.txt for more information...</p>
             <p style="margin:10px 0;font-size:11px;color:#666">(Just kidding, you can't)</p>
@@ -1565,12 +1565,12 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         <!-- Taskbar -->
         <div class="taskbar">
             <button class="start-btn" id="startBtn" onclick="toggleStart()">
-                <span>🐴</span> Start
+                <span>[HORSE]</span> Start
             </button>
             <div class="taskbar-divider"></div>
             <div class="taskbar-items">
                 <div class="taskbar-item active" onclick="openHorse()">
-                    <span>🐴</span> Horse Moment
+                    <span>[HORSE]</span> Horse Moment
                 </div>
             </div>
             <div class="clock" id="clock">--:--</div>
@@ -1579,7 +1579,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         <!-- Start Menu -->
         <div class="start-menu" id="startMenu">
             <div class="start-header">
-                <div class="start-user-icon">🐴</div>
+                <div class="start-user-icon">[HORSE]</div>
                 <div class="start-username">Horse User</div>
             </div>
             <div class="start-items">
@@ -1600,11 +1600,11 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 </div>
                 <div class="start-separator"></div>
                 <div class="start-item" onclick="openHorse();toggleStart()">
-                    <span>🐴</span> Horse Moment
+                    <span>[HORSE]</span> Horse Moment
                 </div>
                 <div class="start-separator"></div>
-                <div class="start-item" onclick="alert('🐴 It is now safe to contemplate.')">
-                    <span>⏻</span> Shut Down...
+                <div class="start-item" onclick="alert('[HORSE] It is now safe to contemplate.')">
+                    <span>[POWER]</span> Shut Down...
                 </div>
             </div>
         </div>
@@ -1795,7 +1795,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         function clickMine(r, c) {
             if (mineGameOver || mineRevealed[r][c] || mineFlags[r][c]) return;
             revealMine(r, c);
-            if (mineGrid[r][c] === -1) { mineGameOver = true; showNotification('💥 BOOM! Game Over!'); }
+            if (mineGrid[r][c] === -1) { mineGameOver = true; showNotification('[BOOM] BOOM! Game Over!'); }
             else if (checkWin()) showNotification('! You Win! Horse-level concentration achieved!');
         }
         
@@ -1865,9 +1865,9 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             if (desktopNotificationsEnabled && 'Notification' in window && Notification.permission === 'granted') {
                 try {
                     new Notification('HorseOS', {
-                        body: text.replace(/🐴|!|✓/g, '').trim(),
-                        icon: '🐴',
-                        badge: '🐴',
+                        body: text.replace(/[HORSE]|!|[OK]/g, '').trim(),
+                        icon: '[HORSE]',
+                        badge: '[HORSE]',
                         tag: options.tag || 'horseos-' + Date.now(),
                         requireInteraction: options.requireInteraction || false
                     });
@@ -1888,7 +1888,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                         if (permission === 'granted') {
                             desktopNotificationsEnabled = true;
                             localStorage.setItem('horseos_desktop_notifs', 'true');
-                            showNotification('✓ Desktop notifications enabled!');
+                            showNotification('[OK] Desktop notifications enabled!');
                         } else {
                             checkbox.checked = false;
                             showNotification('Notification permission denied');
@@ -1924,10 +1924,10 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             setTimeout(() => {
                 // Show welcome popup with longer duration
                 document.getElementById('firstTimePopup').innerHTML = `
-                    <div class="leave-emoji">🐴</div>
+                    <div class="leave-emoji">[HORSE]</div>
                     <div class="leave-text">Welcome to HorseOS!</div>
                     <p style="margin:10px 0;font-size:12px">Your journey to digital wellness begins...</p>
-                    <button onclick="startTutorial()" style="margin-top:10px">Click to Continue 👉</button>
+                    <button onclick="startTutorial()" style="margin-top:10px">Click to Continue [POINT]</button>
                 `;
                 document.getElementById('firstTimePopup').classList.add('show');
                 
@@ -1954,7 +1954,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             // Returning visitor - normal flow
             setTimeout(() => {
                 openHorse();
-                showNotification('🐴 Welcome back! Time to contemplate.');
+                showNotification('[HORSE] Welcome back! Time to contemplate.');
             }, 1500);
         }
         
@@ -2186,7 +2186,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                     // Time for a Horse Moment!
                     if (!horseRunning) {
                         openHorse();
-                        showNotification('🐴 Scheduled Horse Moment! Time to contemplate.', {
+                        showNotification('[HORSE] Scheduled Horse Moment! Time to contemplate.', {
                             requireInteraction: true,
                             tag: 'horse-moment-scheduled'
                         });
@@ -2281,14 +2281,14 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             msg.textContent = 'OK Settings saved! The horse is pleased.';
             setTimeout(() => msg.textContent = '', 3000);
             
-            showNotification('🐴 Schedule updated! Duration: ' + horseDuration + 's');
+            showNotification('[HORSE] Schedule updated! Duration: ' + horseDuration + 's');
         }
         
         function testHorseNow() {
             closeWindow('scheduler');
             setTimeout(() => {
                 openHorse();
-                showNotification('🐴 Test Horse Moment activated!');
+                showNotification('[HORSE] Test Horse Moment activated!');
             }, 300);
         }
         
@@ -2343,7 +2343,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
         
         function setPaintTool(tool) {
             paintTool = tool;
-            showNotification(tool === 'brush' ? '🐴 Brush selected. You will draw horses.' : '🧼 Eraser selected... but the horse remembers.');
+            showNotification(tool === 'brush' ? '[HORSE] Brush selected. You will draw horses.' : '[ERASE] Eraser selected... but the horse remembers.');
         }
         
         function initPaint() {
@@ -2395,7 +2395,7 @@ P.S. - If you read this far, you definitely need a Horse Moment.
                 const ctx = canvas.getContext('2d');
                 ctx.fillStyle = '#fff';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                showNotification('🐴 Canvas cleared. The horse provides a fresh pasture.');
+                showNotification('[HORSE] Canvas cleared. The horse provides a fresh pasture.');
             }
         }
         
@@ -2421,7 +2421,7 @@ This is not contemplation.
 The next Horse Moment will be... extended.
 
 Judging you silently,
-🐴 The Horse
+[HORSE] The Horse
 
 P.S. - That sourdough recipe won't fix what's broken.`
             },
@@ -2430,7 +2430,7 @@ P.S. - That sourdough recipe won't fix what's broken.`
                 subject: 'Performance Review - ACTION REQUIRED',
                 body: `EMPLOYEE: You
 REVIEW PERIOD: All of it
-RATING: 🐴 (Horse)
+RATING: [HORSE] (Horse)
 
 STRENGTHS:
 - Consistent screen time
@@ -2503,7 +2503,7 @@ P.S. - Your horse knows you read this far. They're watching.`
             
             const chat = document.getElementById('horseChat');
             const viewerMsg = `> [U]: ${msg}`;
-            const horseMsg = `> 🐴: ${horseResponses[Math.floor(Math.random() * horseResponses.length)]}`;
+            const horseMsg = `> [HORSE]: ${horseResponses[Math.floor(Math.random() * horseResponses.length)]}`;
             
             chat.innerHTML += viewerMsg + '<br>' + horseMsg + '<br>';
             chat.scrollTop = chat.scrollHeight;
@@ -2624,7 +2624,7 @@ P.S. - Your horse knows you read this far. They're watching.`
             }
         });
 
-        console.log('🐴 HorseOS v2.0 - Super Retro Edition loaded!');
+        console.log('[HORSE] HorseOS v2.0 - Super Retro Edition loaded!');
         console.log('Contemplation is mandatory.');
         console.log('Type openWindow("welcome") to read the manual.');
     </script>
