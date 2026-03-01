@@ -888,6 +888,15 @@ REMEMBER:
             `;
         }
         
+        // Show README on first load
+        window.addEventListener('load', function() {
+            // Check if this is first visit
+            if (!localStorage.getItem('horseos_readme_seen')) {
+                openApp('readme');
+                localStorage.setItem('horseos_readme_seen', 'true');
+            }
+        });
+        
         // Prevent zoom on double-tap
         document.addEventListener('dblclick', function(e) {
             e.preventDefault();
