@@ -205,22 +205,6 @@
             background: linear-gradient(90deg, #800000, #ff4444);
         }
         
-        /* Blocker overlay - prevents clicking anything else */
-        .horse-blocker {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 9998;
-            display: none;
-        }
-        
-        .horse-blocker.active {
-            display: block;
-        }
-        
         /* Mouse leave popup */
         .horse-leave-popup {
             position: fixed;
@@ -285,22 +269,6 @@
         .readme-wiggle .icon-img {
             animation: wiggle 0.5s ease-in-out infinite;
             font-size: 40px !important;
-        }
-        
-        /* First-time overlay blocker */
-        .tutorial-blocker {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: transparent;
-            z-index: 9990;
-            display: none;
-        }
-        
-        .tutorial-blocker.active {
-            display: block;
         }
         
         /* Notification pointing to README */
@@ -1477,12 +1445,6 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             <span id="notifText"></span>
         </div>
 
-        <!-- Horse Blocker Overlay -->
-        <div class="horse-blocker" id="horseBlocker"></div>
-        
-        <!-- Tutorial Blocker (for first-time experience) -->
-        <div class="tutorial-blocker" id="tutorialBlocker"></div>
-        
         <!-- README Notification Arrow -->
         <div class="readme-notification" id="readmeNotification">
             ^ Click here!
@@ -1991,15 +1953,6 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             originalOpenWindow(id);
         };
 
-        // Horse Blocker - prevent clicking other things
-        function enableHorseBlocker() {
-            document.getElementById('horseBlocker').classList.add('active');
-        }
-        
-        function disableHorseBlocker() {
-            document.getElementById('horseBlocker').classList.remove('active');
-        }
-        
         // Mouse leave detection - more reliable
         const leaveMessages = [
             "Where do you think you're going?",
@@ -2085,20 +2038,6 @@ P.S. - If you read this far, you definitely need a Horse Moment.
             }
         }
         
-        // Override openHorse to enable blocker
-        const originalOpenHorse = openHorse;
-        openHorse = function() {
-            originalOpenHorse();
-            enableHorseBlocker();
-        };
-        
-        // Override finishHorse to disable blocker
-        const originalFinishHorse = finishHorse;
-        finishHorse = function() {
-            originalFinishHorse();
-            disableHorseBlocker();
-        };
-
         // Scheduler Functions
         let horseDuration = 60;
         let autoInterval = 0;
